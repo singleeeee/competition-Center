@@ -1,0 +1,76 @@
+{
+	// 组件自动引入
+	"easycom": {
+    "autoscan": true,
+    "custom": {
+      // uni-ui 规则如下配置 
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue" 
+    }
+  },
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/find/index",
+			"style": {
+				"navigationBarTitleText": "发现"
+			}
+		},
+		{
+			"path": "pages/competition/index",
+			"style": {
+				"navigationBarTitleText": "比赛"
+			}
+		},
+		{
+			"path": "pages/community/index",
+			"style": {
+				"navigationBarTitleText": "社区"
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		// 默认字体颜色
+		"color":"#333",
+		// 选中字体颜色
+		"selectedColor":"#1296db",
+		"backgroundColor":"#fff",
+		"borderStyle": "white",
+		"list": [
+			{
+				"text": "发现",
+				"pagePath": "pages/find/index",
+				"iconPath": "static/tab-images/find-unactive.png",
+				"selectedIconPath": "static/tab-images/find-active.png"
+			},
+			{
+				"text": "比赛",
+				"pagePath": "pages/competition/index",
+				"iconPath": "static/tab-images/competition-unactive.png",
+				"selectedIconPath": "static/tab-images/competition-active.png"
+			},
+			{
+				"text": "社区",
+				"pagePath": "pages/community/index",
+				"iconPath": "static/tab-images/community-unactive.png",
+				"selectedIconPath": "static/tab-images/community-active.png"
+			},
+			{
+				"text": "我的",
+				"pagePath": "pages/mine/index",
+				"iconPath": "static/tab-images/mine-unactive.png",
+				"selectedIconPath": "static/tab-images/mine-active.png"
+			},
+		]
+	}
+}
