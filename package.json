@@ -1,6 +1,10 @@
 {
   "name": "uni-preset-vue",
   "version": "0.0.0",
+  "author": {
+    "name": "singleeeee",
+    "url": "http://singleeeee.top/"
+  },
   "scripts": {
     "dev:app": "uni -p app",
     "dev:app-android": "uni -p app-android",
@@ -37,13 +41,13 @@
     "build:quickapp-webview-huawei": "uni build -p quickapp-webview-huawei",
     "build:quickapp-webview-union": "uni build -p quickapp-webview-union",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.ts --fix --ignore-path .gitignore",
-    "prepare": "husky install"
+    "tsc": "vue-tsc --noEmit --skipLibCheck",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
-    "*.{vue,ts,js}": [
-      "eslint --fix"
-    ]
+    "*.{vue,ts,js}": ["eslint --fix"]
   },
   "dependencies": {
     "@dcloudio/uni-app": "3.0.0-3081220230817001",
@@ -80,17 +84,13 @@
     "@vue/tsconfig": "^0.1.3",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.19.2",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "lint-staged": "^15.2.0",
     "miniprogram-api-typings": "^3.12.2",
     "prettier": "^3.1.1",
+    "sass": "^1.56.1",
     "typescript": "^4.9.4",
     "vite": "4.1.4",
     "vue-tsc": "^1.0.24"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
