@@ -1,1 +1,1 @@
-<button bindtap="{{a}}"> 保存用户信息 </button><button bindtap="{{b}}">清理用户信息</button>
+<button bindtap="{{a}}"> 保存用户信息 </button><button bindtap="{{b}}">清理用户信息</button><button bindtap="{{c}}">请求测试</button>
