@@ -5,6 +5,26 @@
     "pages/community/index",
     "pages/mine/index"
   ],
+  "subPackages": [
+    {
+      "root": "subpackage/notification_detail",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/personal_data",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/posts",
+      "pages": [
+        "index"
+      ]
+    }
+  ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",
@@ -13,7 +33,7 @@
   },
   "tabBar": {
     "color": "#333",
-    "selectedColor": "#1296db",
+    "selectedColor": "#12a66a",
     "backgroundColor": "#fff",
     "borderStyle": "white",
     "list": [

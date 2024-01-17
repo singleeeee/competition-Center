@@ -1,4 +1,8 @@
 {
   "navigationBarTitleText": "社区",
-  "usingComponents": {}
+  "usingComponents": {
+    "topic": "./components/topic",
+    "friends": "./components/friends",
+    "message": "./components/message"
+  }
 }

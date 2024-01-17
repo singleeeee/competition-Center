@@ -8,12 +8,18 @@ if (!Math) {
   "./pages/competition/index.js";
   "./pages/community/index.js";
   "./pages/mine/index.js";
+  "./subpackage/notification_detail/index.js";
+  "./subpackage/personal_data/index.js";
+  "./subpackage/posts/index.js";
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",
   setup(__props) {
     common_vendor.onLaunch(() => {
-      console.log("App Launch");
+      common_vendor.index.setTabBarBadge({
+        index: 2,
+        text: "1"
+      });
     });
     common_vendor.onShow(() => {
       console.log("App Show");

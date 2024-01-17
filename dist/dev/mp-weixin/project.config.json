@@ -18,10 +18,27 @@
         }
     },
     "compileType": "miniprogram",
-    "libVersion": "3.3.1",
+    "libVersion": "1.0.0",
     "appid": "wxa554745366849234",
     "projectname": "",
-    "condition": {},
+    "condition": {
+        "search": {
+            "current": -1,
+            "list": []
+        },
+        "conversation": {
+            "current": -1,
+            "list": []
+        },
+        "game": {
+            "current": -1,
+            "list": []
+        },
+        "miniprogram": {
+            "current": -1,
+            "list": []
+        }
+    },
     "editorSetting": {
         "tabIndent": "auto",
         "tabSize": 4
