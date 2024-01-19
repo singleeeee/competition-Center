@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "个人资料修改",
+                    "pathName": "subpackage/personal_data/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "帖子",
                     "pathName": "subpackage/posts/index",
                     "query": "",

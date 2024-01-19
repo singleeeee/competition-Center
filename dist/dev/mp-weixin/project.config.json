@@ -20,7 +20,7 @@
     "compileType": "miniprogram",
     "libVersion": "1.0.0",
     "appid": "wxa554745366849234",
-    "projectname": "",
+    "projectname": "competition-center",
     "condition": {
         "search": {
             "current": -1,
