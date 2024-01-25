@@ -31,5 +31,5 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-1b8b30bc"], ["__file", "E:/前端/项目/竞赛中心助手/competition-Center/src/pages/find/index.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-1b8b30bc"], ["__file", "E:/frontend/project/Competition-center/competition-Center/src/pages/find/index.vue"]]);
 wx.createPage(MiniProgramPage);

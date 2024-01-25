@@ -94,5 +94,5 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     v: $props.isShadow ? $props.shadow : ""
   });
 }
-const Component = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "E:/前端/项目/竞赛中心助手/competition-Center/node_modules/@dcloudio/uni-ui/lib/uni-card/uni-card.vue"]]);
+const Component = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "E:/frontend/project/Competition-center/competition-Center/node_modules/@dcloudio/uni-ui/lib/uni-card/uni-card.vue"]]);
 wx.createComponent(Component);
