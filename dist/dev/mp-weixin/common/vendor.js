@@ -8779,6 +8779,7 @@ exports.onHide = onHide;
 exports.onLaunch = onLaunch;
 exports.onShow = onShow;
 exports.p = p;
+exports.reactive = reactive;
 exports.ref = ref;
 exports.resolveComponent = resolveComponent;
 exports.s = s;

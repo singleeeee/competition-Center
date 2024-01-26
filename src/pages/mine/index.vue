@@ -1,5 +1,19 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import UnLog from './components/UnLog.vue'
+import { onShow } from '@dcloudio/uni-app'
+import { useUserInfoStore } from '@/stores'
+onShow(() => {
+  const userInfo = uni.getStorageSync('UserInfo')
+  if (userInfo) {
+    isHeadShow.value = true
+  } else {
+    isHeadShow.value = false
+  }
+})
+//
+const userInfoStore = useUserInfoStore()
+const { userInfo } = userInfoStore
 // 跳转到修改个人资料页面
 const navigatetoPerson = () => {
   uni.navigateTo({
@@ -11,76 +25,55 @@ const configItems = [
   {
     id: 1,
     title: '我的奖项',
+    icon: 'medal',
   },
   {
     id: 2,
     title: '我的队伍',
+    icon: 'flag',
   },
   {
     id: 3,
     title: '参赛报名',
+    icon: 'paperplane',
   },
   {
     id: 4,
     title: '我的经历',
+    icon: 'person',
   },
   {
     id: 5,
     title: '联系客服',
+    icon: 'headphones',
   },
   {
     id: 6,
     title: '更多设置',
+    icon: 'gear',
   },
   {
     id: 7,
     title: '关于',
+    icon: 'redo',
   },
 ]
 
-// 用户信息
-const userInfo = ref({
-  nickname: '',
-  avatarUrl: '',
-})
-let loginAvatar = '' //带'的url
-let isLogin = ref(false)
-
-// 监听点击头像事件
-const onChooseavatar = (e) => {
-  loginAvatar = "'" + e.detail.avatarUrl + "'"
-  userInfo.value.avatarUrl = e.detail.avatarUrl
-}
-
-// 登录按钮
-const login = async () => {
-  if (loginAvatar && userInfo.value.nickname) {
-    await uni.showLoading
-    uni.setStorageSync('userInfo', userInfo.value)
-    isLogin.value = true
-  } else {
-    console.log(userInfo.value)
-    uni.showToast({
-      icon: 'error',
-      title: '头像和昵称',
-    })
-  }
-}
-// 输入框失焦事件
-const blur = (e: any) => {
-  userInfo.value.nickname = e.detail.value
+let isHeadShow = ref(false)
+const changeIsLog = (val: boolean) => {
+  isHeadShow.value = val
 }
 </script>
 
 <template>
-  <view class="container" v-if="isLogin">
+  <view class="container">
     <view class="header">
-      <view class="avatarBox">
+      <view class="avatarBox" v-if="isHeadShow">
         <view class="avatar">
-          <image class="avatar" :src="userInfo.avatarUrl" mode="scaleToFill" />
+          <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
         </view>
         <view class="bodyBox">
-          <view class="nickname">{{ userInfo.nickname }}</view>
+          <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
             <view class="tag-view">
               <uni-tag class="label" text="大二" :circle="true" type="primary" size="small" />
@@ -93,13 +86,14 @@ const blur = (e: any) => {
           <uni-icons type="right" color="#ccc" size="20"></uni-icons>
         </view>
       </view>
+      <UnLog @changeIsLog="changeIsLog" v-else></UnLog>
     </view>
     <view class="body">
       <view class="collectBox">
         <view class="liked">
-          <span style="font-size: 40rpx; padding-right: 10rpx; color: red; font-weight: 700"
-            >2444</span
-          >
+          <span style="font-size: 40rpx; padding-right: 10rpx; color: red; font-weight: 700">{{
+            userInfo.loveNum || 0
+          }}</span>
           <span
             style="
               font-size: 26rpx;
@@ -152,39 +146,15 @@ const blur = (e: any) => {
       </view>
       <view class="list">
         <view class="item" v-for="item in configItems" :key="item.id">
-          <view class="left">{{ item.title }}</view>
+          <view class="left">
+            <uni-icons :type="item.icon" color="" size="18" />
+            {{ item.title }}</view
+          >
           <view class="right">
             <uni-icons type="right" color="#ccc" size="18" />
           </view>
         </view>
       </view>
-    </view>
-  </view>
-  <view class="unLog" v-else>
-    <view class="loginBox">
-      <view class="img">
-        <button
-          class="avatar"
-          open-type="chooseAvatar"
-          @chooseavatar="onChooseavatar"
-          :style="{
-            background: 'url(' + loginAvatar + ')',
-          }"
-        >
-          <uni-icons v-if="!userInfo.avatarUrl" type="person-filled" color="#AFAFAF" size="100" />
-        </button>
-      </view>
-      <view class="nicknameInput">
-        <input
-          type="nickname"
-          class="inputNickname"
-          placeholder="请输入昵称"
-          v-model="userInfo.nickname"
-          @blur="blur"
-        />
-      </view>
-      <button class="log" @click="login">登录</button>
-      <view style="margin-top: 20rpx; font-size: 30rpx">登录后开启更多功能</view>
     </view>
   </view>
 </template>

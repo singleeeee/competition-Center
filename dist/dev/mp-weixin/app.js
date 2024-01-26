@@ -2,12 +2,14 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const stores_index = require("./stores/index.js");
-require("./stores/modules/member.js");
+require("./stores/modules/userInfoStore.js");
+require("./utils/http.js");
 if (!Math) {
   "./pages/find/index.js";
   "./pages/competition/index.js";
   "./pages/community/index.js";
   "./pages/mine/index.js";
+  "./pages/mine/personPage/index.js";
   "./subpackage/notification_detail/index.js";
   "./subpackage/personal_data/index.js";
   "./subpackage/posts/index.js";
@@ -31,7 +33,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "E:/前端/项目/竞赛中心助手/competition-Center/src/App.vue"]]);
+const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "E:/frontend/project/Competition-center/competition-Center/src/App.vue"]]);
 function createApp() {
   const app = common_vendor.createSSRApp(App);
   app.use(stores_index.pinia);
