@@ -1,55 +1,5 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
-import MyButton from '@/components/MyButton.vue'
-// 用户信息
-const userInfo = ref({
-  isLogin: false,
-  nickname: '',
-  avatarUrl: '',
-})
-onShow(() => {
-  // 判断本地缓存
-  const localUserInfo = uni.getStorageSync('userInfo')
-  if (localUserInfo) {
-    userInfo.value = localUserInfo
-  } else {
-    userInfo.value = {
-      isLogin: false,
-      nickname: '',
-      avatarUrl: '',
-    }
-    loginAvatar = ''
-  }
-})
-
-let loginAvatar = '' //带'的头像url
-
-// 监听点击头像事件
-const onChooseavatar = (e) => {
-  loginAvatar = "'" + e.detail.avatarUrl + "'"
-  userInfo.value.avatarUrl = e.detail.avatarUrl
-}
-
-// 登录按钮
-const login = async () => {
-  // 头像与昵称必填
-  if (loginAvatar && userInfo.value.nickname) {
-    await uni.showLoading
-    userInfo.value.isLogin = true
-    uni.setStorageSync('userInfo', userInfo.value)
-  } else {
-    console.log(userInfo.value)
-    uni.showToast({
-      icon: 'error',
-      title: '头像和昵称',
-    })
-  }
-}
-// 输入框失焦事件
-const blur = (e: any) => {
-  userInfo.value.nickname = e.detail.value
-}
 // 跳转到修改个人资料页面
 const navigatetoPerson = () => {
   uni.navigateTo({
@@ -87,10 +37,43 @@ const configItems = [
     title: '关于',
   },
 ]
+
+// 用户信息
+const userInfo = ref({
+  nickname: '',
+  avatarUrl: '',
+})
+let loginAvatar = '' //带'的url
+let isLogin = ref(false)
+
+// 监听点击头像事件
+const onChooseavatar = (e) => {
+  loginAvatar = "'" + e.detail.avatarUrl + "'"
+  userInfo.value.avatarUrl = e.detail.avatarUrl
+}
+
+// 登录按钮
+const login = async () => {
+  if (loginAvatar && userInfo.value.nickname) {
+    await uni.showLoading
+    uni.setStorageSync('userInfo', userInfo.value)
+    isLogin.value = true
+  } else {
+    console.log(userInfo.value)
+    uni.showToast({
+      icon: 'error',
+      title: '头像和昵称',
+    })
+  }
+}
+// 输入框失焦事件
+const blur = (e: any) => {
+  userInfo.value.nickname = e.detail.value
+}
 </script>
 
 <template>
-  <view class="container" v-if="userInfo.isLogin">
+  <view class="container" v-if="isLogin">
     <view class="header">
       <view class="avatarBox">
         <view class="avatar">
@@ -200,7 +183,7 @@ const configItems = [
           @blur="blur"
         />
       </view>
-      <MyButton @tap="login" content="登录" backgroundcolor="#12a66a"></MyButton>
+      <button class="log" @click="login">登录</button>
       <view style="margin-top: 20rpx; font-size: 30rpx">登录后开启更多功能</view>
     </view>
   </view>
@@ -370,6 +353,20 @@ const configItems = [
         margin-bottom: 100rpx;
         border-bottom: 1rpx solid #ccc;
         color: #000;
+      }
+    }
+
+    .log {
+      background: linear-gradient(-45deg, #12a66a, green);
+      width: 60%;
+      border-radius: 50rpx;
+      height: 90rpx;
+      line-height: 90rpx;
+      color: #fff;
+      &:active {
+        color: #ccc;
+        transform: scale(0.99);
+        transition: all 0.4s ease;
       }
     }
   }

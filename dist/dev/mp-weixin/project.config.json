@@ -15,13 +15,12 @@
             "ignore": [],
             "disablePlugins": [],
             "outputPath": ""
-        },
-        "ignoreUploadUnusedFiles": false
+        }
     },
     "compileType": "miniprogram",
     "libVersion": "",
     "appid": "wxa554745366849234",
-    "projectname": "competition-center",
+    "projectname": "",
     "condition": {
         "search": {
             "current": -1,

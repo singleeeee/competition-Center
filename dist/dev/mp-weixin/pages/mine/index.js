@@ -9,51 +9,11 @@ if (!Array) {
 const _easycom_uni_tag = () => "../../node-modules/@dcloudio/uni-ui/lib/uni-tag/uni-tag.js";
 const _easycom_uni_icons = () => "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons.js";
 if (!Math) {
-  (_easycom_uni_tag + _easycom_uni_icons + MyButton)();
+  (_easycom_uni_tag + _easycom_uni_icons)();
 }
-const MyButton = () => "../../components/MyButton.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
-    const userInfo = common_vendor.ref({
-      isLogin: false,
-      nickname: "",
-      avatarUrl: ""
-    });
-    common_vendor.onShow(() => {
-      const localUserInfo = common_vendor.index.getStorageSync("userInfo");
-      if (localUserInfo) {
-        userInfo.value = localUserInfo;
-      } else {
-        userInfo.value = {
-          isLogin: false,
-          nickname: "",
-          avatarUrl: ""
-        };
-        loginAvatar = "";
-      }
-    });
-    let loginAvatar = "";
-    const onChooseavatar = (e) => {
-      loginAvatar = "'" + e.detail.avatarUrl + "'";
-      userInfo.value.avatarUrl = e.detail.avatarUrl;
-    };
-    const login = async () => {
-      if (loginAvatar && userInfo.value.nickname) {
-        await common_vendor.index.showLoading;
-        userInfo.value.isLogin = true;
-        common_vendor.index.setStorageSync("userInfo", userInfo.value);
-      } else {
-        console.log(userInfo.value);
-        common_vendor.index.showToast({
-          icon: "error",
-          title: "头像和昵称"
-        });
-      }
-    };
-    const blur = (e) => {
-      userInfo.value.nickname = e.detail.value;
-    };
     const navigatetoPerson = () => {
       common_vendor.index.navigateTo({
         url: "/subpackage/personal_data/index"
@@ -89,10 +49,36 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         title: "关于"
       }
     ];
+    const userInfo = common_vendor.ref({
+      nickname: "",
+      avatarUrl: ""
+    });
+    let loginAvatar = "";
+    let isLogin = common_vendor.ref(false);
+    const onChooseavatar = (e) => {
+      loginAvatar = "'" + e.detail.avatarUrl + "'";
+      userInfo.value.avatarUrl = e.detail.avatarUrl;
+    };
+    const login = async () => {
+      if (loginAvatar && userInfo.value.nickname) {
+        await common_vendor.index.showLoading;
+        common_vendor.index.setStorageSync("userInfo", userInfo.value);
+        isLogin.value = true;
+      } else {
+        console.log(userInfo.value);
+        common_vendor.index.showToast({
+          icon: "error",
+          title: "头像和昵称"
+        });
+      }
+    };
+    const blur = (e) => {
+      userInfo.value.nickname = e.detail.value;
+    };
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: userInfo.value.isLogin
-      }, userInfo.value.isLogin ? {
+        a: common_vendor.unref(isLogin)
+      }, common_vendor.unref(isLogin) ? {
         b: userInfo.value.avatarUrl,
         c: common_vendor.t(userInfo.value.nickname),
         d: common_vendor.p({
@@ -153,14 +139,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         x: common_vendor.o(blur),
         y: userInfo.value.nickname,
         z: common_vendor.o(($event) => userInfo.value.nickname = $event.detail.value),
-        A: common_vendor.o(login),
-        B: common_vendor.p({
-          content: "登录",
-          backgroundcolor: "#12a66a"
-        })
+        A: common_vendor.o(login)
       }));
     };
   }
 });
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-9023ef44"], ["__file", "E:/frontend/project/Competition-center/competition-Center/src/pages/mine/index.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-9023ef44"], ["__file", "E:/前端/项目/竞赛中心助手/competition-Center/src/pages/mine/index.vue"]]);
 wx.createPage(MiniProgramPage);
