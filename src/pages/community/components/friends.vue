@@ -13,7 +13,7 @@
             <view class="status" :style="{ color: item.status === '在线' ? 'green' : 'gray' }">{{
               item.status
             }}</view>
-            <button>聊天</button>
+            <button @tap="switchToChat">聊天</button>
           </view>
         </view>
       </view>
@@ -39,6 +39,9 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
+const switchToChat = () => {
+  uni.navigateTo({ url: '/pages/community/chatRoom/index' })
+}
 const myFriendsList = ref([
   {
     id: 1,

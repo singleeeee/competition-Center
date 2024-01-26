@@ -38,6 +38,12 @@
 			"style": {
 				"navigationBarTitleText": "personPage"
 			}
+		},
+		{
+			"path": "pages/community/chatRoom/index",
+			"style": {
+				"navigationBarTitleText": "聊天室"
+			}
 		}
 	],
 	"subPackages": [

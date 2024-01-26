@@ -4,7 +4,8 @@
     "pages/competition/index",
     "pages/community/index",
     "pages/mine/index",
-    "pages/mine/personPage/index"
+    "pages/mine/personPage/index",
+    "pages/community/chatRoom/index"
   ],
   "subPackages": [
     {

@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "聊天室",
+                    "pathName": "pages/community/chatRoom/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "个人主页",
                     "pathName": "pages/mine/personPage/index",
                     "query": "",

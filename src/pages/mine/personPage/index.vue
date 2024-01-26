@@ -204,4 +204,11 @@ const activeBar = ref(0)
   width: 30rpx;
   height: 30rpx;
 }
+.ellipsis {
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
 </style>

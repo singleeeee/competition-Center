@@ -10,6 +10,7 @@ if (!Math) {
   "./pages/community/index.js";
   "./pages/mine/index.js";
   "./pages/mine/personPage/index.js";
+  "./pages/community/chatRoom/index.js";
   "./subpackage/notification_detail/index.js";
   "./subpackage/personal_data/index.js";
   "./subpackage/posts/index.js";
