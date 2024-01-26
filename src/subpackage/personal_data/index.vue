@@ -118,7 +118,7 @@ const cityPopup = ref()
 const labelPopup = ref()
 
 // 监听点击头像事件
-const onChooseAvatar = (e) => {
+const onChooseAvatar = (e: any) => {
   userInfoStore.changeUserInfo('userAvatarUrl', e.detail.avatarUrl)
 }
 
@@ -127,7 +127,7 @@ const genderArray = ['男', '女']
 const genderValue = ref([0])
 const genderSelectd = ref('男')
 
-const genderChange = (e) => {
+const genderChange = (e: any) => {
   const val = e.detail.value
   genderSelectd.value = genderArray[val[0]]
   userInfoStore.changeUserInfo('userGender', genderSelectd.value === '男' ? 0 : 1)
