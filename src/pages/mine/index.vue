@@ -7,6 +7,7 @@ onShow(() => {
   const userInfo = uni.getStorageSync('UserInfo')
   if (userInfo) {
     isHeadShow.value = true
+    useUserInfoStore().updateUserInfo(userInfo)
   } else {
     isHeadShow.value = false
   }
@@ -147,7 +148,7 @@ const changeIsLog = (val: boolean) => {
       <view class="list">
         <view class="item" v-for="item in configItems" :key="item.id">
           <view class="left">
-            <uni-icons :type="item.icon" color="" size="18" />
+            <uni-icons style="vertical-align: middle" :type="item.icon" color="" size="24" />
             {{ item.title }}</view
           >
           <view class="right">
@@ -171,6 +172,7 @@ const changeIsLog = (val: boolean) => {
     background-color: #12a66a;
     padding: 0 20rpx;
     .avatarBox {
+      padding-left: 20rpx;
       display: flex;
       align-items: center;
       height: 200rpx;

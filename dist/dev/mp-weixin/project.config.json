@@ -20,7 +20,7 @@
         }
     },
     "compileType": "miniprogram",
-    "libVersion": "",
+    "libVersion": "1.0",
     "appid": "wxa554745366849234",
     "projectname": "",
     "condition": {

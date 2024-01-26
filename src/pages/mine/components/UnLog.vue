@@ -5,7 +5,7 @@
     </view>
     <view class="bodyBox">
       <view class="nickname">登录/注册</view>
-      <view class="info"> 见证更精彩的世界 </view>
+      <view class="info">见证更精彩的世界 </view>
     </view>
     <view class="detail">
       <uni-icons type="right" color="#ccc" size="20" />
@@ -18,6 +18,7 @@ import { http } from '@/utils/http'
 import type { UserInfo } from '@/types/global'
 const emit = defineEmits(['changeIsLog'])
 const Login = async () => {
+  uni.showLoading()
   try {
     // 获取code
     const { code } = await uni.login({
@@ -42,15 +43,18 @@ const Login = async () => {
     userInfoStore.changeUserInfo('ID', ID)
     userInfoStore.changeUserInfo('userWxopenid', userWxopenid)
     emit('changeIsLog', true)
+    uni.hideLoading()
   } catch (error) {
     uni.showToast({
       title: '登录或注册失败',
     })
+    uni.hideLoading()
   }
 }
 </script>
 <style lang="scss" scoped>
 .avatarBox {
+  padding-left: 20rpx;
   display: flex;
   align-items: center;
   height: 200rpx;

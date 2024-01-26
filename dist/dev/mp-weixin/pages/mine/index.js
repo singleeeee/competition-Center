@@ -22,6 +22,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       const userInfo2 = common_vendor.index.getStorageSync("UserInfo");
       if (userInfo2) {
         isHeadShow.value = true;
+        stores_modules_userInfoStore.useUserInfoStore().updateUserInfo(userInfo2);
       } else {
         isHeadShow.value = false;
       }
@@ -122,7 +123,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             b: common_vendor.p({
               type: item.icon,
               color: "",
-              size: "18"
+              size: "24"
             }),
             c: common_vendor.t(item.title),
             d: "9023ef44-6-" + i0,

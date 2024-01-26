@@ -21,15 +21,15 @@ export const useUserInfoStore = defineStore(
       userAvatarUrl:
         'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
       // 简介
-      userIntroduction: '',
+      userIntroduction: '没有简介',
       //所在地区
-      userCity: '',
+      userCity: '广东、东莞',
       // 用户标签
-      userLabel: '',
+      userLabel: '大二、计算机',
       //年级
       userGrade: 0, //1900-2100
       //专业
-      userProfession: '',
+      userProfession: '计算机科学与技术',
       // 获赞个数
       loveNum: 0,
     })
@@ -37,6 +37,7 @@ export const useUserInfoStore = defineStore(
     // 修改某项属性
     const changeUserInfo = <K extends keyof UserInfo>(property: K, value: UserInfo[K]) => {
       userInfo[property] = value
+      console.log('修改了', property, value)
 
       if (userInfo.token) {
         http({
@@ -45,6 +46,13 @@ export const useUserInfoStore = defineStore(
           data: {
             ID: userInfo.ID,
             [property]: value,
+          },
+          fail: () => {
+            uni.showToast({
+              title: '修改失败',
+              icon: 'error',
+              mask: true,
+            })
           },
         })
       }
@@ -74,9 +82,14 @@ export const useUserInfoStore = defineStore(
         //专业
         userProfession: '',
         // 获赞个数
-        loveNUm: 0,
+        loveNum: 0,
       }),
         uni.removeStorageSync('UserInfo')
+    }
+
+    //从本地仓库回显
+    const updateUserInfo = (value: UserInfo) => {
+      userInfo = JSON.parse(JSON.stringify(value))
     }
 
     // 记得 return
@@ -84,6 +97,7 @@ export const useUserInfoStore = defineStore(
       userInfo,
       changeUserInfo,
       clearUserInfo,
+      updateUserInfo,
     }
   },
   // TODO: 持久化

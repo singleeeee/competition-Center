@@ -35,6 +35,7 @@
   padding: 0 20rpx;
 }
 .container .header .avatarBox.data-v-9023ef44 {
+  padding-left: 20rpx;
   display: flex;
   align-items: center;
   height: 200rpx;

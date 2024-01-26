@@ -8,6 +8,34 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "个人资料修改",
+                    "pathName": "subpackage/personal_data/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "比赛",
+                    "pathName": "pages/competition/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "社区",
+                    "pathName": "pages/community/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "我的",
+                    "pathName": "pages/mine/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "帖子",
                     "pathName": "subpackage/posts/index",
                     "query": "",
@@ -17,27 +45,6 @@
                 {
                     "name": "通告详情",
                     "pathName": "subpackage/notification_detail/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "pages/competition/index",
-                    "pathName": "pages/competition/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "pages/community/index",
-                    "pathName": "pages/community/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "pages/mine/index",
-                    "pathName": "pages/mine/index",
                     "query": "",
                     "launchMode": "default",
                     "scene": null
