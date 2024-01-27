@@ -44,6 +44,12 @@
 			"style": {
 				"navigationBarTitleText": "聊天室"
 			}
+		},
+		{
+			"path": "pages/competition/searchPage/index",
+			"style": {
+				"navigationBarTitleText": "搜索"
+			}
 		}
 	],
 	"subPackages": [

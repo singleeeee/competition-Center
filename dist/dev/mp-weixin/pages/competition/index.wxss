@@ -23,18 +23,76 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-.uni-wrap.data-v-3e564a22 {
-  flex-direction: column;
-  height: 100vh;
-  flex: 1;
+.container .headBox.data-v-3e564a22 {
+  height: 240rpx;
+  width: 100%;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  background-color: #fff;
 }
-.mb-10.data-v-3e564a22 {
-  margin-bottom: 10px;
+.container .headBox .searchBox.data-v-3e564a22 {
+  height: 80rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.decoration.data-v-3e564a22 {
-  width: 6px;
-  height: 6px;
-  margin-right: 4px;
-  border-radius: 50%;
-  background-color: #18bc37;
+.container .headBox .searchBox .search.data-v-3e564a22 {
+  text-align: center;
+  width: 80%;
+  background-color: #ccc;
+  height: 50rpx;
+  line-height: 50rpx;
+  border-radius: 30rpx;
+  font-size: 30rpx;
+}
+.container .headBox .scrollBox.data-v-3e564a22 {
+  margin: 5rpx 0;
+  height: 60rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #eee;
+  padding-bottom: 10rpx;
+  background-color: pink;
+}
+.container .headBox .scrollBox .scroll-view.data-v-3e564a22 {
+  height: 50rpx;
+  white-space: nowrap;
+}
+.container .headBox .scrollBox .scroll-view .scroll-view-item.data-v-3e564a22 {
+  display: inline-block;
+  height: 62rpx;
+  background-color: plum;
+  width: 140rpx;
+  margin: 0 40rpx;
+  text-align: center;
+  line-height: 60rpx;
+  font-size: 26rpx;
+  border-bottom: 4rpx solid skyblue;
+}
+.container .headBox .scrollBox .scroll-view .active.data-v-3e564a22 {
+  border-bottom: 4rpx solid skyblue;
+}
+.container .headBox .tagList.data-v-3e564a22 {
+  display: flex;
+  justify-content: space-between;
+  height: 80rpx;
+  background-color: #fff;
+  align-items: center;
+}
+.container .headBox .tagList .left.data-v-3e564a22 {
+  display: flex;
+}
+.container .headBox .tagList .tag.data-v-3e564a22 {
+  background-color: #eee;
+  color: #aaa;
+  font-size: 26rpx;
+  margin: 0 20rpx;
+  padding: 10rpx 20rpx;
+}
+.container .headBox .tagList .active.data-v-3e564a22 {
+  background: linear-gradient(to top, rgb(44, 141, 192), rgb(90, 196, 238));
+  color: #fff;
+}
+.container .itemList.data-v-3e564a22 {
+  margin-top: 320rpx;
 }

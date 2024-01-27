@@ -18,8 +18,7 @@ export const useUserInfoStore = defineStore(
       // 性别
       userGender: 0,
       // 头像
-      userAvatarUrl:
-        'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
+      userAvatarUrl: 'http://tmp/wpinKs1JejQv9558093d8ac2138389013e440bfe808e.jpeg',
       // 简介
       userIntroduction: '没有简介',
       //所在地区
