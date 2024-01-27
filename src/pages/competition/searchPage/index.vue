@@ -1,6 +1,6 @@
 <template>
   <view class="searchPage">
-    <uni-search-bar focus cancelButton="none" />
+    <uni-search-bar style="width: 100%" focus cancelButton="none" />
   </view>
   <view class="searchRecord">
     <view class="title">历史记录</view>
@@ -37,6 +37,8 @@ const recordList = ref([
   top: 0;
   z-index: 9999;
   height: 150rpx;
+  display: flex;
+  align-items: center;
   background-color: #12a66a;
 }
 .searchRecord {

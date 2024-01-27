@@ -21,6 +21,12 @@ const navigatetoPerson = () => {
     url: '/subpackage/personal_data/index',
   })
 }
+// 跳转到修改个人资料页面
+const navigatetoPersonPage = () => {
+  uni.navigateTo({
+    url: '/pages/mine/personPage/index',
+  })
+}
 // 主页item配置项
 const configItems = [
   {
@@ -73,7 +79,7 @@ const changeIsLog = (val: boolean) => {
         <view class="avatar">
           <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
         </view>
-        <view class="bodyBox">
+        <view class="bodyBox" @tap="navigatetoPersonPage">
           <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
             <view class="tag-view">

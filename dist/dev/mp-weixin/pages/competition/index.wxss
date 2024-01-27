@@ -30,6 +30,7 @@
   position: fixed;
   top: 0;
   background-color: #fff;
+  box-shadow: 0 0rpx 10rpx 1rpx #eee;
 }
 .container .headBox .searchBox.data-v-3e564a22 {
   height: 80rpx;
@@ -40,36 +41,34 @@
 .container .headBox .searchBox .search.data-v-3e564a22 {
   text-align: center;
   width: 80%;
-  background-color: #ccc;
-  height: 50rpx;
-  line-height: 50rpx;
+  background-color: #ddd;
+  height: 60rpx;
+  line-height: 60rpx;
   border-radius: 30rpx;
   font-size: 30rpx;
+  color: #888;
 }
 .container .headBox .scrollBox.data-v-3e564a22 {
-  margin: 5rpx 0;
   height: 60rpx;
-  background-color: #fff;
-  border-bottom: 1rpx solid #eee;
   padding-bottom: 10rpx;
-  background-color: pink;
 }
 .container .headBox .scrollBox .scroll-view.data-v-3e564a22 {
-  height: 50rpx;
+  height: 60rpx;
   white-space: nowrap;
 }
-.container .headBox .scrollBox .scroll-view .scroll-view-item.data-v-3e564a22 {
+.container .headBox .scrollBox .scroll-view .scrollViewItem.data-v-3e564a22 {
   display: inline-block;
-  height: 62rpx;
-  background-color: plum;
+  height: 56rpx;
   width: 140rpx;
-  margin: 0 40rpx;
+  margin: 0 20rpx;
   text-align: center;
   line-height: 60rpx;
   font-size: 26rpx;
-  border-bottom: 4rpx solid skyblue;
+  color: #ccc;
 }
 .container .headBox .scrollBox .scroll-view .active.data-v-3e564a22 {
+  color: #000;
+  font-weight: 700;
   border-bottom: 4rpx solid skyblue;
 }
 .container .headBox .tagList.data-v-3e564a22 {
@@ -94,5 +93,14 @@
   color: #fff;
 }
 .container .itemList.data-v-3e564a22 {
-  margin-top: 320rpx;
+  margin-top: 250rpx;
+}
+.picker-view.data-v-3e564a22 {
+  width: 750rpx;
+  height: 600rpx;
+  margin-top: 20rpx;
+}
+.picker-view .item.data-v-3e564a22 {
+  line-height: 60rpx;
+  text-align: center;
 }

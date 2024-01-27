@@ -34,6 +34,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: "/subpackage/personal_data/index"
       });
     };
+    const navigatetoPersonPage = () => {
+      common_vendor.index.navigateTo({
+        url: "/pages/mine/personPage/index"
+      });
+    };
     const configItems = [
       {
         id: 1,
@@ -99,25 +104,26 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           type: "primary",
           size: "small"
         }),
-        g: common_vendor.p({
+        g: common_vendor.o(navigatetoPersonPage),
+        h: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "20"
         }),
-        h: common_vendor.o(navigatetoPerson)
+        i: common_vendor.o(navigatetoPerson)
       } : {
-        i: common_vendor.o(changeIsLog)
+        j: common_vendor.o(changeIsLog)
       }, {
-        j: common_vendor.t(common_vendor.unref(userInfo).loveNum || 0),
-        k: common_assets._imports_0,
-        l: common_assets._imports_1,
-        m: common_assets._imports_2,
-        n: common_assets._imports_3,
-        o: common_assets._imports_4,
-        p: common_assets._imports_5,
-        q: common_assets._imports_6,
-        r: common_assets._imports_7,
-        s: common_vendor.f(configItems, (item, k0, i0) => {
+        k: common_vendor.t(common_vendor.unref(userInfo).loveNum || 0),
+        l: common_assets._imports_0,
+        m: common_assets._imports_1,
+        n: common_assets._imports_2,
+        o: common_assets._imports_3,
+        p: common_assets._imports_4,
+        q: common_assets._imports_5,
+        r: common_assets._imports_6,
+        s: common_assets._imports_7,
+        t: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-5-" + i0,
             b: common_vendor.p({
@@ -130,7 +136,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             e: item.id
           };
         }),
-        t: common_vendor.p({
+        v: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"
