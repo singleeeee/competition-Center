@@ -35,6 +35,7 @@
   padding: 0 20rpx;
 }
 .container .header .avatarBox.data-v-9023ef44 {
+  padding-left: 20rpx;
   display: flex;
   align-items: center;
   height: 200rpx;
@@ -146,61 +147,4 @@
 }
 .container .body .list .item.data-v-9023ef44:active {
   background-color: #eee;
-}
-.unLog.data-v-9023ef44 {
-  height: 100vh;
-  background-color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.unLog .loginBox.data-v-9023ef44 {
-  height: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.unLog .loginBox .avatar.data-v-9023ef44 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 220rpx;
-  height: 220rpx;
-  background-color: #ccc !important;
-  border-radius: 50%;
-  margin-bottom: 20rpx;
-  background-size: contain !important;
-}
-.unLog .loginBox .nicknameInput.data-v-9023ef44 {
-  display: flex;
-  margin: 20rpx 10rpx;
-  align-items: center;
-  font-size: 34rpx;
-  color: #aaa;
-}
-.unLog .loginBox .nicknameInput .inputNickname.data-v-9023ef44 {
-  box-sizing: border-box;
-  font-size: 28rpx;
-  height: 60rpx;
-  line-height: 60rpx;
-  text-align: center;
-  width: 50vw;
-  margin-bottom: 100rpx;
-  border-bottom: 1rpx solid #ccc;
-  color: #000;
-}
-.unLog .loginBox .log.data-v-9023ef44 {
-  background: linear-gradient(-45deg, #12a66a, green);
-  width: 60%;
-  border-radius: 50rpx;
-  height: 90rpx;
-  line-height: 90rpx;
-  color: #fff;
-}
-.unLog .loginBox .log.data-v-9023ef44:active {
-  color: #ccc;
-  transform: scale(0.99);
-  transition: all 0.4s ease;
 }

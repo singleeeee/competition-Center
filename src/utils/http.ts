@@ -1,6 +1,6 @@
-import { useMemberStore } from '@/stores'
+import { useUserInfoStore } from '@/stores'
 // 接口基地址
-const baseURL = 'https://pcapi-xiaotuxian-front-devtest.itheima.net/'
+const baseURL = 'http://47.113.177.192:8082'
 
 // 添加拦截器
 const httpInterceptor = {
@@ -14,9 +14,10 @@ const httpInterceptor = {
     options.timeout = 10000
     // 3. 添加客户端类型
     // 4. 添加token请求头标识
-    const memberStore = useMemberStore()
-    if (memberStore.profile?.token) {
-      options.header.Authorization = memberStore.profile.token
+    const userInfoStore = useUserInfoStore()
+    options.header = {
+      ...options.header,
+      ['Jwt-code']: userInfoStore.userInfo.token || '',
     }
   },
 }
@@ -24,13 +25,13 @@ const httpInterceptor = {
 // 拦截 request 请求
 uni.addInterceptor('request', httpInterceptor)
 // 拦截 uploadFile 文件上传
-uni.addInterceptor('uploadFile', httpInterceptor)
+// uni.addInterceptor('uploadFile', httpInterceptor)
 
 // 添加类型，支持泛型
-interface Data<T> {
+export interface Data<T> {
   code: string
+  data: T
   msg: string
-  result: T
 }
 
 // 添加请求拦截器
@@ -46,9 +47,9 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           resolve(res.data as Data<T>)
         } else if (res.statusCode === 401) {
           // 401错误  -> 清理用户信息，跳转到登录页
-          const memberStore = useMemberStore()
-          memberStore.clearProfile()
-          uni.navigateTo({ url: '/pages/community/community' })
+          const userInfoStore = useUserInfoStore()
+          userInfoStore.clearUserInfo()
+          uni.switchTab({ url: '/pages/mine/index' })
           reject(res)
         } else {
           // 其他错误 -> 根据后端错误信息轻提示

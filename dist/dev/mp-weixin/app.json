@@ -3,7 +3,10 @@
     "pages/find/index",
     "pages/competition/index",
     "pages/community/index",
-    "pages/mine/index"
+    "pages/mine/index",
+    "pages/mine/personPage/index",
+    "pages/community/chatRoom/index",
+    "pages/competition/searchPage/index"
   ],
   "subPackages": [
     {

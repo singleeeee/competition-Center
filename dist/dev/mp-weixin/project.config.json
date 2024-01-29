@@ -11,6 +11,8 @@
         "minified": false,
         "newFeature": true,
         "bigPackageSizeSupport": true,
+        "ignoreDevUnusedFiles": false,
+        "ignoreUploadUnusedFiles": false,
         "babelSetting": {
             "ignore": [],
             "disablePlugins": [],
@@ -19,7 +21,7 @@
         "ignoreUploadUnusedFiles": false
     },
     "compileType": "miniprogram",
-    "libVersion": "",
+    "libVersion": "1.0",
     "appid": "wxa554745366849234",
     "projectname": "",
     "condition": {

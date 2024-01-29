@@ -2,12 +2,16 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const stores_index = require("./stores/index.js");
-require("./stores/modules/member.js");
+require("./stores/modules/userInfoStore.js");
+require("./utils/http.js");
 if (!Math) {
   "./pages/find/index.js";
   "./pages/competition/index.js";
   "./pages/community/index.js";
   "./pages/mine/index.js";
+  "./pages/mine/personPage/index.js";
+  "./pages/community/chatRoom/index.js";
+  "./pages/competition/searchPage/index.js";
   "./subpackage/notification_detail/index.js";
   "./subpackage/personal_data/index.js";
   "./subpackage/posts/index.js";

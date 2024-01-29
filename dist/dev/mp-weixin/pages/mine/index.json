@@ -3,6 +3,7 @@
   "navigationBarBackgroundColor": "#12a66a",
   "usingComponents": {
     "uni-tag": "../../node-modules/@dcloudio/uni-ui/lib/uni-tag/uni-tag",
-    "uni-icons": "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons"
+    "uni-icons": "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons",
+    "un-log": "./components/UnLog"
   }
 }
