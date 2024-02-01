@@ -17,7 +17,7 @@ const httpInterceptor = {
     const userInfoStore = useUserInfoStore()
     options.header = {
       ...options.header,
-      ['Jwt-code']: userInfoStore.userInfo.token || '',
+      ['Authorization']: userInfoStore.userInfo.token || '',
     }
   },
 }
