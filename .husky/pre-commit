@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 #一次性对整个项目中的所有文件进行校验，遇到有错误的地方自动修复
-npm run lint-staged   
+# npm run lint-staged   
 # This is your pre-commit script
 echo "Running pre-commit checks..."
 

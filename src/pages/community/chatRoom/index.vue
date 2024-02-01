@@ -1,23 +1,31 @@
 <template>
-  <view class="chatRoom">
-    <view v-for="(items, index) in timeChatList" :key="index" class="each_time">
-      <view class="date">{{ items.time }}</view>
-      <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
-        <view class="chat-Box">
-          <view v-if="!item.myWord" class="friendBox">
-            <view class="avatar">
-              <image class="avatar" :src="item.avatarUrl" />
+  <view class="container">
+    <view class="chatRoom">
+      <view v-for="(items, index) in timeChatList" :key="index" class="each_time">
+        <view class="date">{{ items.time }}</view>
+        <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
+          <view class="chat-Box">
+            <view v-if="!item.myWord" class="friendBox">
+              <view class="avatar">
+                <image class="avatar" :src="item.avatarUrl" />
+              </view>
+              <view class="content">{{ item.content }}</view>
             </view>
-            <view class="content">{{ item.content }}</view>
-          </view>
-          <view wx:else class="myBox">
-            <view class="avatar">
-              <image class="avatar" :src="item.avatarUrl" alt="" />
+            <view wx:else class="myBox">
+              <view class="avatar">
+                <image class="avatar" :src="item.avatarUrl" alt="" />
+              </view>
+              <view class="content">{{ item.content }}</view>
             </view>
-            <view class="content">{{ item.content }}</view>
           </view>
         </view>
       </view>
+    </view>
+    <view class="inputArea">
+      <view class="input">
+        <uni-icons style="padding-right: 10rpx" type="compose" color="#ccc" size="24" />
+        文明发言</view
+      >
     </view>
   </view>
 </template>
@@ -62,6 +70,36 @@ const timeChatList = [
     ],
   },
   {
+    id: 4,
+    time: '02:20',
+    chatList: [
+      {
+        myWord: false,
+        content: '我想在你那里买一块地。',
+        avatarUrl:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+      },
+      {
+        myWord: true,
+        content: '买什么地',
+        avatarUrl:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
+      },
+      {
+        myWord: false,
+        content: '买你的死心塌地',
+        avatarUrl:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+      },
+      {
+        myWord: true,
+        content: '....',
+        avatarUrl:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
+      },
+    ],
+  },
+  {
     id: 3,
     time: '07:20',
     chatList: [
@@ -95,11 +133,46 @@ const timeChatList = [
 </script>
 
 <style lang="scss" scoped>
-.chatRoom {
+.container {
   height: 100vh;
+  overflow-y: scroll;
+}
+.container::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+  background-color: transparent;
+  opacity: 0;
+}
+.inputArea {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  z-index: 99;
+  height: 80rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  .input {
+    box-sizing: border-box;
+    margin: 0 20rpx;
+    padding: 0 20rpx;
+    width: 100%;
+    background-color: #eee;
+    border-radius: 10rpx;
+    display: flex;
+    align-items: center;
+    color: #ccc;
+    font-size: 28rpx;
+  }
+}
+
+.chatRoom {
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
+  padding-bottom: 120rpx;
 }
 .chatRoom .each_time .date {
   height: 50rpx;
