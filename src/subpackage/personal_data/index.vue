@@ -119,7 +119,15 @@ const labelPopup = ref()
 
 // 监听点击头像事件
 const onChooseAvatar = (e: any) => {
-  userInfoStore.changeUserInfo('userAvatarUrl', e.detail.avatarUrl)
+  uni.uploadFile({
+    url: 'http://47.113.177.192:8082/app/upload/file',
+    filePath: e.detail.avatarUrl,
+    name: 'file',
+    success: (success) => {
+      const { data } = JSON.parse(success.data)
+      userInfoStore.changeUserInfo('userAvatarUrl', data.url)
+    },
+  })
 }
 
 // 性别修改

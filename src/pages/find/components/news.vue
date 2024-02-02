@@ -97,11 +97,13 @@ const navigatetoDetail = () => {
   align-items: center;
   height: 200rpx;
   padding: 0 20rpx 10rpx 20rpx;
-  border: 0.5rpx solid #eee;
+  border-bottom: 0.5rpx solid #efefef;
   margin: 20rpx 10rpx;
   background-color: #fff;
   border-radius: 10rpx;
-  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.08);
+  overflow-y: scroll;
+  // box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.08);
+
   .left {
     flex: 1;
     height: 180rpx;

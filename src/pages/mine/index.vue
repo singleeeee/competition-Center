@@ -3,18 +3,20 @@ import { ref } from 'vue'
 import UnLog from './components/UnLog.vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
+import { storeToRefs } from 'pinia'
 onShow(() => {
-  const userInfo = uni.getStorageSync('UserInfo')
+  let userInfo = uni.getStorageSync('UserInfo')
   if (userInfo) {
-    isHeadShow.value = true
+    userInfo = JSON.parse(userInfo)
     useUserInfoStore().updateUserInfo(userInfo)
+    isHeadShow.value = true
   } else {
     isHeadShow.value = false
   }
 })
-//
 const userInfoStore = useUserInfoStore()
-const { userInfo } = userInfoStore
+// 大坑！！！！！解构赋值还是会丢失响应式的，但是log出来还是proxy？
+const { userInfo } = storeToRefs(userInfoStore)
 // 跳转到修改个人资料页面
 const navigatetoPerson = () => {
   uni.navigateTo({
@@ -67,6 +69,7 @@ const configItems = [
 ]
 
 let isHeadShow = ref(false)
+// 改变登录状态
 const changeIsLog = (val: boolean) => {
   isHeadShow.value = val
 }
@@ -99,7 +102,7 @@ const changeIsLog = (val: boolean) => {
       <view class="collectBox">
         <view class="liked">
           <span style="font-size: 40rpx; padding-right: 10rpx; color: red; font-weight: 700">{{
-            userInfo.loveNum || 0
+            userInfo.loveNumber || 0
           }}</span>
           <span
             style="

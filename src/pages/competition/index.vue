@@ -232,6 +232,11 @@ const comChange = (e: any) => {
       .scroll-view {
         height: 60rpx;
         white-space: nowrap;
+        &::-webkit-scrollbar {
+          width: 0;
+          height: 0;
+          color: transparent;
+        }
         .scrollViewItem {
           display: inline-block;
           height: 56rpx;
@@ -245,8 +250,14 @@ const comChange = (e: any) => {
         .active {
           color: #000;
           font-weight: 700;
-          border-bottom: 4rpx solid skyblue;
+          border-bottom: 4rpx solid #12a661;
         }
+      }
+      &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+        color: transparent;
       }
     }
     .tagList {
@@ -266,7 +277,8 @@ const comChange = (e: any) => {
         padding: 10rpx 20rpx;
       }
       .active {
-        background: linear-gradient(to top, rgb(44, 141, 192), rgb(90, 196, 238));
+        // background: linear-gradient(to top, rgb(44, 141, 192), rgb(90, 196, 238));
+        background: linear-gradient(to top, rgb(15, 101, 27), rgb(65, 224, 86));
         color: #fff;
       }
     }

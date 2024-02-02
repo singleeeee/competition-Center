@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
 import type { UserInfo } from '@/types/global'
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import { http } from '@/utils/http'
 
 // 定义 Store
 export const useUserInfoStore = defineStore(
   'UserInfo',
   () => {
-    let userInfo = reactive<UserInfo>({
+    // 默认用户信息
+    const userInfo = ref<UserInfo>({
       ID: 0,
       // token
       token: '',
@@ -18,32 +19,30 @@ export const useUserInfoStore = defineStore(
       // 性别
       userGender: 0,
       // 头像
-      userAvatarUrl: 'http://tmp/wpinKs1JejQv9558093d8ac2138389013e440bfe808e.jpeg',
+      userAvatarUrl: 'https://s11.ax1x.com/2024/02/02/pFQmajg.png',
       // 简介
-      userIntroduction: '没有简介',
+      userIntroduction: '这个人很懒~',
       //所在地区
-      userCity: '广东、东莞',
+      userCity: '广东',
       // 用户标签
-      userLabel: '大二、计算机',
+      userLabel: '神秘人',
       //年级
       userGrade: 0, //1900-2100
       //专业
-      userProfession: '计算机科学与技术',
+      userProfession: '考古学',
       // 获赞个数
-      loveNum: 0,
+      loveNumber: 0,
     })
 
     // 修改某项属性
     const changeUserInfo = <K extends keyof UserInfo>(property: K, value: UserInfo[K]) => {
-      userInfo[property] = value
+      userInfo.value[property] = value
       console.log('修改了', property, value)
-
-      if (userInfo.token) {
+      if (userInfo.value.token) {
         http({
           url: `/app/user/updateUserInfo`,
           method: 'POST',
           data: {
-            ID: userInfo.ID,
             [property]: value,
           },
           fail: () => {
@@ -54,43 +53,50 @@ export const useUserInfoStore = defineStore(
             })
           },
         })
+      } else {
+        uni.showToast({
+          title: '请重新登录',
+          icon: 'error',
+          mask: true,
+        })
+        uni.switchTab({ url: '/pages/mine/index' })
       }
     }
     // 清除用户信息
     const clearUserInfo = () => {
-      ;(userInfo = {
-        ID: 0,
-        // token
-        token: '',
-        //wxopenid
-        userWxopenid: '',
-        // 昵称
-        userNickname: '',
-        // 性别
-        userGender: 0,
-        // 头像
-        userAvatarUrl: '',
-        // 简介
-        userIntroduction: '',
-        //所在地区
-        userCity: '',
-        // 用户标签
-        userLabel: '',
-        //年级
-        userGrade: 0, //1900-2100
-        //专业
-        userProfession: '',
-        // 获赞个数
-        loveNum: 0,
-      }),
-        uni.removeStorageSync('UserInfo')
+      // // ID
+      // userInfo.value.ID = 0
+      // // token
+      // ;(userInfo.value.token = ''),
+      //   //wxopenid
+      //   (userInfo.value.userWxopenid = ''),
+      //   // 昵称
+      //   (userInfo.value.userNickname = '微信用户'),
+      //   // 性别
+      //   (userInfo.value.userGender = 0),
+      //   // 头像
+      //   (userInfo.value.userAvatarUrl = 'https://s11.ax1x.com/2024/02/02/pFQmajg.png'),
+      //   // 简介
+      //   (userInfo.value.userIntroduction = '无'),
+      //   //所在地区
+      //   (userInfo.value.userCity = '广东'),
+      //   // 用户标签
+      //   (userInfo.value.userLabel = ''),
+      //   //年级
+      //   (userInfo.value.userGrade = 0),
+      //   //专业
+      //   (userInfo.value.userProfession = ''),
+      //   // 获赞个数
+      //   (userInfo.value.loveNumber = 0),
+      uni.removeStorageSync('UserInfo')
+      // console.log('清除本地仓库后的pinia', userInfo)
+      // console.log('本地仓库', uni.getStorageSync('UserInfo'))
     }
 
-    //从本地仓库回显
+    // 整体更新仓库
     const updateUserInfo = (value: UserInfo) => {
-      userInfo = JSON.parse(JSON.stringify(value))
+      userInfo.value = JSON.parse(JSON.stringify(value))
     }
-
     // 记得 return
     return {
       userInfo,
@@ -101,9 +107,6 @@ export const useUserInfoStore = defineStore(
   },
   // TODO: 持久化
   {
-    //网页端配置
-    // persist: true,
-    // 小程序端
     persist: {
       storage: {
         getItem(key) {

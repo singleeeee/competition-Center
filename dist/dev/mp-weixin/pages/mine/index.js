@@ -19,16 +19,17 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
     common_vendor.onShow(() => {
-      const userInfo2 = common_vendor.index.getStorageSync("UserInfo");
+      let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
       if (userInfo2) {
-        isHeadShow.value = true;
+        userInfo2 = JSON.parse(userInfo2);
         stores_modules_userInfoStore.useUserInfoStore().updateUserInfo(userInfo2);
+        isHeadShow.value = true;
       } else {
         isHeadShow.value = false;
       }
     });
     const userInfoStore = stores_modules_userInfoStore.useUserInfoStore();
-    const { userInfo } = userInfoStore;
+    const { userInfo } = common_vendor.storeToRefs(userInfoStore);
     const navigatetoPerson = () => {
       common_vendor.index.navigateTo({
         url: "/subpackage/personal_data/index"
@@ -114,7 +115,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       } : {
         j: common_vendor.o(changeIsLog)
       }, {
-        k: common_vendor.t(common_vendor.unref(userInfo).loveNum || 0),
+        k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
         l: common_assets._imports_0,
         m: common_assets._imports_1,
         n: common_assets._imports_2,

@@ -9,7 +9,7 @@
       text="为了备战2024年的蓝桥杯与团体程序设计天梯赛，我们特别组织了这次算法集训队！ 这是一个绝佳的机会，让我们共同努力，为即将到来的挑战做好准备，提升我们的编程和算法技能！"
     />
     <!-- 轮播图 -->
-    <swiper class="swiper" circular autoplay  :style="{ 'margin-top': marginTop + 'rpx' }">
+    <swiper class="swiper" circular autoplay :style="{ 'margin-top': marginTop + 'rpx' }">
       <swiper-item>
         <image
           class="image"
@@ -32,7 +32,7 @@
         />
       </swiper-item>
     </swiper>
-    <view class="section"> <view class="line"></view> <view class="title">通知</view> </view>
+    <view class="section"> <view class="line"></view> <view class="title">近期通告</view> </view>
 
     <!-- 通告栏 -->
     <view class="report">
@@ -53,7 +53,7 @@ const closeNoticebar = () => {
 </script>
 <style scoped lang="scss">
 .container {
-  background-color: #efefef;
+  background-color: #fff;
 }
 .swiper {
   height: 300rpx;
@@ -75,8 +75,9 @@ const closeNoticebar = () => {
   align-items: center;
   padding: 20rpx;
   background-color: #fff;
+  font-weight: 700;
   .line {
-    background-color: #f9d39f;
+    background-color: #12a661;
     width: 10rpx;
     height: 60rpx;
     margin-right: 20rpx;

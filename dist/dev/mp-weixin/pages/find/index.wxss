@@ -24,7 +24,7 @@
 /* 透明度 */
 /* 文章场景相关 */
 .container.data-v-1b8b30bc {
-  background-color: #efefef;
+  background-color: #fff;
 }
 .swiper.data-v-1b8b30bc {
   height: 300rpx;
@@ -46,9 +46,10 @@
   align-items: center;
   padding: 20rpx;
   background-color: #fff;
+  font-weight: 700;
 }
 .section .line.data-v-1b8b30bc {
-  background-color: #f9d39f;
+  background-color: #12a661;
   width: 10rpx;
   height: 60rpx;
   margin-right: 20rpx;

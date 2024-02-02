@@ -7694,6 +7694,18 @@ This will fail in production.`);
   useStore.$id = id;
   return useStore;
 }
+function storeToRefs(store) {
+  store = toRaw(store);
+  const refs = {};
+  for (const key in store) {
+    const value = store[key];
+    if (isRef(value) || isReactive(value)) {
+      refs[key] = // ---
+      toRef(store, key);
+    }
+  }
+  return refs;
+}
 function isObject(v) {
   return typeof v === "object" && v !== null;
 }
@@ -9151,11 +9163,11 @@ exports.onHide = onHide;
 exports.onLaunch = onLaunch;
 exports.onShow = onShow;
 exports.p = p;
-exports.reactive = reactive;
 exports.ref = ref;
 exports.resolveComponent = resolveComponent;
 exports.s = s;
 exports.sr = sr;
 exports.src_default = src_default;
+exports.storeToRefs = storeToRefs;
 exports.t = t;
 exports.unref = unref;
