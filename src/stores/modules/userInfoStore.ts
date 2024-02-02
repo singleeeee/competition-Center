@@ -95,7 +95,8 @@ export const useUserInfoStore = defineStore(
 
     // 整体更新仓库
     const updateUserInfo = (value: UserInfo) => {
-      userInfo.value = JSON.parse(JSON.stringify(value))
+      const res = JSON.parse(JSON.stringify(value))
+      userInfo.value = res
     }
     // 记得 return
     return {

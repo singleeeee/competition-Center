@@ -1,14 +1,24 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import UnLog from './components/UnLog.vue'
-import { onShow } from '@dcloudio/uni-app'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+onLoad(() => {
+  let userInfo = uni.getStorageSync('UserInfo')
+  if (userInfo) {
+    // 转成对象
+    userInfo = JSON.parse(userInfo)
+    userInfo = userInfo.userInfo
+    useUserInfoStore().updateUserInfo(userInfo)
+    isHeadShow.value = true
+  } else {
+    isHeadShow.value = false
+  }
+})
 onShow(() => {
   let userInfo = uni.getStorageSync('UserInfo')
   if (userInfo) {
-    userInfo = JSON.parse(userInfo)
-    useUserInfoStore().updateUserInfo(userInfo)
     isHeadShow.value = true
   } else {
     isHeadShow.value = false

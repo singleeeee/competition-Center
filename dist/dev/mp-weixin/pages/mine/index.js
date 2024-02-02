@@ -18,11 +18,20 @@ const UnLog = () => "./components/UnLog.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
-    common_vendor.onShow(() => {
+    common_vendor.onLoad(() => {
       let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
       if (userInfo2) {
         userInfo2 = JSON.parse(userInfo2);
+        userInfo2 = userInfo2.userInfo;
         stores_modules_userInfoStore.useUserInfoStore().updateUserInfo(userInfo2);
+        isHeadShow.value = true;
+      } else {
+        isHeadShow.value = false;
+      }
+    });
+    common_vendor.onShow(() => {
+      let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
+      if (userInfo2) {
         isHeadShow.value = true;
       } else {
         isHeadShow.value = false;

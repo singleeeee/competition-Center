@@ -9,7 +9,6 @@
             <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
           </button>
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 昵称 -->
@@ -17,9 +16,11 @@
       <view class="left">昵称</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userNickname }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userNickname
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 性别 -->
@@ -27,9 +28,11 @@
       <view class="left">性别</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ genderSelectd }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            genderSelectd
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 简介 -->
@@ -37,9 +40,11 @@
       <view class="left">简介</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userIntroduction }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userIntroduction
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 所在地区 -->
@@ -47,9 +52,11 @@
       <view class="left">所在地区</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userCity }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userCity
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 个性标签 -->
@@ -57,9 +64,11 @@
       <view class="left">个性标签</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userLabel }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userLabel
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
   </view>
@@ -204,6 +213,7 @@ const introCancel = () => {
         background-color: #fff;
         border: 0;
         border-radius: 50%;
+        margin-right: 20rpx;
         .avatar {
           display: block;
           width: 120rpx;
@@ -212,6 +222,11 @@ const introCancel = () => {
           background-color: skyblue;
           margin-right: 20rpx;
         }
+      }
+      .back {
+        min-height: 50rpx;
+        display: flex;
+        align-items: center;
       }
     }
   }
