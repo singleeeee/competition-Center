@@ -83,6 +83,12 @@ let isHeadShow = ref(false)
 const changeIsLog = (val: boolean) => {
   isHeadShow.value = val
 }
+
+// tag数组
+let tagList = ref<string[]>([])
+if (userInfo.value.userLabel.includes('-')) {
+  tagList.value = userInfo.value.userLabel.split('-')
+}
 </script>
 
 <template>
@@ -96,9 +102,26 @@ const changeIsLog = (val: boolean) => {
           <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
             <view class="tag-view">
-              <uni-tag class="label" text="大二" :circle="true" type="primary" size="small" />
-              <uni-tag class="label" text="厨子" :circle="true" type="primary" size="small" />
-              <uni-tag class="label" text="铜牌" :circle="true" type="primary" size="small" />
+              <view v-if="tagList.length > 0">
+                <uni-tag
+                  v-for="(item, index) in tagList"
+                  :key="index"
+                  class="label"
+                  :text="item"
+                  :circle="true"
+                  type="primary"
+                  size="small"
+                />
+              </view>
+              <view v-else>
+                <uni-tag
+                  class="label"
+                  text="暂无标签"
+                  :circle="true"
+                  type="primary"
+                  size="small"
+                ></uni-tag>
+              </view>
             </view>
           </view>
         </view>
@@ -217,8 +240,7 @@ const changeIsLog = (val: boolean) => {
           font-weight: 700;
         }
         .label {
-          font-size: 26rpx !important;
-          padding-right: 10rpx;
+          margin-right: 40rpx;
         }
       }
       .detail {

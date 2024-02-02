@@ -48,24 +48,24 @@
       </view>
     </view>
     <!-- 所在地区 -->
-    <view class="items" @tap="cityPopup.open('bottom')">
+    <view class="items">
       <view class="left">所在地区</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+          <!-- <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
             userInfo.userCity
-          }}</span>
-          <uni-icons type="right" color="#ccc" size="18" />
+          }}</span> -->
+          <CityChoose></CityChoose>
         </view>
       </view>
     </view>
     <!-- 个性标签 -->
-    <view class="items" @tap="labelPopup.open('bottom')">
+    <view class="items" @tap="labelPopup.open('center')">
       <view class="left">个性标签</view>
       <view class="right">
         <view class="back">
           <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
-            userInfo.userLabel
+            userInfo.userLabel || '暂未使用标签'
           }}</span>
           <uni-icons type="right" color="#ccc" size="18" />
         </view>
@@ -100,9 +100,9 @@
       @introCancel="introCancel"
     ></TextareaPopup>
   </uni-popup>
-  <!-- 城市 -->
-  <uni-popup ref="cityPopup" background-color="#fff">修改所在城市</uni-popup>
-  <uni-popup ref="labelPopup" background-color="#fff">修改所在城市</uni-popup>
+  <uni-popup ref="labelPopup" background-color="#fff">
+    <LabelPopup></LabelPopup>
+  </uni-popup>
 </template>
 
 <script lang="ts" setup>
@@ -111,6 +111,8 @@ import { useUserInfoStore } from '@/stores'
 import { onShow } from '@dcloudio/uni-app'
 import InputPopup from './components/InputPopup.vue'
 import TextareaPopup from './components/TextareaPopup.vue'
+import CityChoose from './components/CityChoose.vue'
+import LabelPopup from './components/LabelPopup.vue'
 // 回显和使用
 const userInfoStore = useUserInfoStore()
 const { userInfo } = userInfoStore
@@ -123,7 +125,6 @@ onShow(() => {
 const nicknamePopup = ref()
 const genderPopup = ref()
 const introducePopup = ref()
-const cityPopup = ref()
 const labelPopup = ref()
 
 // 监听点击头像事件

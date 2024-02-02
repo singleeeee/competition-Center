@@ -90,30 +90,38 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const changeIsLog = (val) => {
       isHeadShow.value = val;
     };
+    let tagList = common_vendor.ref([]);
+    if (userInfo.value.userLabel.includes("-")) {
+      tagList.value = userInfo.value.userLabel.split("-");
+    }
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.unref(isHeadShow)
-      }, common_vendor.unref(isHeadShow) ? {
+      }, common_vendor.unref(isHeadShow) ? common_vendor.e({
         b: common_vendor.unref(userInfo).userAvatarUrl,
         c: common_vendor.t(common_vendor.unref(userInfo).userNickname),
-        d: common_vendor.p({
-          text: "大二",
-          circle: true,
-          type: "primary",
-          size: "small"
-        }),
-        e: common_vendor.p({
-          text: "厨子",
-          circle: true,
-          type: "primary",
-          size: "small"
-        }),
+        d: common_vendor.unref(tagList).length > 0
+      }, common_vendor.unref(tagList).length > 0 ? {
+        e: common_vendor.f(common_vendor.unref(tagList), (item, index, i0) => {
+          return {
+            a: index,
+            b: "9023ef44-0-" + i0,
+            c: common_vendor.p({
+              text: item,
+              circle: true,
+              type: "primary",
+              size: "small"
+            })
+          };
+        })
+      } : {
         f: common_vendor.p({
-          text: "铜牌",
+          text: "暂无标签",
           circle: true,
           type: "primary",
           size: "small"
-        }),
+        })
+      }, {
         g: common_vendor.o(navigatetoPersonPage),
         h: common_vendor.p({
           type: "right",
@@ -121,7 +129,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           size: "20"
         }),
         i: common_vendor.o(navigatetoPerson)
-      } : {
+      }) : {
         j: common_vendor.o(changeIsLog)
       }, {
         k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
@@ -135,14 +143,14 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         s: common_assets._imports_7,
         t: common_vendor.f(configItems, (item, k0, i0) => {
           return {
-            a: "9023ef44-5-" + i0,
+            a: "9023ef44-4-" + i0,
             b: common_vendor.p({
               type: item.icon,
               color: "",
               size: "24"
             }),
             c: common_vendor.t(item.title),
-            d: "9023ef44-6-" + i0,
+            d: "9023ef44-5-" + i0,
             e: item.id
           };
         }),
