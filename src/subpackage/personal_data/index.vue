@@ -100,8 +100,17 @@
       @introCancel="introCancel"
     ></TextareaPopup>
   </uni-popup>
+  <!-- 个性标签 -->
   <uni-popup ref="labelPopup" background-color="#fff">
     <LabelPopup></LabelPopup>
+  </uni-popup>
+  <!-- 成功提示 -->
+  <uni-popup ref="successInfo" type="message">
+    <uni-popup-message type="success" message="修改成功" :duration="1000"></uni-popup-message>
+  </uni-popup>
+  <!-- 失败提示 -->
+  <uni-popup ref="errorInfo" type="message">
+    <uni-popup-message type="error" message="修改失败" :duration="1000"></uni-popup-message>
   </uni-popup>
 </template>
 
@@ -127,6 +136,8 @@ const nicknamePopup = ref()
 const genderPopup = ref()
 const introducePopup = ref()
 const labelPopup = ref()
+const successInfo = ref()
+const errorInfo = ref()
 
 // 监听点击头像事件
 const onChooseAvatar = (e: any) => {
@@ -137,6 +148,10 @@ const onChooseAvatar = (e: any) => {
     success: (success) => {
       const { data } = JSON.parse(success.data)
       userInfoStore.changeUserInfo('userAvatarUrl', data.url)
+      successInfo.value.open()
+    },
+    fail: () => {
+      errorInfo.value.open()
     },
   })
 }
@@ -161,7 +176,7 @@ const logout = () => {
 }
 
 // 昵称修改
-let nickname = ref<String>(userInfo.userNickname)
+let nickname = ref<String>(userInfo.value.userNickname)
 
 // 确认
 const nicknameConfirm = () => {
@@ -170,12 +185,12 @@ const nicknameConfirm = () => {
 }
 // 取消
 const nicknameCancel = () => {
-  nickname.value = userInfo.userNickname
+  nickname.value = userInfo.value.userNickname
   nicknamePopup.value.close()
 }
 
 // 简介修改
-let introduction = ref<String>(userInfo.userIntroduction)
+let introduction = ref<String>(userInfo.value.userNickname)
 // 确认
 const introConfirm = () => {
   userInfoStore.changeUserInfo('userIntroduction', introduction.value as string)
@@ -183,7 +198,7 @@ const introConfirm = () => {
 }
 // 取消
 const introCancel = () => {
-  introduction.value = userInfo.userIntroduction
+  introduction.value = userInfo.value.userNickname
   introducePopup.value.close()
 }
 </script>

@@ -37,7 +37,6 @@ export const useUserInfoStore = defineStore(
     // 修改某项属性
     const changeUserInfo = <K extends keyof UserInfo>(property: K, value: UserInfo[K]) => {
       userInfo.value[property] = value
-      console.log('修改了', property, value)
       if (userInfo.value.token) {
         http({
           url: `/app/user/updateUserInfo`,
