@@ -62,7 +62,7 @@
   font-weight: 700;
 }
 .container .header .avatarBox .bodyBox .label.data-v-9023ef44 {
-  margin-right: 40rpx;
+  margin-right: 30rpx;
 }
 .container .header .avatarBox .detail.data-v-9023ef44 {
   display: flex;

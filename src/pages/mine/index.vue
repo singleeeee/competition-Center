@@ -4,6 +4,12 @@ import UnLog from './components/UnLog.vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+
+const userInfoStore = useUserInfoStore()
+// 大坑！！！！！解构赋值还是会丢失响应式的，但是log出来还是proxy？
+const { userInfo } = storeToRefs(userInfoStore)
+let tagList = ref<string[]>([])
+
 onLoad(() => {
   let userInfo = uni.getStorageSync('UserInfo')
   if (userInfo) {
@@ -19,14 +25,21 @@ onLoad(() => {
 onShow(() => {
   let userInfo = uni.getStorageSync('UserInfo')
   if (userInfo) {
+    userInfo = JSON.parse(userInfo)
+    userInfo = userInfo.userInfo
+    // console.log('onshow重新赋值')
+    // useUserInfoStore().changeUserInfo('userLabel', userInfo.userLabel)
+    // tag数组
+    for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
+    if (userInfo.userLabel.includes('-')) {
+      tagList.value = userInfo.userLabel.split('-')
+    } else if (userInfo.userLabel !== '') tagList.value.push(userInfo.userLabel)
     isHeadShow.value = true
   } else {
     isHeadShow.value = false
   }
 })
-const userInfoStore = useUserInfoStore()
-// 大坑！！！！！解构赋值还是会丢失响应式的，但是log出来还是proxy？
-const { userInfo } = storeToRefs(userInfoStore)
+
 // 跳转到修改个人资料页面
 const navigatetoPerson = () => {
   uni.navigateTo({
@@ -82,12 +95,6 @@ let isHeadShow = ref(false)
 // 改变登录状态
 const changeIsLog = (val: boolean) => {
   isHeadShow.value = val
-}
-
-// tag数组
-let tagList = ref<string[]>([])
-if (userInfo.value.userLabel.includes('-')) {
-  tagList.value = userInfo.value.userLabel.split('-')
 }
 </script>
 
@@ -240,7 +247,7 @@ if (userInfo.value.userLabel.includes('-')) {
           font-weight: 700;
         }
         .label {
-          margin-right: 40rpx;
+          margin-right: 30rpx;
         }
       }
       .detail {

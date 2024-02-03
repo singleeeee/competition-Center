@@ -109,7 +109,7 @@ const activeBar = ref(0)
 let tagList = ref<string[]>([])
 if (userInfo.value.userLabel.includes('-')) {
   tagList.value = userInfo.value.userLabel.split('-')
-}
+} else if (userInfo.value.userLabel !== '') tagList.value.push(userInfo.value.userLabel)
 </script>
 
 <style lang="scss" scoped>

@@ -18,6 +18,9 @@ const UnLog = () => "./components/UnLog.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
+    const userInfoStore = stores_modules_userInfoStore.useUserInfoStore();
+    const { userInfo } = common_vendor.storeToRefs(userInfoStore);
+    let tagList = common_vendor.ref([]);
     common_vendor.onLoad(() => {
       let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
       if (userInfo2) {
@@ -32,13 +35,19 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     common_vendor.onShow(() => {
       let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
       if (userInfo2) {
+        userInfo2 = JSON.parse(userInfo2);
+        userInfo2 = userInfo2.userInfo;
+        for (let i = 0; i < tagList.value.length; i++)
+          tagList.value.pop();
+        if (userInfo2.userLabel.includes("-")) {
+          tagList.value = userInfo2.userLabel.split("-");
+        } else if (userInfo2.userLabel !== "")
+          tagList.value.push(userInfo2.userLabel);
         isHeadShow.value = true;
       } else {
         isHeadShow.value = false;
       }
     });
-    const userInfoStore = stores_modules_userInfoStore.useUserInfoStore();
-    const { userInfo } = common_vendor.storeToRefs(userInfoStore);
     const navigatetoPerson = () => {
       common_vendor.index.navigateTo({
         url: "/subpackage/personal_data/index"
@@ -90,10 +99,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const changeIsLog = (val) => {
       isHeadShow.value = val;
     };
-    let tagList = common_vendor.ref([]);
-    if (userInfo.value.userLabel.includes("-")) {
-      tagList.value = userInfo.value.userLabel.split("-");
-    }
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.unref(isHeadShow)

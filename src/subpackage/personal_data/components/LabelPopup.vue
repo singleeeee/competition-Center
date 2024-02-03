@@ -60,6 +60,7 @@ const addTag = () => {
   if (tagList.value.length > 2) {
     uni.showToast({
       title: '最多使用三个标签',
+      icon: 'none',
     })
     return
   }
