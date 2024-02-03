@@ -2,9 +2,9 @@
   <view class="container" :style="`height:${windowHeight}*2 + 'rpx'`">
     <!-- tab栏切换 -->
     <view class="topTab">
-      <view :class="{ item: true, active: currentPage === 0 }" @click="currentPage = 0">大厅</view>
-      <view :class="{ item: true, active: currentPage === 1 }" @click="currentPage = 1">好友</view>
-      <view :class="{ item: true, active: currentPage === 2 }" @click="currentPage = 2">信息</view>
+      <view :class="{ item: true, active: currentPage === 0 }" @tap="currentPage = 0">大厅</view>
+      <view :class="{ item: true, active: currentPage === 1 }" @tap="currentPage = 1">好友</view>
+      <view :class="{ item: true, active: currentPage === 2 }" @tap="currentPage = 2">信息</view>
     </view>
     <!-- 滑动内容 -->
     <swiper
@@ -60,34 +60,34 @@ const swiperChange = (e) => {
 .container {
   background-color: #eee;
   .swiper {
-    margin-top: 80rpx;
+    margin-top: 100rpx;
   }
   .topTab {
     position: fixed;
     top: 0;
     z-index: 999;
-    height: 80rpx;
+    height: 8vh;
     width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 6rpx;
+    box-shadow: 0 0 1rpx 2rpx #eee;
     background-color: #fff;
     .item {
-      height: 80rpx;
-      width: 80rpx;
+      height: 120rpx;
+      width: 100%;
       color: #bbb;
-      font-size: 28rpx;
+      font-size: 30rpx;
       height: 60rpx;
       line-height: 60rpx;
       text-align: center;
     }
   }
   .active {
-    border-bottom: 2rpx solid #27b393;
     transform: scale(1.2);
     color: #000 !important;
     transition: all 0.2s ease;
+    font-weight: 700;
   }
 }
 </style>

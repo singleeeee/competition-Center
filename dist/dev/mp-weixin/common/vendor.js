@@ -9209,7 +9209,7 @@ const pages = [
   {
     path: "pages/mine/personPage/index",
     style: {
-      navigationBarTitleText: "personPage"
+      navigationBarTitleText: "个人主页"
     }
   },
   {
@@ -9255,6 +9255,50 @@ const subPackages = [
         path: "index",
         style: {
           navigationBarTitleText: "更多帖子"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/fans_friends",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "粉丝列表"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/myCollection",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "我的收藏"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/PostWriting",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "草稿"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/subscribe",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "订阅"
         }
       }
     ]

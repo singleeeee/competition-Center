@@ -29,7 +29,7 @@
       <view class="right">
         <view class="back">
           <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
-            genderSelectd
+            genderSelectd || '男'
           }}</span>
           <uni-icons type="right" color="#ccc" size="18" />
         </view>
@@ -113,12 +113,13 @@ import InputPopup from './components/InputPopup.vue'
 import TextareaPopup from './components/TextareaPopup.vue'
 import CityChoose from './components/CityChoose.vue'
 import LabelPopup from './components/LabelPopup.vue'
+import { storeToRefs } from 'pinia'
 // 回显和使用
 const userInfoStore = useUserInfoStore()
-const { userInfo } = userInfoStore
+const { userInfo } = storeToRefs(userInfoStore)
 onShow(() => {
-  genderSelectd.value = userInfo.userGender === 0 ? '男' : '女'
-  genderValue.value[0] = userInfo.userGender
+  genderSelectd.value = userInfo.value.userGender === 1 ? '男' : '女'
+  genderValue.value[0] = userInfo.value.userGender - 1
 })
 
 // 所有的弹出层
@@ -148,7 +149,7 @@ const genderSelectd = ref('男')
 const genderChange = (e: any) => {
   const val = e.detail.value
   genderSelectd.value = genderArray[val[0]]
-  userInfoStore.changeUserInfo('userGender', genderSelectd.value === '男' ? 0 : 1)
+  userInfoStore.changeUserInfo('userGender', genderSelectd.value === '男' ? 1 : 2)
 }
 
 // 退出登录

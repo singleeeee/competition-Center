@@ -8,6 +8,27 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "草稿发布文章",
+                    "pathName": "subpackage/PostWriting/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "我的收藏",
+                    "pathName": "subpackage/myCollection/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "粉丝关注",
+                    "pathName": "subpackage/fans_friends/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "比赛",
                     "pathName": "pages/competition/index",
                     "query": "",

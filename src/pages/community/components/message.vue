@@ -48,7 +48,7 @@ const messageList = ref([
 <style scoped lang="scss">
 .container {
   .messageBox {
-    height: 100rpx;
+    height: 130rpx;
     display: flex;
     align-items: center;
     background-color: #fff;
@@ -57,8 +57,8 @@ const messageList = ref([
     box-sizing: border-box;
     border-bottom: 1px solid #ebeef5;
     .avatar {
-      width: 80rpx;
-      height: 80rpx;
+      width: 90rpx;
+      height: 90rpx;
       border-radius: 50%;
       background-color: skyblue;
     }
@@ -79,8 +79,14 @@ const messageList = ref([
       }
     }
     .timeBox {
+      height: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
       width: 120rpx;
       font-size: 20rpx;
+      // background-color: pink;
 
       .num {
         padding-top: 10rpx;

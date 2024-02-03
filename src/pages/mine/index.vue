@@ -96,6 +96,17 @@ let isHeadShow = ref(false)
 const changeIsLog = (val: boolean) => {
   isHeadShow.value = val
 }
+
+// 跳转非tabbar页面
+const navigateTo = (target: string) => {
+  uni.navigateTo({
+    url: `/subpackage/${target}/index`,
+  })
+}
+// 跳转都tabbar页面
+const switchTab = (target: string) => {
+  uni.navigateTo({ url: `/pages/mine/${target}/index` })
+}
 </script>
 
 <template>
@@ -156,19 +167,19 @@ const changeIsLog = (val: boolean) => {
           ></view
         >
         <view class="itemsBox">
-          <view class="items">
+          <view class="items" @tap="navigateTo('myCollection')">
             <image class="img" src="@/static/mine/collect.png" mode="scaleToFill" />
             收藏</view
           >
-          <view class="items">
+          <view class="items" @tap="navigateTo('subscribe')">
             <image class="img" src="@/static/mine/subscribe.png" mode="scaleToFill" />
             订阅</view
           >
-          <view class="items">
+          <view class="items" @tap="navigateTo('fans_friends')">
             <image class="img" src="@/static/mine/follow.png" mode="scaleToFill" />
             关注</view
           >
-          <view class="items">
+          <view class="items" @tap="navigateTo('fans_friends')">
             <image class="img" src="@/static/mine/fans.png" mode="scaleToFill" />
             粉丝</view
           >
@@ -180,11 +191,11 @@ const changeIsLog = (val: boolean) => {
             <image class="img" src="@/static/mine/message.png" mode="scaleToFill" />
             信息</view
           >
-          <view class="items">
+          <view class="items" @tap="navigateTo('PostWriting')">
             <image class="img" src="@/static/mine/draft.png" mode="scaleToFill" />
             草稿</view
           >
-          <view class="items">
+          <view class="items" @tap="switchTab('personPage')">
             <image class="img" src="@/static/mine/person.png" mode="scaleToFill" />
             个人中心</view
           >

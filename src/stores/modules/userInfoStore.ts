@@ -23,9 +23,9 @@ export const useUserInfoStore = defineStore(
       // 简介
       userIntroduction: '这个人很懒~',
       //所在地区
-      userCity: '广东',
+      userCity: '未知',
       // 用户标签
-      userLabel: '神秘人',
+      userLabel: '新用户',
       //年级
       userGrade: 0, //1900-2100
       //专业

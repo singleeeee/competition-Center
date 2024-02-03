@@ -26,6 +26,30 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "subpackage/fans_friends",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/myCollection",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/PostWriting",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/subscribe",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {

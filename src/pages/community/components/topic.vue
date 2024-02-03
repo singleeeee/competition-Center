@@ -52,17 +52,17 @@ const navigatetoPosts = () => {
   box-sizing: border-box;
   .title {
     width: 100%;
-    height: 60rpx;
+    height: 80rpx;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 5rpx 20rpx;
+    padding: 10rpx 20rpx;
     background-color: #fff;
     border-bottom: 0.5px solid #eee;
     box-sizing: border-box;
     .topic {
       font-weight: 700;
-      border-left: 2px solid black;
+      border-left: 4px solid #12a661;
       padding-left: 14rpx;
     }
 
@@ -75,27 +75,28 @@ const navigatetoPosts = () => {
     display: flex;
     align-items: center;
     background-color: #fff;
-    padding: 5rpx 20rpx;
+    padding: 14rpx 20rpx;
     &:active {
       background-color: #eee;
     }
     .img {
-      width: 80rpx;
-      height: 80rpx;
+      width: 90rpx;
+      height: 90rpx;
       background-color: skyblue;
       border-radius: 50%;
       margin-right: 20rpx;
     }
     .content {
       height: 80rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
       .topicTitle {
         display: inline;
-        height: 60rpx;
         font-size: 26rpx;
-        // background-color: orange;
+        color: rgb(245, 169, 29);
       }
       .introduce {
-        height: 20rpx;
         font-size: 24rpx;
         color: #aaa;
       }

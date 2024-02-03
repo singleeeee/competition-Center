@@ -13,7 +13,7 @@
             <view class="status" :style="{ color: item.status === '在线' ? 'green' : 'gray' }">{{
               item.status
             }}</view>
-            <button @tap="switchToChat">聊天</button>
+            <button>聊天</button>
           </view>
         </view>
       </view>
@@ -22,7 +22,7 @@
       <view class="content">
         <view class="frdbox" v-for="item in teamList" :key="item.id">
           <view class="image"></view>
-          <view class="body">
+          <view class="body" @tap="switchToChat">
             <view class="nickname">{{ item.nickname }}</view>
             <view class="info">{{ item.info }}</view>
           </view>
@@ -30,7 +30,7 @@
             <view class="status" :style="{ color: item.status === '在线' ? 'green' : 'gray' }">{{
               item.status
             }}</view>
-            <button>聊天</button>
+            <button @tap="switchToChat">聊天</button>
           </view>
         </view>
       </view>
@@ -81,7 +81,7 @@ const teamList = ref([
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20rpx;
+  padding: 20rpx 20rpx;
   box-sizing: border-box;
   .image {
     width: 80rpx;

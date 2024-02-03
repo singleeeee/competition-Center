@@ -99,6 +99,14 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const changeIsLog = (val) => {
       isHeadShow.value = val;
     };
+    const navigateTo = (target) => {
+      common_vendor.index.navigateTo({
+        url: `/subpackage/${target}/index`
+      });
+    };
+    const switchTab = (target) => {
+      common_vendor.index.navigateTo({ url: `/pages/mine/${target}/index` });
+    };
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.unref(isHeadShow)
@@ -139,14 +147,20 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       }, {
         k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
         l: common_assets._imports_0,
-        m: common_assets._imports_1,
-        n: common_assets._imports_2,
-        o: common_assets._imports_3,
-        p: common_assets._imports_4,
-        q: common_assets._imports_5,
-        r: common_assets._imports_6,
-        s: common_assets._imports_7,
-        t: common_vendor.f(configItems, (item, k0, i0) => {
+        m: common_vendor.o(($event) => navigateTo("myCollection")),
+        n: common_assets._imports_1,
+        o: common_vendor.o(($event) => navigateTo("subscribe")),
+        p: common_assets._imports_2,
+        q: common_vendor.o(($event) => navigateTo("fans_friends")),
+        r: common_assets._imports_3,
+        s: common_vendor.o(($event) => navigateTo("fans_friends")),
+        t: common_assets._imports_4,
+        v: common_assets._imports_5,
+        w: common_vendor.o(($event) => navigateTo("PostWriting")),
+        x: common_assets._imports_6,
+        y: common_vendor.o(($event) => switchTab("personPage")),
+        z: common_assets._imports_7,
+        A: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
@@ -159,7 +173,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             e: item.id
           };
         }),
-        v: common_vendor.p({
+        B: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"
