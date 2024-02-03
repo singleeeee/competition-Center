@@ -1,105 +1,211 @@
 <template>
-  <view class="chatRoom">
-    <view v-for="(items, index) in timeChatList" :key="index" class="each_time">
-      <view class="date">{{ items.time }}</view>
-      <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
-        <view class="chat-Box">
-          <view v-if="!item.myWord" class="friendBox">
-            <view class="avatar">
-              <image class="avatar" :src="item.avatarUrl" />
+  <view class="container">
+    <view class="chatRoom">
+      <!-- 一个时间段 -->
+      <view v-for="(items, index) in timeChatList" :key="index" class="each_time">
+        <!-- 时间 -->
+        <view class="date">{{ items.time }}</view>
+        <!-- 聊天内容 -->
+        <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
+          <view class="chat-Box">
+            <!-- 对面发的 -->
+            <view v-if="!item.myWord" class="friendBox">
+              <view class="avatar">
+                <image class="avatar" :src="item.avatarUrl" />
+              </view>
+              <view v-if="!item.isImg" class="content">{{ item.content }}</view>
+              <view v-else class="imgBox">
+                <image class="img" :src="item.imgUrl" mode="widthFix" />
+              </view>
             </view>
-            <view class="content">{{ item.content }}</view>
-          </view>
-          <view wx:else class="myBox">
-            <view class="avatar">
-              <image class="avatar" :src="item.avatarUrl" alt="" />
+            <!-- 自己发的 -->
+            <view wx:else class="myBox">
+              <view class="avatar">
+                <image class="avatar" :src="item.avatarUrl" alt="" />
+              </view>
+              <!-- 内容 -->
+              <view v-if="!item.isImg" class="content">{{ item.content }}</view>
+              <view v-else class="imgBox">
+                <image class="img" :src="item.imgUrl" mode="widthFix" />
+              </view>
             </view>
-            <view class="content">{{ item.content }}</view>
           </view>
         </view>
       </view>
     </view>
+    <view class="inputArea">
+      <view class="input" @tap="openInput">
+        <uni-icons style="padding-right: 10rpx" type="compose" color="#ccc" size="24" />
+        文明发言</view
+      >
+    </view>
   </view>
+  <uni-popup ref="popup" type="center" @mask-click="closeInput">
+    <MyInput v-model:textarea="textarea" @send="send" @clearImgList="clearImgList"></MyInput>
+  </uni-popup>
 </template>
 
 <script lang="ts" setup>
-const timeChatList = [
+import { ref } from 'vue'
+import MyInput from '@/components/MyInput.vue'
+import { onShow } from '@dcloudio/uni-app'
+let bottomPx = 0
+
+//滚动到最新位置
+onShow(() => {
+  scrollToBottom()
+})
+// 滚动到底部
+const scrollToBottom = () => {
+  uni
+    .createSelectorQuery()
+    .select('.container')
+    .boundingClientRect((res) => {
+      bottomPx = res.bottom
+      uni.pageScrollTo({
+        scrollTop: bottomPx,
+        duration: 100,
+      })
+    })
+    .exec()
+}
+// 消息列表
+const timeChatList = ref([
   {
     id: 1,
     time: '15:30',
     chatList: [
       {
+        isImg: false,
         myWord: false,
         content: '其实我每天只想你一次',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        avatarUrl: 'https://s11.ax1x.com/2024/02/01/pFMWV7F.jpg',
+        imgUrl: '',
       },
       {
+        isImg: false,
         myWord: true,
         content: '那么少',
         avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
-      },
-      {
-        myWord: false,
-        content: '因为一想就是一整天',
-        avatarUrl:
           'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        imgUrl: '',
       },
     ],
   },
-  {
-    id: 2,
-    time: '06:20',
-    chatList: [
-      {
-        myWord: false,
-        content:
-          '怎样说呢，你对我笑的时候啊，感觉就好像我是只剩１％电的手机，就在哆哆嗦嗦要关机的那一瞬间，突然被你接上了充电器。',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-      },
-    ],
-  },
-  {
-    id: 3,
-    time: '07:20',
-    chatList: [
-      {
-        myWord: false,
-        content: '我想在你那里买一块地。',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-      },
-      {
+])
+// 输入框popup
+const popup = ref()
+// 打开输入框
+const openInput = () => {
+  popup.value.open('bottom')
+}
+// 输入框绑定内容
+let textarea = ref('')
+// 关闭输入框
+const closeInput = () => {
+  console.log(textarea.value)
+}
+// 发送信息
+const send = (imgList: string[]) => {
+  console.log(imgList, textarea.value)
+  // 什么都没
+  if (textarea.value === '' && imgList.length === 0) {
+    uni.showToast({
+      title: '消息不能为空！',
+      icon: 'none',
+    })
+    return
+  } else if (imgList.length !== 0) {
+    // 如果有信息
+    if (textarea.value !== '') {
+      const sendArr = {
+        isImg: false,
         myWord: true,
-        content: '买什么地',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
-      },
-      {
-        myWord: false,
-        content: '买你的死心塌地',
+        content: textarea.value,
         avatarUrl:
           'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-      },
-      {
+        imgUrl: '',
+      }
+      ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
+    }
+    for (let i = 0; i < imgList.length; i++) {
+      const sendArr = {
+        isImg: true,
         myWord: true,
-        content: '....',
+        content: '',
         avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
-      },
-    ],
-  },
-]
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        imgUrl: imgList[i],
+      }
+      ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
+    }
+    scrollToBottom()
+    textarea.value = ''
+    popup.value.close()
+  } else {
+    const sendArr = {
+      isImg: false,
+      myWord: true,
+      content: textarea.value,
+      avatarUrl:
+        'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+      imgUrl: '',
+    }
+    ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
+    scrollToBottom()
+    textarea.value = ''
+    popup.value.close()
+  }
+}
+// 清空组件的图片列表
+const clearImgList = () => {
+  console.log('清空')
+}
 </script>
 
 <style lang="scss" scoped>
+.container {
+  min-height: 100vh;
+  overflow-y: scroll;
+  background-color: #f5f5f5;
+}
+.container::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+  background-color: transparent;
+  opacity: 0;
+}
+.inputArea {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  z-index: 99;
+  height: 80rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  box-shadow: -2rpx 0 2rpx 4rpx #eee;
+  .input {
+    box-sizing: border-box;
+    margin: 0 20rpx;
+    padding: 0 20rpx;
+    width: 100%;
+    background-color: #eee;
+    border-radius: 10rpx;
+    display: flex;
+    align-items: center;
+    color: #ccc;
+    font-size: 28rpx;
+  }
+}
+
 .chatRoom {
-  height: 100vh;
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
+  padding-bottom: 120rpx;
 }
 .chatRoom .each_time .date {
   height: 50rpx;
@@ -132,14 +238,29 @@ const timeChatList = [
 }
 .chatRoom .each_time .detail_info .chat-Box .friendBox .content,
 .chatRoom .each_time .detail_info .chat-Box .myBox .content {
+  display: flex;
+  align-items: center;
   text-indent: 10rpx;
   max-width: 50%;
-  background-color: purple;
   margin-left: 10rpx;
   background-color: #fff;
-  padding: 20rpx 15rpx 20rpx 15rpx;
+  padding: 15rpx 10rpx 15rpx 10rpx;
   border-radius: 10rpx;
-  font-size: 26rpx;
+  font-size: 30rpx;
+}
+
+.chatRoom .each_time .detail_info .chat-Box .friendBox .imgBox,
+.chatRoom .each_time .detail_info .chat-Box .myBox .imgBox {
+  max-width: 50%;
+  width: 42%;
+  margin-right: 30rpx;
+  border-radius: 10rpx;
+}
+.chatRoom .each_time .detail_info .chat-Box .friendBox .img,
+.chatRoom .each_time .detail_info .chat-Box .myBox .img {
+  width: 100%;
+  // max-height: 300rpx;
+  border-radius: 10rpx;
 }
 .chatRoom .each_time .detail_info .chat-Box .myBox {
   display: flex;

@@ -17,7 +17,7 @@ const httpInterceptor = {
     const userInfoStore = useUserInfoStore()
     options.header = {
       ...options.header,
-      ['Jwt-code']: userInfoStore.userInfo.token || '',
+      ['Authorization']: userInfoStore.userInfo.token || '',
     }
   },
 }
@@ -44,6 +44,14 @@ export const http = <T>(options: UniApp.RequestOptions) => {
         // 状态码 2xx，参考 axios 的设计
         if (res.statusCode >= 200 && res.statusCode < 300) {
           // 2.1 提取核心数据 res.data
+          if (res.data.code === 7) {
+            uni.showToast({
+              title: res.data.msg,
+              icon: 'error',
+              duration: 1000,
+            })
+            reject(res)
+          }
           resolve(res.data as Data<T>)
         } else if (res.statusCode === 401) {
           // 401错误  -> 清理用户信息，跳转到登录页

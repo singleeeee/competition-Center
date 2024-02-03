@@ -34,7 +34,28 @@
           </view>
         </view>
         <view class="information ellipsis">{{ userInfo.userIntroduction }}</view>
-        <view class="tag"> 标签 </view>
+        <view class="tag">
+          <view v-if="tagList.length > 0">
+            <uni-tag
+              v-for="(item, index) in tagList"
+              :key="index"
+              class="label"
+              :text="item"
+              :circle="true"
+              type="primary"
+              size="small"
+            />
+          </view>
+          <view v-else>
+            <uni-tag
+              class="label"
+              text="暂无标签"
+              :circle="true"
+              type="primary"
+              size="small"
+            ></uni-tag>
+          </view>
+        </view>
       </view>
       <view class="trends">
         <view class="topTap">
@@ -60,8 +81,9 @@
 
 <script lang="ts" setup>
 import { useUserInfoStore } from '@/stores'
+import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-const { userInfo } = useUserInfoStore()
+const { userInfo } = storeToRefs(useUserInfoStore())
 // 跳转到个人资料修改
 const navigateToEdit = () => {
   uni.navigateTo({
@@ -82,6 +104,12 @@ const swiperChange = (e: any) => {
 const currentPage = ref(0)
 
 const activeBar = ref(0)
+
+// tag数组
+let tagList = ref<string[]>([])
+if (userInfo.value.userLabel.includes('-')) {
+  tagList.value = userInfo.value.userLabel.split('-')
+} else if (userInfo.value.userLabel !== '') tagList.value.push(userInfo.value.userLabel)
 </script>
 
 <style lang="scss" scoped>

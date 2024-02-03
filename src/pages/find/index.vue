@@ -32,6 +32,8 @@
         />
       </swiper-item>
     </swiper>
+    <view class="section"> <view class="line"></view> <view class="title">近期通告</view> </view>
+
     <!-- 通告栏 -->
     <view class="report">
       <news></news>
@@ -66,5 +68,19 @@ const closeNoticebar = () => {
   position: fixed;
   top: 0;
   z-index: 999;
+}
+.section {
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #fff;
+  font-weight: 700;
+  .line {
+    background-color: #12a661;
+    width: 10rpx;
+    height: 60rpx;
+    margin-right: 20rpx;
+  }
 }
 </style>

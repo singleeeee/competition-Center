@@ -9,7 +9,6 @@
             <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
           </button>
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 昵称 -->
@@ -17,9 +16,11 @@
       <view class="left">昵称</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userNickname }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userNickname
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 性别 -->
@@ -27,9 +28,11 @@
       <view class="left">性别</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ genderSelectd }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            genderSelectd
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 简介 -->
@@ -37,29 +40,35 @@
       <view class="left">简介</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userIntroduction }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userIntroduction
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 所在地区 -->
-    <view class="items" @tap="cityPopup.open('bottom')">
+    <view class="items">
       <view class="left">所在地区</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userCity }}</span>
+          <!-- <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userCity
+          }}</span> -->
+          <CityChoose></CityChoose>
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
     <!-- 个性标签 -->
-    <view class="items" @tap="labelPopup.open('bottom')">
+    <view class="items" @tap="labelPopup.open('center')">
       <view class="left">个性标签</view>
       <view class="right">
         <view class="back">
-          <span style="color: #ccc; font-size: 28rpx">{{ userInfo.userLabel }}</span>
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            userInfo.userLabel || '暂未使用标签'
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
         </view>
-        <uni-icons type="right" color="#ccc" size="20" />
       </view>
     </view>
   </view>
@@ -91,9 +100,9 @@
       @introCancel="introCancel"
     ></TextareaPopup>
   </uni-popup>
-  <!-- 城市 -->
-  <uni-popup ref="cityPopup" background-color="#fff">修改所在城市</uni-popup>
-  <uni-popup ref="labelPopup" background-color="#fff">修改所在城市</uni-popup>
+  <uni-popup ref="labelPopup" background-color="#fff">
+    <LabelPopup></LabelPopup>
+  </uni-popup>
 </template>
 
 <script lang="ts" setup>
@@ -102,6 +111,8 @@ import { useUserInfoStore } from '@/stores'
 import { onShow } from '@dcloudio/uni-app'
 import InputPopup from './components/InputPopup.vue'
 import TextareaPopup from './components/TextareaPopup.vue'
+import CityChoose from './components/CityChoose.vue'
+import LabelPopup from './components/LabelPopup.vue'
 // 回显和使用
 const userInfoStore = useUserInfoStore()
 const { userInfo } = userInfoStore
@@ -114,12 +125,19 @@ onShow(() => {
 const nicknamePopup = ref()
 const genderPopup = ref()
 const introducePopup = ref()
-const cityPopup = ref()
 const labelPopup = ref()
 
 // 监听点击头像事件
 const onChooseAvatar = (e: any) => {
-  userInfoStore.changeUserInfo('userAvatarUrl', e.detail.avatarUrl)
+  uni.uploadFile({
+    url: 'http://47.113.177.192:8082/app/upload/file',
+    filePath: e.detail.avatarUrl,
+    name: 'file',
+    success: (success) => {
+      const { data } = JSON.parse(success.data)
+      userInfoStore.changeUserInfo('userAvatarUrl', data.url)
+    },
+  })
 }
 
 // 性别修改
@@ -196,6 +214,7 @@ const introCancel = () => {
         background-color: #fff;
         border: 0;
         border-radius: 50%;
+        margin-right: 20rpx;
         .avatar {
           display: block;
           width: 120rpx;
@@ -204,6 +223,11 @@ const introCancel = () => {
           background-color: skyblue;
           margin-right: 20rpx;
         }
+      }
+      .back {
+        min-height: 50rpx;
+        display: flex;
+        align-items: center;
       }
     }
   }

@@ -40,3 +40,17 @@
   top: 0;
   z-index: 999;
 }
+.section.data-v-1b8b30bc {
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #fff;
+  font-weight: 700;
+}
+.section .line.data-v-1b8b30bc {
+  background-color: #12a661;
+  width: 10rpx;
+  height: 60rpx;
+  margin-right: 20rpx;
+}

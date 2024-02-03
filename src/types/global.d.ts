@@ -23,5 +23,5 @@ export type UserInfo = {
   //专业
   userProfession: string
   // 获赞个数
-  loveNum: number
+  loveNumber: number
 }

@@ -56,6 +56,11 @@
   height: 60rpx;
   white-space: nowrap;
 }
+.container .headBox .scrollBox .scroll-view.data-v-3e564a22::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
 .container .headBox .scrollBox .scroll-view .scrollViewItem.data-v-3e564a22 {
   display: inline-block;
   height: 56rpx;
@@ -69,7 +74,13 @@
 .container .headBox .scrollBox .scroll-view .active.data-v-3e564a22 {
   color: #000;
   font-weight: 700;
-  border-bottom: 4rpx solid skyblue;
+  border-bottom: 4rpx solid #12a661;
+}
+.container .headBox .scrollBox.data-v-3e564a22::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
 }
 .container .headBox .tagList.data-v-3e564a22 {
   display: flex;
@@ -89,7 +100,7 @@
   padding: 10rpx 20rpx;
 }
 .container .headBox .tagList .active.data-v-3e564a22 {
-  background: linear-gradient(to top, rgb(44, 141, 192), rgb(90, 196, 238));
+  background: linear-gradient(to top, rgb(15, 101, 27), rgb(65, 224, 86));
   color: #fff;
 }
 .container .itemList.data-v-3e564a22 {

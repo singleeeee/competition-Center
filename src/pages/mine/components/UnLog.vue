@@ -29,7 +29,19 @@ const Login = async () => {
       url: `/app/login?code=${code}`,
       header: {},
     })
-    const { ID, userWxopenid } = resOpenid.data as UserInfo
+    const {
+      ID,
+      userWxopenid,
+      userNickname,
+      userAvatarUrl,
+      userGender,
+      userGrade,
+      userProfession,
+      userIntroduction,
+      userLabel,
+      userCity,
+      loveNumber,
+    } = resOpenid.data as UserInfo
 
     // 获取token
     const resToken = await http({
@@ -40,16 +52,31 @@ const Login = async () => {
     const userInfoStore = useUserInfoStore()
     // 更新仓库
     userInfoStore.changeUserInfo('token', token)
-    userInfoStore.changeUserInfo('ID', ID)
-    userInfoStore.changeUserInfo('userWxopenid', userWxopenid)
+    const serviceUserInfo: UserInfo = {
+      ID,
+      token,
+      userWxopenid,
+      userNickname,
+      userAvatarUrl,
+      userGender,
+      userGrade,
+      userProfession,
+      userIntroduction,
+      userLabel,
+      userCity,
+      loveNumber,
+    }
+    userInfoStore.updateUserInfo(serviceUserInfo)
     emit('changeIsLog', true)
     uni.hideLoading()
   } catch (error) {
     uni.showToast({
       title: '登录或注册失败',
+      icon: 'error',
     })
     uni.hideLoading()
   }
+  uni.hideLoading()
 }
 </script>
 <style lang="scss" scoped>

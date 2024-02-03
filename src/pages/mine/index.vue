@@ -1,20 +1,45 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import UnLog from './components/UnLog.vue'
-import { onShow } from '@dcloudio/uni-app'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
-onShow(() => {
-  const userInfo = uni.getStorageSync('UserInfo')
+import { storeToRefs } from 'pinia'
+
+const userInfoStore = useUserInfoStore()
+// 大坑！！！！！解构赋值还是会丢失响应式的，但是log出来还是proxy？
+const { userInfo } = storeToRefs(userInfoStore)
+let tagList = ref<string[]>([])
+
+onLoad(() => {
+  let userInfo = uni.getStorageSync('UserInfo')
   if (userInfo) {
-    isHeadShow.value = true
+    // 转成对象
+    userInfo = JSON.parse(userInfo)
+    userInfo = userInfo.userInfo
     useUserInfoStore().updateUserInfo(userInfo)
+    isHeadShow.value = true
   } else {
     isHeadShow.value = false
   }
 })
-//
-const userInfoStore = useUserInfoStore()
-const { userInfo } = userInfoStore
+onShow(() => {
+  let userInfo = uni.getStorageSync('UserInfo')
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo)
+    userInfo = userInfo.userInfo
+    // console.log('onshow重新赋值')
+    // useUserInfoStore().changeUserInfo('userLabel', userInfo.userLabel)
+    // tag数组
+    for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
+    if (userInfo.userLabel.includes('-')) {
+      tagList.value = userInfo.userLabel.split('-')
+    } else if (userInfo.userLabel !== '') tagList.value.push(userInfo.userLabel)
+    isHeadShow.value = true
+  } else {
+    isHeadShow.value = false
+  }
+})
+
 // 跳转到修改个人资料页面
 const navigatetoPerson = () => {
   uni.navigateTo({
@@ -67,6 +92,7 @@ const configItems = [
 ]
 
 let isHeadShow = ref(false)
+// 改变登录状态
 const changeIsLog = (val: boolean) => {
   isHeadShow.value = val
 }
@@ -83,9 +109,26 @@ const changeIsLog = (val: boolean) => {
           <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
             <view class="tag-view">
-              <uni-tag class="label" text="大二" :circle="true" type="primary" size="small" />
-              <uni-tag class="label" text="厨子" :circle="true" type="primary" size="small" />
-              <uni-tag class="label" text="铜牌" :circle="true" type="primary" size="small" />
+              <view v-if="tagList.length > 0">
+                <uni-tag
+                  v-for="(item, index) in tagList"
+                  :key="index"
+                  class="label"
+                  :text="item"
+                  :circle="true"
+                  type="primary"
+                  size="small"
+                />
+              </view>
+              <view v-else>
+                <uni-tag
+                  class="label"
+                  text="暂无标签"
+                  :circle="true"
+                  type="primary"
+                  size="small"
+                ></uni-tag>
+              </view>
             </view>
           </view>
         </view>
@@ -99,7 +142,7 @@ const changeIsLog = (val: boolean) => {
       <view class="collectBox">
         <view class="liked">
           <span style="font-size: 40rpx; padding-right: 10rpx; color: red; font-weight: 700">{{
-            userInfo.loveNum || 0
+            userInfo.loveNumber || 0
           }}</span>
           <span
             style="
@@ -204,8 +247,7 @@ const changeIsLog = (val: boolean) => {
           font-weight: 700;
         }
         .label {
-          font-size: 26rpx !important;
-          padding-right: 10rpx;
+          margin-right: 30rpx;
         }
       }
       .detail {
