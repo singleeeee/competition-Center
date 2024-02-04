@@ -27,7 +27,19 @@
       <uni-icons type="fire-filled" color="red" size="22" />
     </view>
     <view class="list">
-      <view class="item"> </view>
+      <view
+        v-for="(item, index) in rangkingList"
+        :key="index"
+        :class="{ item: true, front: index < 3 }"
+      >
+        <view class="left">
+          <view>
+            <image class="img" :src="item.img" mode="scaleToFill" />
+          </view>
+          <view class="text">{{ item.text }}</view>
+        </view>
+        <view class="right"> 热度{{ item.hotNum }}万 </view>
+      </view>
     </view>
   </view>
 </template>
@@ -68,6 +80,55 @@ const recordList = searchList
 const deleteRecord = () => {
   searchRecord.clearRecord()
 }
+
+// 排行榜
+const rangkingList = ref([
+  {
+    img: '../../../static/serachPage/diyiming.png',
+    text: '蓝桥杯国奖需要多少分以上',
+    hotNum: 134.2,
+  },
+  {
+    img: '../../../static/serachPage/dierming.png',
+    text: '互联网+金牌加多少学分',
+    hotNum: 112,
+  },
+  {
+    img: '../../../static/serachPage/disanming.png',
+    text: '挑战杯真的是PPT大赛吗？',
+    hotNum: 110.1,
+  },
+  {
+    img: '../../../static/serachPage/icon-test.png',
+    text: '这周的蓝桥杯双周赛什么时候开始？',
+    hotNum: 78,
+  },
+  {
+    img: '../../../static/serachPage/icon-test3.png',
+    text: '软通杯',
+    hotNum: 65.6,
+  },
+  {
+    img: '../../../static/serachPage/icon-test1.png',
+    text: '蓝桥杯国奖经验',
+    hotNum: 56.7,
+  },
+  {
+    img: '../../../static/serachPage/icon-test4.png',
+    text: '计算机设计大赛',
+    hotNum: 34,
+  },
+  {
+    img: '../../../static/serachPage/icon-test2.png',
+    text: '代金宇是谁',
+    hotNum: 14,
+  },
+  {
+    img: '../../../static/serachPage/icon-test5.png',
+    text: '彭肠是谁',
+    hotNum: 10,
+  },
+])
 </script>
 
 <style lang="scss" scoped>
@@ -75,7 +136,7 @@ const deleteRecord = () => {
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 9999;
+  z-index: 99999;
   height: 150rpx;
   display: flex;
   align-items: center;
@@ -88,7 +149,7 @@ const deleteRecord = () => {
   position: absolute;
   top: 140rpx;
   z-index: 9999;
-  border-radius: 30rpx 30rpx 0 0;
+  border-radius: 30rpx 0rpx 0 30rpx;
   display: flex;
   justify-content: space-between;
   padding: 20rpx;
@@ -136,7 +197,42 @@ const deleteRecord = () => {
     text-align: center;
   }
   .list {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .item {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      justify-content: space-between;
+      width: 100%;
+      height: 100rpx;
+      margin: 10rpx;
+      border-radius: 10rpx;
+      padding: 10rpx;
+      background-color: #fff;
+      .img {
+        width: 40rpx;
+        height: 40rpx;
+        vertical-align: middle;
+        margin: 0 10rpx;
+      }
+      .text {
+        font-size: 28rpx;
+        padding-left: 10rpx;
+      }
+      .left {
+        display: flex;
+        align-items: center;
+      }
+      .right {
+        font-size: 26rpx;
+        color: #aaa;
+      }
+    }
+    .front {
+      background: linear-gradient(to right, #fef9f5, #fff);
     }
   }
 }
