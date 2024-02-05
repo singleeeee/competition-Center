@@ -81,7 +81,8 @@
 				{
 					"path": "index",
 					"style": {
-						"navigationBarTitleText": "更多帖子"
+						"navigationBarTitleText": "更多帖子",
+						"onReachBottomDistance": 150
 					}
 				}
 			]

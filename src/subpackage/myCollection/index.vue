@@ -17,6 +17,8 @@
 </template>
 
 <script lang="ts" setup>
+import { http } from '@/utils/http'
+import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 
 const collectionList = ref([
@@ -36,6 +38,12 @@ const collectionList = ref([
     topic: 'Unity',
   },
 ])
+onLoad(async () => {
+  const res = await http({
+    url: '/app/dis/userShowCollectDis',
+  })
+  console.log(res)
+})
 </script>
 
 <style lang="scss" scoped>

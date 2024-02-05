@@ -5,22 +5,32 @@ import { http } from '@/utils/http'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import type { PostList } from '@/types/global'
+import { onReachBottom } from '@dcloudio/uni-app'
 
 const userInfoStore = useUserInfoStore()
 const { userInfo } = storeToRefs(userInfoStore)
 let postList = ref<PostList[]>([])
-onMounted(async () => {
+onMounted(() => {
+  getPostList()
+})
+// 获取帖子列表
+const getPostList = async () => {
+  // 返回的数据
+  const dataList = ref<any>([])
+  // 请求数据
   const res = await http({
     url: `/app/dis/getDisInfoList?ID=${userInfo.value.ID}`,
   })
-  const dataList = ref<any>([])
   dataList.value = (res.data as any).list
+  // 处理需要的数据 用map失效？
   for (let i = 0; i < dataList.value.length; i++) {
+    // 处理时间
     const data = new Date((dataList.value[i] as any).CreatedAt)
     const year = data.getFullYear()
     const month = data.getMonth() + 1
     const day = data.getDate()
     const time = `${year}/${month}/${day}`
+    // 最终格式
     const obj: PostList = {
       ID: dataList.value[i].ID, // 帖子ID
       isLike: true, // 帖子是否被点赞
@@ -37,10 +47,11 @@ onMounted(async () => {
       disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
     }
     console.log(obj)
-
+    // 存入数组
     postList.value.push(obj)
   }
-})
+  console.log('获取数据成功')
+}
 // 点赞和取消点赞
 const like = (val: boolean) => {
   if (val) {
@@ -57,6 +68,14 @@ const like = (val: boolean) => {
 }
 
 const collect = (val: boolean) => {}
+
+// 当前页码
+const pagenum = ref(0)
+
+// 上滑触底效果
+onReachBottom(() => {
+  console.log('触底了')
+})
 </script>
 
 <template>

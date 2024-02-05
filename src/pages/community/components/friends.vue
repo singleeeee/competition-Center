@@ -1,27 +1,17 @@
 <template>
   <uni-collapse ref="collapse">
     <!-- 好友分组 -->
-    <uni-collapse-item title="我的好友">
+    <uni-collapse-item
+      v-for="(group, index) in groupList"
+      :key="index"
+      open
+      :title="group.groupName"
+    >
       <view class="content">
-        <view class="frdbox" v-for="item in myFriendsList" :key="item.id">
-          <view class="image"></view>
-          <view class="body">
-            <view class="nickname">{{ item.nickname }}</view>
-            <view class="info">{{ item.info }}</view>
+        <view class="frdbox" v-for="item in group.groupMember" :key="item.id">
+          <view>
+            <image class="image" :src="item.avatar" mode="scaleToFill" />
           </view>
-          <view class="statusBox">
-            <view class="status" :style="{ color: item.status === '在线' ? 'green' : 'gray' }">{{
-              item.status
-            }}</view>
-            <button>聊天</button>
-          </view>
-        </view>
-      </view>
-    </uni-collapse-item>
-    <uni-collapse-item title="小程序队友">
-      <view class="content">
-        <view class="frdbox" v-for="item in teamList" :key="item.id">
-          <view class="image"></view>
           <view class="body" @tap="switchToChat">
             <view class="nickname">{{ item.nickname }}</view>
             <view class="info">{{ item.info }}</view>
@@ -42,36 +32,67 @@ import { ref } from 'vue'
 const switchToChat = () => {
   uni.navigateTo({ url: '/pages/community/chatRoom/index' })
 }
-const myFriendsList = ref([
+
+const groupList = ref([
   {
     id: 1,
-    nickname: '代金宇',
-    avatar: '',
-    info: '我踏马来啦',
-    status: '在线',
+    groupName: '我的好友',
+    groupMember: [
+      {
+        id: 1,
+        nickname: '代金宇',
+        avatar:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        info: '我踏马来啦',
+        status: '在线',
+      },
+      {
+        id: 2,
+        nickname: '马春丽',
+        avatar:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
+        info: '好极了',
+        status: '离线',
+      },
+      {
+        id: 3,
+        nickname: '阮志荣',
+        avatar:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-05/微信图片_20240201173945.jpg',
+        info: '我踏马来啦',
+        status: '在线',
+      },
+    ],
   },
-  {
-    id: 2,
-    nickname: '张翰',
-    avatar: '',
-    info: 'Unity，启动！',
-    status: '离线',
-  },
-])
-const teamList = ref([
   {
     id: 1,
-    nickname: '代金宇',
-    avatar: '',
-    info: '我踏马来啦',
-    status: '在线',
-  },
-  {
-    id: 2,
-    nickname: '马春丽',
-    avatar: '',
-    info: '我想回家',
-    status: '离线',
+    groupName: '重生之带学妹拿奖',
+    groupMember: [
+      {
+        id: 1,
+        nickname: '代金宇',
+        avatar:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        info: '我踏马来啦',
+        status: '在线',
+      },
+      {
+        id: 2,
+        nickname: '马春丽',
+        avatar:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
+        info: '好极了',
+        status: '离线',
+      },
+      {
+        id: 3,
+        nickname: '阮志荣',
+        avatar:
+          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-05/微信图片_20240201173945.jpg',
+        info: '我踏马来啦',
+        status: '在线',
+      },
+    ],
   },
 ])
 </script>

@@ -7874,6 +7874,7 @@ const onShow = /* @__PURE__ */ createHook(ON_SHOW);
 const onHide = /* @__PURE__ */ createHook(ON_HIDE);
 const onLaunch = /* @__PURE__ */ createHook(ON_LAUNCH);
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
+const onReachBottom = /* @__PURE__ */ createHook(ON_REACH_BOTTOM);
 const icons = {
   "id": "2852637",
   "name": "uniui图标库",
@@ -9278,7 +9279,8 @@ const subPackages = [
       {
         path: "index",
         style: {
-          navigationBarTitleText: "更多帖子"
+          navigationBarTitleText: "更多帖子",
+          onReachBottomDistance: 150
         }
       }
     ]
@@ -12471,6 +12473,7 @@ exports.onHide = onHide;
 exports.onLaunch = onLaunch;
 exports.onLoad = onLoad;
 exports.onMounted = onMounted;
+exports.onReachBottom = onReachBottom;
 exports.onShow = onShow;
 exports.p = p$1;
 exports.popup = popup;
