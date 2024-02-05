@@ -1,7 +1,213 @@
 <template>
-  <div class="PostWriting">PostWriting</div>
+  <view class="container">
+    <view class="inputTitleBox">
+      <view class="info">标题:</view>
+      <input class="inputTitle" v-model="title" placeholder="输入标题" @input="titleChange" />
+    </view>
+    <view class="content">
+      <textarea
+        class="text"
+        placeholder="请输入内容"
+        v-model="textarea"
+        autofocus
+        focus
+        :cursor-spacing="225"
+        :auto-height="true"
+        :maxlength="-1"
+      />
+    </view>
+    <view class="img">
+      <view
+        class="imageItem"
+        v-for="(item, index) in imgList"
+        :key="index"
+        :data-id="index"
+        @tap="deleteImg"
+      >
+        <image class="image" :src="item" mode="scaleToFill" />
+        <uni-icons class="clear" type="clear" color="" size="20" />
+      </view>
+    </view>
+    <view class="function">
+      <view class="icon">
+        <uni-icons type="image" color="#888" size="30" @tap="chooseImg" />
+        <uni-icons type="folder-add" color="#888" size="30" @tap="chooseImg" />
+        <uni-icons type="camera" color="#888" size="30" @tap="chooseImg" />
+      </view>
+      <view>
+        <button class="sendBtn" plain @tap="send">发布</button>
+      </view>
+    </view>
+  </view>
 </template>
+<script lang="ts" setup>
+import { useUserInfoStore } from '@/stores'
+import { http } from '@/utils/http'
+import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
+// 内容区
+const textarea = ref('')
+// 标题
+const title = ref('')
 
-<script lang="ts" setup></script>
+// 标题变化
+const titleChange = () => {}
+// 图片列表
+const imgList = ref<string[]>([])
+// 上传图片
+const chooseImg = () => {
+  uni.chooseImage({
+    count: 1,
+    success: (success) => {
+      if (imgList.value.length < 3) {
+        uni.showLoading({
+          mask: true,
+        })
+        const fileurl = success.tempFilePaths[0]
+        uni.uploadFile({
+          url: 'http://47.113.177.192:8082/app/upload/file',
+          filePath: fileurl,
+          name: 'file',
+          success: (success) => {
+            const {
+              data: { url },
+            } = JSON.parse(success.data)
+            imgList.value.push(url)
+            uni.hideLoading()
+          },
+        })
+      } else {
+        uni.showToast({
+          title: '不能超过三张图片',
+          icon: 'none',
+          mask: true,
+        })
+      }
+    },
+  })
+}
+// 删除照片
+const deleteImg = (e: any) => {
+  const index = e.currentTarget.dataset.id
+  imgList.value.splice(index, 1)
+}
+// 获取用户信息
+const userInfoStore = useUserInfoStore()
+const { userInfo } = storeToRefs(userInfoStore)
 
-<style scoped></style>
+// 发布帖子
+const send = () => {
+  if (title.value.trim() && textarea.value.trim()) {
+    http({
+      url: '/app/dis/createDisInfo',
+      data: {
+        disTitle: title.value,
+        disContent: textarea.value,
+        disComId: 1,
+        disUserId: userInfo.value.ID,
+        disPicture: imgList.value,
+      },
+      method: 'POST',
+    })
+  } else {
+    uni.showToast({
+      title: '标题或内容都不能为空',
+      icon: 'none',
+    })
+  }
+}
+</script>
+<style lang="scss" scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 450rpx;
+  .inputTitleBox {
+    display: flex;
+    width: 100%;
+    margin: 40rpx 0;
+    height: 80rpx;
+    align-items: center;
+    padding: 0 20rpx;
+    .info {
+      flex: 1;
+      min-width: 80rpx;
+      font-weight: 700;
+    }
+    .inputTitle {
+      flex: 9;
+      height: 60rpx;
+      background-color: #eee;
+      margin: 0 20rpx;
+      border-radius: 10rpx;
+      font-size: 26rpx;
+      padding: 0 20rpx;
+    }
+  }
+  .content {
+    background-color: #eee;
+    border-radius: 10rpx;
+    min-height: 200rpx;
+    margin: 0 20rpx;
+  }
+  .img {
+    position: fixed;
+    bottom: 100rpx;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    min-height: 180rpx;
+    .imageItem {
+      position: relative;
+      width: 120rpx;
+      height: 120rpx;
+      margin: 0 20rpx;
+      .image {
+        height: 120rpx;
+        width: 120rpx;
+      }
+      .clear {
+        position: absolute;
+        top: -16rpx;
+        right: -16rpx;
+        z-index: 99;
+      }
+    }
+  }
+  .function {
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 0 40rpx;
+    padding-left: 20rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100rpx;
+    box-shadow: 2rpx 0 0 4rpx #eee;
+    .icon {
+      width: 30vw;
+      display: flex;
+      justify-content: space-evenly;
+    }
+    .sendBtn {
+      border: 0;
+      width: 200rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      font-size: 28rpx;
+      background-color: #12a66a;
+      box-shadow: 0rpx 1rpx 12rpx 4rpx #efefef;
+      color: #eee;
+      border-radius: 30rpx;
+    }
+  }
+  .text {
+    width: 100%;
+    font-size: 28rpx;
+    padding: 20rpx;
+  }
+}
+</style>

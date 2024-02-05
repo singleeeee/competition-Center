@@ -10,36 +10,53 @@
       clear
     />
   </view>
-  <view class="searchRecord">
-    <view class="title">历史记录</view>
-    <view class="icon">
-      <uni-icons type="trash" color="#ccc" size="20" @tap="deleteRecord" />
-    </view>
-  </view>
-  <view class="content">
-    <view v-for="(items, index) in recordList" :key="index" class="tagBox">
-      <view class="tag">{{ items }}</view>
-    </view>
-  </view>
-  <view class="hotSearch">
-    <view class="title"
-      >热门搜索
-      <uni-icons type="fire-filled" color="red" size="22" />
-    </view>
-    <view class="list">
-      <view
-        v-for="(item, index) in rangkingList"
-        :key="index"
-        :class="{ item: true, front: index < 3 }"
-      >
-        <view class="left">
-          <view>
-            <image class="img" :src="item.img" mode="scaleToFill" />
-          </view>
-          <view class="text">{{ item.text }}</view>
-        </view>
-        <view class="right"> 热度{{ item.hotNum }}万 </view>
+  <view v-if="!isResultShow" class="container">
+    {
+    <view class="searchRecord">
+      <view class="title">历史记录</view>
+      <view class="icon">
+        <uni-icons type="trash" color="#ccc" size="20" @tap="deleteRecord" />
       </view>
+    </view>
+    <view class="content">
+      <view v-for="(items, index) in recordList" :key="index" class="tagBox">
+        <view class="tag">{{ items }}</view>
+      </view>
+    </view>
+    <view class="hotSearch">
+      <view class="title"
+        >热门搜索
+        <uni-icons type="fire-filled" color="red" size="22" />
+      </view>
+      <view class="list">
+        <view
+          v-for="(item, index) in rangkingList"
+          :key="index"
+          :class="{ item: true, front: index < 3 }"
+        >
+          <view class="left">
+            <view>
+              <image class="img" :src="item.img" mode="scaleToFill" />
+            </view>
+            <view class="text">{{ item.text }}</view>
+          </view>
+          <view class="right">热度{{ item.hotNum }}万 </view>
+        </view>
+      </view>
+    </view>
+    }
+  </view>
+  <view v-else class="searchResult">
+    <view class="topTab">
+      <view :class="{ item: true, active: currentPage === 0 }" @tap="currentPage = 0">全部</view>
+      <view :class="{ item: true, active: currentPage === 1 }" @tap="currentPage = 1">比赛</view>
+      <view :class="{ item: true, active: currentPage === 2 }" @tap="currentPage = 2">通告</view>
+      <view :class="{ item: true, active: currentPage === 3 }" @tap="currentPage = 3">帖子</view>
+      <view :class="{ item: true, active: currentPage === 4 }" @tap="currentPage = 4">用户</view>
+    </view>
+    <view class="resultItem" v-for="(item, index) in resultList" :key="index">
+      <uni-icons style="padding-right: 10rpx" type="search" color="#aaa" size="20" />
+      <view class="text">{{ item }}</view>
     </view>
   </view>
 </template>
@@ -58,7 +75,8 @@ const handleChange = (e) => {
   if (timer) {
     clearTimeout(timer)
     timer = setTimeout(() => {
-      console.log(e)
+      if (inputValue.value.trim() !== '') isResultShow.value = true
+      else if (inputValue.value.trim() === '') isResultShow.value = false
     }, 200)
   }
 }
@@ -67,6 +85,7 @@ const confirm = () => {
   if (inputValue.value.trim() !== '') {
     searchRecord.addRecord(inputValue.value)
     inputValue.value = ''
+    isResultShow.value = false
   }
 }
 // 获取仓库
@@ -129,6 +148,13 @@ const rangkingList = ref([
     hotNum: 10,
   },
 ])
+
+// 搜素结果引导
+const resultList = ref(['蓝桥杯', '蓝桥杯什么时候开始', '蓝桥杯第几届了', '蓝桥杯省奖加多少学分'])
+// 是否显示结果引导
+const isResultShow = ref(true)
+//tab
+const currentPage = ref(0)
 </script>
 
 <style lang="scss" scoped>
@@ -142,6 +168,7 @@ const rangkingList = ref([
   align-items: center;
   background-color: #12a66a;
 }
+
 .searchRecord {
   box-sizing: border-box;
   width: 100%;
@@ -160,7 +187,7 @@ const rangkingList = ref([
 }
 .content {
   box-sizing: border-box;
-  margin-top: 210rpx;
+  margin-top: 160rpx;
   width: 100%;
   height: auto;
   padding: 10rpx 20rpx;
@@ -234,6 +261,49 @@ const rangkingList = ref([
     .front {
       background: linear-gradient(to right, #fef9f5, #fff);
     }
+  }
+}
+.searchResult {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-top: 150rpx;
+  .resultItem {
+    display: flex;
+    align-items: center;
+    font-size: 26rpx;
+    margin: 10rpx;
+    padding: 20rpx 10rpx;
+    border-bottom: 1rpx solid #eee;
+    .text {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      color: #666;
+    }
+  }
+  .topTab {
+    height: 5vh;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #fff;
+    .item {
+      height: 120rpx;
+      width: 10%;
+      font-size: 24rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      text-align: center;
+    }
+  }
+  .active {
+    transform: scale(1.01);
+    color: #000 !important;
+    transition: all 0.2s ease;
+    font-weight: 700;
+    border-bottom: 4rpx solid #12a661;
   }
 }
 </style>

@@ -67,7 +67,6 @@ defineProps({
 
 <style scoped lang="scss">
 .container {
-  margin: 0 30rpx;
   .authorBox {
     display: flex;
     justify-content: space-between;
@@ -85,7 +84,7 @@ defineProps({
       box-sizing: border-box;
       flex: 1;
       height: 120rpx;
-      padding: 10rpx 0 0 10rpx;
+      padding: 10rpx 0 0 20rpx;
       .nickname {
         font-size: 30rpx;
         color: orange;

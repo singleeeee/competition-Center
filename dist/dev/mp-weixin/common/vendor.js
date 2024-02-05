@@ -12470,6 +12470,7 @@ exports.o = o$1;
 exports.onHide = onHide;
 exports.onLaunch = onLaunch;
 exports.onLoad = onLoad;
+exports.onMounted = onMounted;
 exports.onShow = onShow;
 exports.p = p$1;
 exports.popup = popup;
