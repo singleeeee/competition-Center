@@ -1,6 +1,9 @@
 {
   "navigationBarTitleText": "",
   "navigationBarBackgroundColor": "#12a66a",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#12a66a",
+  "backgroundTextStyle": "light",
   "usingComponents": {
     "uni-tag": "../../node-modules/@dcloudio/uni-ui/lib/uni-tag/uni-tag",
     "uni-icons": "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons",

@@ -30,7 +30,9 @@ export type PostList = {
   // 帖子ID
   ID: number
   // 是否点赞
-  isLike: boolean
+  isLiked: boolean
+  // 是否收藏
+  isCollected: boolean
   // 关联的比赛
   disComId?: number
   // 帖子的头像

@@ -90,11 +90,34 @@
   padding: 20rpx;
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.08);
 }
-.container .body .collectBox .liked.data-v-9023ef44,
-.container .body .messageBox .liked.data-v-9023ef44 {
-  padding-bottom: 20rpx;
-  padding-left: 20rpx;
+.container .body .collectBox .numberBox.data-v-9023ef44,
+.container .body .messageBox .numberBox.data-v-9023ef44 {
+  width: 100%;
+  display: flex;
   border-bottom: 1px solid #ccc;
+  align-items: center;
+}
+.container .body .collectBox .numberBox .liked.data-v-9023ef44,
+.container .body .messageBox .numberBox .liked.data-v-9023ef44 {
+  display: flex;
+  position: relative;
+  padding-bottom: 20rpx;
+  padding-left: 30rpx;
+  margin-right: 40rpx;
+}
+.container .body .collectBox .numberBox .liked .Number.data-v-9023ef44,
+.container .body .messageBox .numberBox .liked .Number.data-v-9023ef44 {
+  font-size: 44rpx;
+  padding-right: 10rpx;
+  color: red;
+  font-weight: 700;
+}
+.container .body .collectBox .numberBox .liked .text.data-v-9023ef44,
+.container .body .messageBox .numberBox .liked .text.data-v-9023ef44 {
+  font-size: 26rpx;
+  font-family: "songti";
+  font-weight: 700;
+  margin-top: 18rpx;
 }
 .container .body .collectBox .itemsBox.data-v-9023ef44,
 .container .body .messageBox .itemsBox.data-v-9023ef44 {

@@ -30,7 +30,10 @@
 			"path": "pages/mine/index",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#12a66a"
+				"navigationBarBackgroundColor": "#12a66a",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#12a66a",
+				"backgroundTextStyle": "light"
 			}
 		},
 		{

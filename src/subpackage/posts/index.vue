@@ -33,7 +33,8 @@ const getPostList = async () => {
     // 最终格式
     const obj: PostList = {
       ID: dataList.value[i].ID, // 帖子ID
-      isLike: true, // 帖子是否被点赞
+      isLiked: false, // 帖子是否被点赞
+      isCollected: false, // 帖子是否被收藏
       disComId: dataList.value[i].disComId, // 关联的比赛ID
       title: dataList.value[i].disTitle, // 帖子标题
       content: dataList.value[i].disContent, // 帖子内容
@@ -46,28 +47,35 @@ const getPostList = async () => {
       disCommentNum: dataList.value[i].disCommentNumber, // 帖子被评论数量
       disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
     }
-    console.log(obj)
     // 存入数组
     postList.value.push(obj)
   }
-  console.log('获取数据成功')
+  console.log('获取数据成功', postList.value)
 }
 // 点赞和取消点赞
-const like = (val: boolean) => {
+const likedChange = async (val: boolean, index: number) => {
   if (val) {
-    const res = http({
-      url: `/app/dis/userLikeDis?ID=${userInfo.value.ID}`,
-    })
-    console.log(res)
+    console.log('点赞')
+    postList.value[index].isLiked = true
+    postList.value[index].likedNum++
   } else {
-    const res = http({
-      url: `/app/dis/userUnLikeDis?ID=${userInfo.value.ID}`,
-    })
-    console.log(res)
+    console.log('取消点赞')
+    postList.value[index].isLiked = false
+    postList.value[index].likedNum--
   }
 }
 
-const collect = (val: boolean) => {}
+const collectedChange = (val: boolean, index: number) => {
+  if (val) {
+    console.log('收藏')
+    postList.value[index].isCollected = true
+    postList.value[index].collectedNum++
+  } else {
+    console.log('取消点赞')
+    postList.value[index].isCollected = false
+    postList.value[index].collectedNum--
+  }
+}
 
 // 当前页码
 const pagenum = ref(0)
@@ -92,12 +100,12 @@ onReachBottom(() => {
       :collected-num="item.collectedNum"
       :comment-num="item.collectedNum"
       :liked-num="item.likedNum"
-      :isLike="item.isLike"
-      :isCollect="false"
-      @collect="collect"
-      @like="like"
-      @liked-change="item.likedNum += $event.detail"
-      @collected-change="item.collectedNum += $event.detail"
+      :isLike="item.isLiked"
+      :isCollect="item.isCollected"
+      :id="index"
+      @liked-change="likedChange"
+      ;
+      @collected-change="collectedChange"
     ></card>
   </view>
 </template>

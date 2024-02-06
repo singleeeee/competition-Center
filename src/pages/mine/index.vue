@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import UnLog from './components/UnLog.vue'
-import { onLoad, onShow } from '@dcloudio/uni-app'
+import { onLoad, onPullDownRefresh, onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 
@@ -40,6 +40,13 @@ onShow(() => {
   }
 })
 
+// 下拉刷新
+onPullDownRefresh(() => {
+  console.log('刷新')
+  setTimeout(() => {
+    uni.stopPullDownRefresh()
+  }, 1000)
+})
 // 跳转到修改个人资料页面
 const navigatetoPerson = () => {
   uni.navigateTo({
@@ -151,21 +158,20 @@ const switchTab = (target: string) => {
     </view>
     <view class="body">
       <view class="collectBox">
-        <view class="liked">
-          <span style="font-size: 40rpx; padding-right: 10rpx; color: red; font-weight: 700">{{
-            userInfo.loveNumber || 0
-          }}</span>
-          <span
-            style="
-              font-size: 26rpx;
-              position: absolute;
-              top: 30rpx;
-              font-family: 'songti';
-              font-weight: 700;
-            "
-            >获赞</span
-          ></view
-        >
+        <view class="numberBox">
+          <view class="liked">
+            <view class="Number">{{ userInfo.loveNumber || 0 }}</view>
+            <view class="text">获赞</view>
+          </view>
+          <view class="liked">
+            <view class="Number">{{ userInfo.loveNumber || 0 }}</view>
+            <view class="text">关注</view>
+          </view>
+          <view class="liked">
+            <view class="Number">{{ userInfo.loveNumber || 0 }}</view>
+            <view class="text">粉丝</view>
+          </view>
+        </view>
         <view class="itemsBox">
           <view class="items" @tap="navigateTo('myCollection')">
             <image class="img" src="@/static/mine/collect.png" mode="scaleToFill" />
@@ -287,12 +293,32 @@ const switchTab = (target: string) => {
       margin: 0 20rpx 20rpx 20rpx;
       padding: 20rpx;
       box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.08);
-
-      .liked {
-        padding-bottom: 20rpx;
-        padding-left: 20rpx;
+      .numberBox {
+        width: 100%;
+        display: flex;
         border-bottom: 1px solid #ccc;
+        align-items: center;
+        .liked {
+          display: flex;
+          position: relative;
+          padding-bottom: 20rpx;
+          padding-left: 30rpx;
+          margin-right: 40rpx;
+          .Number {
+            font-size: 44rpx;
+            padding-right: 10rpx;
+            color: red;
+            font-weight: 700;
+          }
+          .text {
+            font-size: 26rpx;
+            font-family: 'songti';
+            font-weight: 700;
+            margin-top: 18rpx;
+          }
+        }
       }
+
       .itemsBox {
         display: flex;
         justify-content: space-around;
@@ -319,6 +345,7 @@ const switchTab = (target: string) => {
         }
       }
     }
+
     .messageBox {
       height: 160rpx;
       .itemsBox {

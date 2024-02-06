@@ -7875,6 +7875,7 @@ const onHide = /* @__PURE__ */ createHook(ON_HIDE);
 const onLaunch = /* @__PURE__ */ createHook(ON_LAUNCH);
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
 const onReachBottom = /* @__PURE__ */ createHook(ON_REACH_BOTTOM);
+const onPullDownRefresh = /* @__PURE__ */ createHook(ON_PULL_DOWN_REFRESH);
 const icons = {
   "id": "2852637",
   "name": "uniui图标库",
@@ -9228,7 +9229,10 @@ const pages = [
     path: "pages/mine/index",
     style: {
       navigationBarTitleText: "",
-      navigationBarBackgroundColor: "#12a66a"
+      navigationBarBackgroundColor: "#12a66a",
+      enablePullDownRefresh: true,
+      backgroundColor: "#12a66a",
+      backgroundTextStyle: "light"
     }
   },
   {
@@ -12473,6 +12477,7 @@ exports.onHide = onHide;
 exports.onLaunch = onLaunch;
 exports.onLoad = onLoad;
 exports.onMounted = onMounted;
+exports.onPullDownRefresh = onPullDownRefresh;
 exports.onReachBottom = onReachBottom;
 exports.onShow = onShow;
 exports.p = p$1;

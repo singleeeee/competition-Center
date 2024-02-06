@@ -11,11 +11,11 @@
       </view>
       <view class="others">
         <!-- 收藏 -->
-        <view class="item" @tap="collect" v-if="!collected">
+        <view class="item" @tap="collectChange" v-if="!isCollected">
           <uni-icons type="star" color="#aaa" size="20" />
           <span style="color: #aaa; padding-left: 10rpx">{{ collectedNum }}</span>
         </view>
-        <view class="item" @tap="collect" v-else>
+        <view class="item" @tap="collectChange" v-else>
           <uni-icons type="star-filled" color="#f79321" size="20" />
           <span style="color: #f79321; padding-left: 10rpx">{{ collectedNum }}</span>
         </view>
@@ -25,11 +25,11 @@
           <span style="color: #aaa; padding-left: 10rpx">{{ commentNum }}</span>
         </view>
         <!-- 点赞 -->
-        <view class="item" @tap="like" v-if="!liked">
+        <view class="item" @tap="likeChange" v-if="!isLiked">
           <uni-icons type="hand-up" color="#aaa" size="20" />
           <span style="color: #aaa; padding-left: 10rpx">{{ likedNum }}</span>
         </view>
-        <view class="item" @tap="like" v-else>
+        <view class="item" @tap="likeChange" v-else>
           <uni-icons type="hand-up-filled" color="#f79321" size="20" />
           <span style="color: #f79321; padding-left: 10rpx">{{ likedNum }}</span>
         </view>
@@ -41,6 +41,10 @@
 import nameTitle from '@/components/nameTitle.vue'
 import { ref } from 'vue'
 const props = defineProps({
+  id: {
+    type: Number,
+    require: true,
+  },
   author: {
     type: String,
     default: '微信用户',
@@ -79,45 +83,41 @@ const props = defineProps({
     default:
       'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-02/defaultAvatar.png',
   },
+  isCollected: {
+    type: Boolean,
+    require: true,
+  },
+  isLiked: {
+    type: Boolean,
+    require: true,
+  },
 })
-const emit = defineEmits(['collect', 'like', 'likedChange', 'collectChange'])
+const emit = defineEmits(['likedChange', 'collectedChange'])
+
 // 点击收藏
-const collect = () => {
-  console.log('收藏')
-  collected.value = !collected.value
-  emit('collect', collected.value)
+const collectChange = () => {
+  emit('collectedChange', !props.isCollected, props.id)
 }
-// 收藏
-const collected = ref(false)
 
 // 点击评论
 const comment = () => {
   console.log('评论')
 }
 
-// 点赞
-const liked = ref(false)
-
 // 点击点赞
-const like = () => {
-  liked.value = !liked.value
-  if (liked.value) {
-    emit('like', 1)
-  } else {
-    emit('like', -1)
-  }
+const likeChange = () => {
+  emit('likedChange', !props.isLiked, props.id)
 }
 </script>
 <style scoped lang="scss">
 .container {
   display: inline-block;
   width: 100%;
-  min-height: 100vh;
   background-color: #f1f1f3;
   .postBox {
     border-radius: 10rpx;
     box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.08);
-    padding: 0rpx 16rpx 0rpx;
+    padding: 0rpx 24rpx 0rpx;
     margin: 10rpx 20rpx;
     background-color: #fff;
 

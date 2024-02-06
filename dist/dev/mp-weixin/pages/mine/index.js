@@ -48,6 +48,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         isHeadShow.value = false;
       }
     });
+    common_vendor.onPullDownRefresh(() => {
+      console.log("刷新");
+      setTimeout(() => {
+        common_vendor.index.stopPullDownRefresh();
+      }, 1e3);
+    });
     const navigatetoPerson = () => {
       common_vendor.index.navigateTo({
         url: "/subpackage/personal_data/index"
@@ -146,21 +152,23 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         j: common_vendor.o(changeIsLog)
       }, {
         k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
-        l: common_assets._imports_0,
-        m: common_vendor.o(($event) => navigateTo("myCollection")),
-        n: common_assets._imports_1,
-        o: common_vendor.o(($event) => navigateTo("subscribe")),
-        p: common_assets._imports_2,
-        q: common_vendor.o(($event) => navigateTo("fans_friends")),
-        r: common_assets._imports_3,
+        l: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
+        m: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
+        n: common_assets._imports_0,
+        o: common_vendor.o(($event) => navigateTo("myCollection")),
+        p: common_assets._imports_1,
+        q: common_vendor.o(($event) => navigateTo("subscribe")),
+        r: common_assets._imports_2,
         s: common_vendor.o(($event) => navigateTo("fans_friends")),
-        t: common_assets._imports_4,
-        v: common_assets._imports_5,
-        w: common_vendor.o(($event) => navigateTo("PostWriting")),
-        x: common_assets._imports_6,
-        y: common_vendor.o(($event) => switchTab("personPage")),
-        z: common_assets._imports_7,
-        A: common_vendor.f(configItems, (item, k0, i0) => {
+        t: common_assets._imports_3,
+        v: common_vendor.o(($event) => navigateTo("fans_friends")),
+        w: common_assets._imports_4,
+        x: common_assets._imports_5,
+        y: common_vendor.o(($event) => navigateTo("PostWriting")),
+        z: common_assets._imports_6,
+        A: common_vendor.o(($event) => switchTab("personPage")),
+        B: common_assets._imports_7,
+        C: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
@@ -173,7 +181,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             e: item.id
           };
         }),
-        B: common_vendor.p({
+        D: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"
