@@ -50,6 +50,12 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "subpackage/postDetail",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {

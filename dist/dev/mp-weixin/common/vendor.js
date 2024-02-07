@@ -9332,6 +9332,17 @@ const subPackages = [
         }
       }
     ]
+  },
+  {
+    root: "subpackage/postDetail",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "帖子详情页"
+        }
+      }
+    ]
   }
 ];
 const globalStyle = {

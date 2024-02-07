@@ -11,27 +11,27 @@
       </view>
       <view class="others">
         <!-- 收藏 -->
-        <view class="item" @tap="collectChange" v-if="!isCollected">
+        <view class="item" @tap="collectChange" v-if="!props.isCollected">
           <uni-icons type="star" color="#aaa" size="20" />
-          <span style="color: #aaa; padding-left: 10rpx">{{ collectedNum }}</span>
+          <span style="color: #aaa; padding-left: 10rpx">{{ props.collectedNum }}</span>
         </view>
         <view class="item" @tap="collectChange" v-else>
           <uni-icons type="star-filled" color="#f79321" size="20" />
-          <span style="color: #f79321; padding-left: 10rpx">{{ collectedNum }}</span>
+          <span style="color: #f79321; padding-left: 10rpx">{{ props.collectedNum }}</span>
         </view>
         <!-- 评论 -->
-        <view class="item" @tap="comment">
+        <view class="item" @tap="switchToDetail">
           <uni-icons type="chat" color="#aaa" size="20" />
-          <span style="color: #aaa; padding-left: 10rpx">{{ commentNum }}</span>
+          <span style="color: #aaa; padding-left: 10rpx">{{ props.commentNum }}</span>
         </view>
         <!-- 点赞 -->
-        <view class="item" @tap="likeChange" v-if="!isLiked">
+        <view class="item" @tap="likeChange" v-if="!props.isLiked">
           <uni-icons type="hand-up" color="#aaa" size="20" />
-          <span style="color: #aaa; padding-left: 10rpx">{{ likedNum }}</span>
+          <span style="color: #aaa; padding-left: 10rpx">{{ props.likedNum }}</span>
         </view>
         <view class="item" @tap="likeChange" v-else>
           <uni-icons type="hand-up-filled" color="#f79321" size="20" />
-          <span style="color: #f79321; padding-left: 10rpx">{{ likedNum }}</span>
+          <span style="color: #f79321; padding-left: 10rpx">{{ props.likedNum }}</span>
         </view>
       </view>
     </view>
@@ -39,7 +39,6 @@
 </template>
 <script lang="ts" setup>
 import nameTitle from '@/components/nameTitle.vue'
-import { ref } from 'vue'
 const props = defineProps({
   id: {
     type: Number,
@@ -75,8 +74,6 @@ const props = defineProps({
   },
   imageUrl: {
     type: String,
-    default:
-      'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-02/defaultAvatar.png',
   },
   avatarUrl: {
     type: String,
@@ -92,7 +89,7 @@ const props = defineProps({
     require: true,
   },
 })
-const emit = defineEmits(['likedChange', 'collectedChange'])
+const emit = defineEmits(['likedChange', 'collectedChange', 'switchToDetail'])
 
 // 点击收藏
 const collectChange = () => {
@@ -100,8 +97,8 @@ const collectChange = () => {
 }
 
 // 点击评论
-const comment = () => {
-  console.log('评论')
+const switchToDetail = () => {
+  emit('switchToDetail', props.id)
 }
 
 // 点击点赞

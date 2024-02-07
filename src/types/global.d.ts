@@ -35,7 +35,9 @@ export type PostList = {
   isCollected: boolean
   // 关联的比赛
   disComId?: number
-  // 帖子的头像
+  // 帖子的作者ID
+  userInfoID: number
+  // 帖子的作者头像
   avatarUrl: string
   // 帖子的作者昵称
   author: string

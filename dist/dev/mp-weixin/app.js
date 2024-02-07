@@ -19,6 +19,7 @@ if (!Math) {
   "./subpackage/myCollection/index.js";
   "./subpackage/PostWriting/index.js";
   "./subpackage/subscribe/index.js";
+  "./subpackage/postDetail/index.js";
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",

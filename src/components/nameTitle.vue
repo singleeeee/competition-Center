@@ -19,7 +19,7 @@
     </view>
     <!-- 二级评论 -->
     <view class="commentItem">
-      <slot name="comment"> </slot>
+      <slot name="comment"></slot>
     </view>
   </view>
 </template>
@@ -93,6 +93,7 @@ defineProps({
         display: flex;
         font-size: 24rpx;
         color: #ccc;
+        margin-bottom: 14rpx;
         .date {
           margin-right: 10rpx;
         }
@@ -108,15 +109,15 @@ defineProps({
   }
   .comment {
     .avatar {
-      width: 90rpx;
-      height: 90rpx;
+      width: 80rpx;
+      height: 80rpx;
     }
     .bodyBox {
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
       height: 120rpx;
-      padding: 10rpx 0 0 20rpx;
+      padding: 10rpx 0 0 30rpx;
       .nickname {
         font-size: 26rpx;
       }

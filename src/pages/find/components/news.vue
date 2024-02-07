@@ -15,6 +15,29 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { http } from '@/utils/http'
+onLoad(async () => {
+  const { data } = await http({
+    url: '/app/dis/getDisInfoList',
+    method: 'GET',
+    data: {
+      disModel: 1,
+      page: 1,
+      pageSize: 20,
+    },
+  })
+  console.log(data.list[0])
+
+  for (let i = 0; i < (data as any).list.length; i++) {
+    const obj = {
+      ID: data.list[i].ID,
+      hot: data.list[i].comHot,
+      title: data.list[i].comTitle,
+      author: '竞赛中心',
+    }
+  }
+})
 const newsList = ref([
   {
     id: 1,
@@ -24,63 +47,6 @@ const newsList = ref([
     pic: '',
     font: 2333,
     hot: '999+',
-  },
-  {
-    id: 2,
-    title: '蓝桥杯自费选手报名提醒',
-    author: '竞赛中心',
-    time: '56分钟前',
-    pic: '',
-    font: 122,
-    hot: 13,
-  },
-  {
-    id: 3,
-    title:
-      '目前系统导师已更新完毕，由于选手数量较多，请所有填写了自选导师的同学务必在12月29日今天下午15:00点前上系统查阅导师信息是否正确，如有修改的，在今天下午16:00前告诉我，过后系统关闭无法更新',
-    author: '竞赛中心',
-    time: '昨天',
-    pic: '',
-    font: 333,
-    hot: 99,
-  },
-  {
-    id: 4,
-    title:
-      '为了备战2024年的蓝桥杯与团体程序设计天梯赛，我们特别组织了这次算法集训队！ 这是一个绝佳的机会，让我们共同努力，为即将到来的挑战做好准备，提升我们的编程和算法技能！',
-    author: '竞赛中心',
-    time: '三天前',
-    pic: '',
-    font: 2333,
-    hot: 199,
-  },
-  {
-    id: 5,
-    title:
-      '挑战杯全称为“挑战杯”全国大学生系列科技学术竞赛，是由共青团中央、中国科协、教育部和全国学联共同主办的全国性的大学生课外学术实践竞赛。',
-    author: '辅导员',
-    time: '三天前',
-    pic: '',
-    font: 2333,
-    hot: 199,
-  },
-  {
-    id: 6,
-    title: '关于开展2023-2024学年第一学期学生评教通知 ',
-    author: '计算机学院',
-    time: '五天前',
-    pic: '',
-    font: 833,
-    hot: 99,
-  },
-  {
-    id: 7,
-    title: '数智精英大赛获奖情况已发布，大家可自行下载获奖证书，望周知。 ',
-    author: '竞赛中心',
-    time: '五天前',
-    pic: '',
-    font: 833,
-    hot: 99,
   },
 ])
 
