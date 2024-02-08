@@ -13,15 +13,29 @@ let postList = ref<PostList[]>([])
 onMounted(() => {
   getPostList()
 })
+// 当前页数
+const currentPage = ref(1)
+// 当前页面大小
+const pageSize = ref(5)
+// 最大帖子数量
+const total = ref(1000000)
 // 获取帖子列表
 const getPostList = async () => {
+  uni.showLoading()
   // 返回的数据
   const dataList = ref<any>([])
   // 请求数据
   const res = await http({
-    url: `/app/dis/getDisInfoList?ID=${userInfo.value.ID}`,
+    url: `/app/dis/getDisInfoList`,
+    data: {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+    },
   })
+  total.value = res.data.total
   dataList.value = (res.data as any).list
+  console.log(dataList.value)
+
   // 处理需要的数据 用map失效？
   for (let i = 0; i < dataList.value.length; i++) {
     // 处理时间
@@ -44,14 +58,15 @@ const getPostList = async () => {
       userInfoID: dataList.value[i].userInfo.ID, // 帖子作者的ID
       author: dataList.value[i].userInfo.userNickname, // 帖子作者昵称
       avatarUrl: dataList.value[i].userInfo.userAvatarUrl, // 帖子作者头像
-      imageUrl: dataList.value[i].disPicture.value || [], // 帖子首页展示图片，只展示第一张
+      imageUrl: dataList.value[i].disPicture || [], // 帖子首页展示图片，只展示第一张
       disCommentNum: dataList.value[i].disCommentNumber, // 帖子被评论数量
       disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
     }
-    console.log(obj.isCollected)
     // 存入数组
     postList.value.push(obj)
+    uni.hideLoading()
   }
+  console.log(postList.value)
 }
 // 点赞和取消点赞
 const likedChange = async (val: boolean, index: number) => {
@@ -105,6 +120,16 @@ const pagenum = ref(0)
 // 上滑触底效果
 onReachBottom(() => {
   console.log('触底了')
+  if (currentPage.value * pageSize.value >= total.value) {
+    uni.showToast({
+      title: '页面到底啦！',
+      icon: 'none',
+      mask: true,
+    })
+    return
+  }
+  currentPage.value++
+  getPostList()
 })
 // 点击评论跳转到详情页
 const switchToDetail = (index: number) => {

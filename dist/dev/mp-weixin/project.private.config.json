@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "帖子详情页",
+                    "pathName": "subpackage/postDetail/index",
+                    "query": "disID=9",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "草稿发布文章",
                     "pathName": "subpackage/PostWriting/index",
                     "query": "",

@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="postBox">
+    <view class="postBox" @tap="switchToDetail">
       <nameTitle :author="author" :date="time" icon="right" :avatarUrl="avatarUrl"></nameTitle>
       <view class="contentBox">
         <view class="title">{{ title }}</view>
@@ -11,25 +11,25 @@
       </view>
       <view class="others">
         <!-- 收藏 -->
-        <view class="item" @tap="collectChange" v-if="!props.isCollected">
+        <view class="item" @tap.stop="collectChange" v-if="!props.isCollected">
           <uni-icons type="star" color="#aaa" size="20" />
           <span style="color: #aaa; padding-left: 10rpx">{{ props.collectedNum }}</span>
         </view>
-        <view class="item" @tap="collectChange" v-else>
+        <view class="item" @tap.stop="collectChange" v-else>
           <uni-icons type="star-filled" color="#f79321" size="20" />
           <span style="color: #f79321; padding-left: 10rpx">{{ props.collectedNum }}</span>
         </view>
         <!-- 评论 -->
-        <view class="item" @tap="switchToDetail">
+        <view class="item" @tap.stop="switchToDetail">
           <uni-icons type="chat" color="#aaa" size="20" />
           <span style="color: #aaa; padding-left: 10rpx">{{ props.commentNum }}</span>
         </view>
         <!-- 点赞 -->
-        <view class="item" @tap="likeChange" v-if="!props.isLiked">
+        <view class="item" @tap.stop="likeChange" v-if="!props.isLiked">
           <uni-icons type="hand-up" color="#aaa" size="20" />
           <span style="color: #aaa; padding-left: 10rpx">{{ props.likedNum }}</span>
         </view>
-        <view class="item" @tap="likeChange" v-else>
+        <view class="item" @tap.stop="likeChange" v-else>
           <uni-icons type="hand-up-filled" color="#f79321" size="20" />
           <span style="color: #f79321; padding-left: 10rpx">{{ props.likedNum }}</span>
         </view>
@@ -119,6 +119,7 @@ const likeChange = () => {
     background-color: #fff;
 
     .contentBox {
+      min-height: 200rpx;
       box-sizing: border-box;
       .title {
         font-weight: 700;

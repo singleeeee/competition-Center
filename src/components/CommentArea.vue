@@ -8,28 +8,35 @@
       :is-comment="true"
       :border="true"
       :author="item.nickname"
-      :nickname-color="item.nicknameColor"
       :avatar-url="item.avatarUrl"
+      :date="toLocalTime(item.date)"
     >
       <template #comment>
         <slot>
-          <view class="commentText" v-for="(items, index) in commentList" :key="index">
-            {{ items.content }}
-
-            <view v-if="item.commentSons.length > 0">
-              <view
-                class="secondCommentList"
-                v-for="(item, index) in items.commentSons"
-                :key="index"
-              >
-                <view class="left">
-                  <view class="userInfo">{{ item.useInfo?.userNickname }}</view>
-                  <view class="content">{{ item.commentText }}</view>
-                  <view class="replyTime">2023/11/14 09:31 香港</view>
-                </view>
-                <view class="right">
-                  <view>
-                    <uni-icons type="hand-up" color="#ccc" size="18" />
+          <view>
+            <view class="commentText">
+              {{ item.content }}
+              <view v-if="item.commentSons.length > 0">
+                <!-- 二级评论 -->
+                <view
+                  class="secondCommentList"
+                  v-for="(items, index) in item.commentSons"
+                  :key="index"
+                >
+                  <view class="left">
+                    <view class="userInfo">{{ items.userInfo.userNickname }}</view>
+                    <view class="content">{{ items.commentText }}</view>
+                    <view class="replyTime"
+                      >{{ toLocalTime(items.CreatedAt) }}
+                      {{
+                        items.userInfo.userCity.slice(0, items.userInfo.userCity.indexOf('/'))
+                      }}</view
+                    >
+                  </view>
+                  <view class="right">
+                    <view>
+                      <uni-icons type="hand-up" color="#ccc" size="18" />
+                    </view>
                   </view>
                 </view>
               </view>
@@ -41,45 +48,52 @@
   </view>
 </template>
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app'
 import nameTitle from './nameTitle.vue'
 import { ref } from 'vue'
 import { http } from '@/utils/http'
-defineProps({
+import { onMounted } from 'vue'
+import { toLocalTime } from '@/utils/toLocalTime'
+const props = defineProps({
   disId: {
     type: Number,
     default: 1,
   },
 })
+console.log(props.disId)
+// 控制评论区显示隐藏
+const isCommentShow = ref(false)
+// 评论总条数
 let commentTotal = ref('')
-onLoad(async () => {
-  console.log('打开帖子详情')
+// 评论数组
+let commentList = ref([])
+// 为啥用onLoad不行？
+onMounted(async () => {
   const { data } = await http({
     url: '/app/comment/getCommentInfoList',
     data: {
       page: 1,
-      pageSize: 5,
-      commentDisId: 1,
+      pageSize: 10,
+      commentDisId: props.disId,
     },
   })
   commentTotal.value = data.total
-  const dataList = data.list
+  console.log(data)
+
   for (let i = 0; i < data.list.length; i++) {
-    const obj = ref({
+    const obj = {
       commentDisId: data.list[i].ID, // 一级帖子的ID
       commentLikeNumber: data.list[i].commentLikeNumber, // 点赞个数
       content: data.list[i].commentText, // 评论内容
       avatarUrl: data.list[i].userInfo.userAvatarUrl, // 评论头像
-      nickname: data.list[i].userInfo.userNickName, // 评论昵称
+      nickname: data.list[i].userInfo.userNickname, // 评论昵称
       commentSons: data.list[i].commentSons, // 二级评论数组
-    })
-    console.log(obj.value)
-
-    commentList.value.push(obj.value)
+      date: data.list[i].CreatedAt,
+    }
+    commentList.value.push(obj)
   }
+  isCommentShow.value = true
+  console.log(commentList.value)
 })
-
-const commentList = ref([])
 </script>
 <style lang="scss" scoped>
 .title {

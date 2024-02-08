@@ -44,7 +44,9 @@ export const http = <T>(options: UniApp.RequestOptions) => {
         // 状态码 2xx，参考 axios 的设计
         if (res.statusCode >= 200 && res.statusCode < 300) {
           // 2.1 提取核心数据 res.data
-          if (res.data.code === 7) {
+          if ((res.data as any).code === '7') {
+            console.log('请求失败，code = 7')
+
             uni.showToast({
               title: res.data.msg,
               icon: 'error',

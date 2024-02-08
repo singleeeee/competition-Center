@@ -2,7 +2,13 @@
   <view class="container">
     <view class="title">{{ title }}</view>
     <view class="content">{{ content }}</view>
-    <view class="img"></view>
+    <view class="imgBox" v-if="imgList.length > 0">
+      <ul class="imgBox">
+        <li v-for="(item, index) in imgList" :key="index">
+          <image class="img" :src="item" mode="heightFix" />
+        </li>
+      </ul>
+    </view>
     <view class="share">
       <view class="lineBox">
         <view class="line"></view>
@@ -44,6 +50,10 @@ defineProps({
     type: String,
     default: '说话',
   },
+  imgList: {
+    type: Array,
+    default: () => [],
+  },
 })
 const isLiked = ref(false)
 const like = () => {
@@ -67,10 +77,17 @@ const collect = () => {
   .content {
     padding: 10rpx 0;
   }
-  .img {
-    background-color: skyblue;
-    height: 400rpx;
+  .imgBox {
+    display: flex;
+    align-items: center;
+    height: 220rpx;
     width: 100%;
+    .img {
+      flex: 1;
+      height: 220rpx;
+      margin: 20rpx 10rpx;
+      margin-left: 0rpx;
+    }
   }
   .share {
     margin: 70rpx 0;

@@ -25,10 +25,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",
   setup(__props) {
     common_vendor.onLaunch(() => {
-      common_vendor.index.setTabBarBadge({
-        index: 2,
-        text: "1"
-      });
     });
     common_vendor.onShow(() => {
       console.log("App Show");
