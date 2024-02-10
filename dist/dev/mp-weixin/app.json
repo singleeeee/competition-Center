@@ -6,7 +6,8 @@
     "pages/mine/index",
     "pages/mine/personPage/index",
     "pages/community/chatRoom/index",
-    "pages/competition/searchPage/index"
+    "pages/competition/searchPage/index",
+    "pages/test/index"
   ],
   "subPackages": [
     {

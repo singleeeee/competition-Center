@@ -15,7 +15,7 @@
     ></PostBody>
     <CommentArea :disId="postDetail.ID"></CommentArea>
   </view>
-  <view v-else> 加载中 </view>
+  <view v-else> 加载中</view>
 </template>
 <script lang="ts" setup>
 import nameTitle from '@/components/nameTitle.vue'

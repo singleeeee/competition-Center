@@ -58,3 +58,14 @@ export type PostList = {
   // 帖子的评论数量
   disCommentNum: number
 }
+// 收藏列表
+export type CollectList = {
+  // 帖子ID
+  disID: number
+  // 帖子标题
+  disTitle: string
+  // 帖子所属话题（比赛）
+  disTopic?: string
+  // 作者姓名
+  disUserName: string
+}

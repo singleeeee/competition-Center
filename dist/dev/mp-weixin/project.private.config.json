@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "pages/test/index",
+                    "pathName": "pages/test/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "帖子详情页",
                     "pathName": "subpackage/postDetail/index",
                     "query": "disID=9",

@@ -9064,6 +9064,69 @@ const messages$1 = {
   "zh-Hans": zhHans$1,
   "zh-Hant": zhHant$1
 };
+let mpMixins = {};
+mpMixins = {
+  data() {
+    return {
+      is_show: "none"
+    };
+  },
+  watch: {
+    show(newVal) {
+      this.is_show = this.show;
+    }
+  },
+  created() {
+    this.swipeaction = this.getSwipeAction();
+    if (this.swipeaction && Array.isArray(this.swipeaction.children)) {
+      this.swipeaction.children.push(this);
+    }
+  },
+  mounted() {
+    this.is_show = this.show;
+  },
+  methods: {
+    // wxs 中调用
+    closeSwipe(e2) {
+      if (this.autoClose && this.swipeaction) {
+        this.swipeaction.closeOther(this);
+      }
+    },
+    change(e2) {
+      this.$emit("change", e2.open);
+      if (this.is_show !== e2.open) {
+        this.is_show = e2.open;
+      }
+    },
+    appTouchStart(e2) {
+      const {
+        clientX
+      } = e2.changedTouches[0];
+      this.clientX = clientX;
+      this.timestamp = new Date().getTime();
+    },
+    appTouchEnd(e2, index2, item, position) {
+      const {
+        clientX
+      } = e2.changedTouches[0];
+      let diff2 = Math.abs(this.clientX - clientX);
+      let time = new Date().getTime() - this.timestamp;
+      if (diff2 < 40 && time < 300) {
+        this.$emit("click", {
+          content: item,
+          index: index2,
+          position
+        });
+      }
+    },
+    onClickForPC(index2, item, position) {
+      return;
+    }
+  }
+};
+const mpwxs = mpMixins;
+let bindIngXMixins = {};
+let otherMixins = {};
 const popup = {
   data() {
     return {};
@@ -9251,6 +9314,12 @@ const pages = [
     path: "pages/competition/searchPage/index",
     style: {
       navigationBarTitleText: "搜索"
+    }
+  },
+  {
+    path: "pages/test/index",
+    style: {
+      navigationBarTitleText: "测试页面"
     }
   }
 ];
@@ -12468,6 +12537,7 @@ const messages = {
   "zh-Hant": zhHant
 };
 exports._export_sfc = _export_sfc;
+exports.bindIngXMixins = bindIngXMixins;
 exports.createAnimation = createAnimation;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;
@@ -12482,6 +12552,7 @@ exports.initVueI18n = initVueI18n;
 exports.isRef = isRef;
 exports.messages = messages$1;
 exports.messages$1 = messages;
+exports.mpwxs = mpwxs;
 exports.n = n$1;
 exports.o = o$1;
 exports.onHide = onHide;
@@ -12491,6 +12562,7 @@ exports.onMounted = onMounted;
 exports.onPullDownRefresh = onPullDownRefresh;
 exports.onReachBottom = onReachBottom;
 exports.onShow = onShow;
+exports.otherMixins = otherMixins;
 exports.p = p$1;
 exports.popup = popup;
 exports.r = r$1;
