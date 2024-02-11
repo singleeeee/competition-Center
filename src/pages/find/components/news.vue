@@ -1,5 +1,10 @@
 <template>
-  <view class="container" v-for="item in newsList" :key="item.id" @click="navigatetoDetail">
+  <view
+    class="container"
+    v-for="item in newsList"
+    :key="item.id"
+    @click="navigatetoDetail(item.ID)"
+  >
     <view class="left">
       <view class="title">{{ item.title }}</view>
       <view class="bottom">
@@ -43,7 +48,7 @@ const getNotificationList = async () => {
       ID: resList.value[i].ID, //帖子ID
       hot: resList.value[i].disLookNumber,
       title: resList.value[i].disTitle,
-      time: toLocalTime(resList.value[i].CreatedAt),
+      time: toLocalTime(resList.value[i].CreatedAt, false),
       font: resList.value[i].disLoveNumber,
       imageUrl: resList.value[i].disPicture[0],
       author: resList.value[i].userInfo.userNickname,
@@ -52,24 +57,12 @@ const getNotificationList = async () => {
   }
 }
 
-const newsList = ref([
-  {
-    id: 1,
-    title: '2024蓝桥杯报名开启!',
-    author: '竞赛中心',
-    time: '21分钟前',
-    pic: '',
-    font: 2333,
-    hot: '999+',
-    imageUrl:
-      'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-02/challengeCup.jpeg',
-  },
-])
+const newsList = ref([])
 
 // 跳转到详情页
-const navigatetoDetail = () => {
+const navigatetoDetail = (disId: number) => {
   uni.navigateTo({
-    url: `/subpackage/notification_detail/index?disId`,
+    url: `/subpackage/notification_detail/index?disId=${disId}`,
   })
 }
 </script>
@@ -77,14 +70,14 @@ const navigatetoDetail = () => {
 .container {
   display: flex;
   align-items: center;
-  height: 200rpx;
-  padding: 0 20rpx 10rpx 20rpx;
+  box-sizing: border-box;
+  padding: 10rpx 20rpx 10rpx 20rpx;
   border-bottom: 0.5rpx solid #efefef;
   margin: 20rpx 10rpx;
   background-color: #fff;
   border-radius: 10rpx;
   overflow-y: scroll;
-  // box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.08);
 
   .left {
     flex: 1;
@@ -94,12 +87,13 @@ const navigatetoDetail = () => {
     justify-content: space-between;
 
     .title {
-      padding-top: 20rpx;
       font-size: 28rpx;
       overflow: hidden;
+      padding-top: 20rpx;
       -webkit-line-clamp: 2;
       text-overflow: ellipsis;
       display: -webkit-box;
+      font-weight: 700;
       -webkit-box-orient: vertical;
     }
     .bottom {
@@ -107,7 +101,7 @@ const navigatetoDetail = () => {
       justify-content: space-between;
       font-size: 24rpx;
       color: #ccc;
-      padding: 0 20rpx 0 0;
+      padding: 0 20rpx 10rpx 0;
     }
   }
   .image {

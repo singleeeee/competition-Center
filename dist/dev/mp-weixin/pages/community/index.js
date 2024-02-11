@@ -28,10 +28,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         e: common_vendor.unref(currentPage) === 2 ? 1 : "",
         f: common_vendor.o(($event) => common_vendor.isRef(currentPage) ? currentPage.value = 2 : currentPage = 2),
         g: common_vendor.p({
-          title: "热门话题"
+          title: "热门比赛",
+          type: true
         }),
         h: common_vendor.p({
-          title: "热门帖子"
+          title: "热门帖子",
+          type: false
         }),
         i: common_vendor.unref(windowHeight) * 2 - 40 + "rpx",
         j: common_vendor.unref(windowHeight) * 2 - 40 + "rpx",

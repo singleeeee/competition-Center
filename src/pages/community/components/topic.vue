@@ -5,42 +5,104 @@
       <view class="topic">{{ title }}</view>
       <view class="rightTitle">更多<uni-icons type="forward" size="12" /></view>
     </view>
-    <view class="topicBox" v-for="item in topicList" :key="item.id" @click="navigatetoPosts">
-      <view class="img"></view>
-      <view class="content">
-        <view class="topicTitle">{{ item.title }}</view>
-        <view class="introduce">{{ item.introduce }}</view>
+    <template v-if="type">
+      <view
+        class="topicBox"
+        v-for="(item, index) in competitionList"
+        :key="index"
+        @click="navigatetoPosts"
+      >
+        <view>
+          <image class="img" :src="item.comPicture" mode="scaleToFill" />
+        </view>
+        <view class="content">
+          <view class="topicTitle"> #{{ item.comTitle }}</view>
+          <view class="introduce">{{ item.comSubTitle }}</view>
+        </view>
       </view>
-    </view>
+    </template>
+    <template v-else>
+      <view
+        class="topicBox"
+        v-for="(item, index) in postList"
+        :key="index"
+        @click="navigatetoPosts"
+      >
+        <view>
+          <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
+        </view>
+        <view class="content">
+          <view class="topicTitle"> #{{ item.disTitle }}</view>
+          <view class="introduce">{{ item.disContent }}</view>
+        </view>
+      </view>
+    </template>
   </view>
 </template>
 
 <script lang="ts" setup>
-const topicList = [
-  {
-    id: 1,
-    title: '#大一可以打蓝桥杯吗？',
-    introduce: '建议大一大二打',
-  },
-  {
-    id: 2,
-    title: '#软通杯含金量如何？',
-    introduce: '练练手',
-  },
-  {
-    id: 3,
-    title: '#我们学校ICPC有多少个名额？',
-    introduce: '一般来说2个',
-  },
-]
-const topic = defineProps({
+import { http } from '@/utils/http'
+import { onLoad } from '@dcloudio/uni-app'
+import { ref } from 'vue'
+
+onLoad(() => {
+  // 获取比赛列表
+  getComList()
+  getCommentList()
+})
+
+// 比赛列表数组
+const competitionList = ref([])
+// 获取比赛列表
+const getComList = async () => {
+  const res = await http({
+    url: '/app/com/getComInfoList',
+    data: {
+      disModel: 3,
+      // disStatus: 1, 1待审核 2 展示中 3 有问题
+      page: 1,
+      pageSize: 5,
+      sort: 'com_hot',
+      order: 'descending',
+    },
+  })
+  for (let i = 0; i < res.data.list.length; i++) {
+    competitionList.value.push(res.data.list[i])
+  }
+}
+// 父组件传来的数据
+defineProps({
   title: {
     type: String,
   },
+  type: {
+    type: Boolean,
+  },
 })
-// 跳转
+// 跳转到具体页面
 const navigatetoPosts = () => {
   uni.navigateTo({ url: '/subpackage/posts/index' })
+}
+
+// 帖子列表数组
+const postList = ref([])
+// 获取帖子列表
+const getCommentList = async () => {
+  const res = await http({
+    url: '/app/dis/getDisInfoList',
+    data: {
+      disModel: 1,
+      disStatus: 2,
+      page: 1,
+      pageSize: 5,
+      sort: 'dis_hot',
+      order: 'descending',
+    },
+  })
+  for (let i = 0; i < res.data.list.length; i++) {
+    postList.value.push(res.data.list[i])
+  }
+  console.log(postList.value)
 }
 </script>
 

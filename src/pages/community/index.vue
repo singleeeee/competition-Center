@@ -17,8 +17,8 @@
       <swiper-item>
         <scroll-view scroll-y :style="{ height: windowHeight * 2 - 40 + 'rpx' }">
           <view class="hall">
-            <topic title="热门话题"></topic>
-            <topic title="热门帖子"></topic>
+            <topic title="热门比赛" :type="true"></topic>
+            <topic title="热门帖子" :type="false"></topic>
           </view>
         </scroll-view>
       </swiper-item>
