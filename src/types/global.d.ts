@@ -61,7 +61,7 @@ export type PostList = {
 // 收藏列表
 export type CollectList = {
   // 帖子ID
-  disID: number
+  disId: number
   // 帖子标题
   disTitle: string
   // 帖子所属话题（比赛）

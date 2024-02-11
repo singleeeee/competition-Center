@@ -8,7 +8,7 @@
         :right-options="Del"
         @click="bindClick($event, index)"
       >
-        <view class="item" @tap="switchToPostDetail(item.disID)">
+        <view class="item" @tap="switchToPostDetail(item.disId)">
           <view class="title">{{ item.disTitle }}</view>
           <view class="author-type">
             <view class="author">{{ item.disUserName }}| {{ item.disTopic }}</view>
@@ -36,19 +36,19 @@ const getCollectList = async () => {
     url: '/app/dis/userShowCollectDis',
   })
   collectionList.value = res.data
+  console.log(collectionList.value)
 }
 // 更新收藏列表（分页器）
 
 // 跳转到帖子详情页
 const switchToPostDetail = (disId: number) => {
-  console.log(disId)
-
   if (disId) {
-    console.log(disId)
+    console.log('disId', disId)
     uni.navigateTo({
-      url: `/subpackage/postDetail/index?ID=${disId}`,
+      url: `/subpackage/postDetail/index?disId=${disId}`,
     })
   } else {
+    console.log('disId不存在')
     uni.showToast({
       url: '帖子不存在!',
       icon: 'none',
@@ -65,8 +65,8 @@ const Del = [
   },
 ]
 // 处理删除事件
-const bindClick = (e, index) => {
-  http({
+const bindClick = async (e, index) => {
+  const res = await http({
     url: `/app/dis/userCancelCollectDis?disID=${collectionList.value[index].disId}`,
     method: 'DELETE',
   })

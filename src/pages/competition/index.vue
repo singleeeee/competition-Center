@@ -121,6 +121,34 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { http } from '@/utils/http'
+onLoad(() => {
+  getCompetitionList()
+})
+// 获取比赛列表
+const currentComPage = 0
+const comPageSize = 5
+const getCompetitionList = async () => {
+  const res = await http({
+    url: '/app/com/getComInfoList',
+    data: {
+      page: currentComPage,
+      pageSize: comPageSize,
+    },
+  })
+  console.log(res)
+
+  //   for (let i = 0; i < (data as any).list.length; i++) {
+  //     const obj = {
+  //       ID: data.list[i].ID,
+  //       hot: data.list[i].comHot,
+  //       title: data.list[i].comTitle,
+  //       author: '竞赛中心',
+  //     }
+  //   }
+  // })
+}
 const navigateToSearch = () => {
   uni.navigateTo({
     url: '/pages/competition/searchPage/index',

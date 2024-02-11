@@ -1,5 +1,8 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const utils_http = require("../../utils/http.js");
+require("../../stores/index.js");
+require("../../stores/modules/userInfoStore.js");
 if (!Array) {
   const _easycom_uni_icons2 = common_vendor.resolveComponent("uni-icons");
   const _easycom_uni_card2 = common_vendor.resolveComponent("uni-card");
@@ -15,6 +18,21 @@ if (!Math) {
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
+    common_vendor.onLoad(() => {
+      getCompetitionList();
+    });
+    const currentComPage = 0;
+    const comPageSize = 5;
+    const getCompetitionList = async () => {
+      const res = await utils_http.http({
+        url: "/app/com/getComInfoList",
+        data: {
+          page: currentComPage,
+          pageSize: comPageSize
+        }
+      });
+      console.log(res);
+    };
     const navigateToSearch = () => {
       common_vendor.index.navigateTo({
         url: "/pages/competition/searchPage/index"

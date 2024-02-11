@@ -10,34 +10,48 @@
         </view>
       </view>
     </view>
-    <view class="image"></view>
+    <view>
+      <image class="image" :src="item.imageUrl" mode="scaleToFill" />
+    </view>
   </view>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
-onLoad(async () => {
-  const { data } = await http({
+import { toLocalTime } from '@/utils/toLocalTime'
+// 加载比赛列表
+onLoad(() => {
+  getNotificationList()
+})
+
+// 获取帖子列表
+const currentNotificationPage = ref(0)
+const notificationPageSize = ref(5)
+const getNotificationList = async () => {
+  const res = await http({
     url: '/app/dis/getDisInfoList',
-    method: 'GET',
     data: {
-      disModel: 1,
-      page: 1,
-      pageSize: 20,
+      page: currentNotificationPage.value,
+      pageSize: notificationPageSize.value,
+      disModel: 2, // 1为普通 2为公告 3为比赛
     },
   })
-  console.log(data.list[0])
-
-  for (let i = 0; i < (data as any).list.length; i++) {
+  const resList = ref(res.data.list)
+  for (let i = 0; i < resList.value.length; i++) {
     const obj = {
-      ID: data.list[i].ID,
-      hot: data.list[i].comHot,
-      title: data.list[i].comTitle,
-      author: '竞赛中心',
+      ID: resList.value[i].ID, //帖子ID
+      hot: resList.value[i].disLookNumber,
+      title: resList.value[i].disTitle,
+      time: toLocalTime(resList.value[i].CreatedAt),
+      font: resList.value[i].disLoveNumber,
+      imageUrl: resList.value[i].disPicture[0],
+      author: resList.value[i].userInfo.userNickname,
     }
+    newsList.value.push(obj)
   }
-})
+}
+
 const newsList = ref([
   {
     id: 1,
@@ -47,13 +61,15 @@ const newsList = ref([
     pic: '',
     font: 2333,
     hot: '999+',
+    imageUrl:
+      'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-02/challengeCup.jpeg',
   },
 ])
 
 // 跳转到详情页
 const navigatetoDetail = () => {
   uni.navigateTo({
-    url: '/subpackage/notification_detail/index',
+    url: `/subpackage/notification_detail/index?disId`,
   })
 }
 </script>

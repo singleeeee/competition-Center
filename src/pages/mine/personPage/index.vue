@@ -97,7 +97,7 @@ const changeBar = (e: any) => {
   currentPage.value = +e.currentTarget.dataset.id
 }
 
-//swiper
+//swiper切换事件
 const swiperChange = (e: any) => {
   activeBar.value = e.detail.current
 }
@@ -174,6 +174,7 @@ if (userInfo.value.userLabel.includes('-')) {
 }
 .container .body .infoBox .nickname {
   font-size: 36rpx;
+  font-weight: 700;
 }
 .container .body .infoBox .itemsBox {
   display: flex;
@@ -197,7 +198,7 @@ if (userInfo.value.userLabel.includes('-')) {
   color: #ccc;
   font-size: 28rpx;
 }
-.container .body .infoBox .tag .tagItem {
+.container .body .infoBox .tag .label {
   padding-right: 20rpx;
   font-size: 24rpx;
 }
