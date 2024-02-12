@@ -160,7 +160,6 @@ const onChooseAvatar = (e: any) => {
 const genderArray = ['男', '女']
 const genderValue = ref([0])
 const genderSelectd = ref('男')
-
 const genderChange = (e: any) => {
   const val = e.detail.value
   genderSelectd.value = genderArray[val[0]]
@@ -190,7 +189,7 @@ const nicknameCancel = () => {
 }
 
 // 简介修改
-let introduction = ref<String>(userInfo.value.userNickname)
+let introduction = ref<String>(userInfo.value.userIntroduction)
 // 确认
 const introConfirm = () => {
   userInfoStore.changeUserInfo('userIntroduction', introduction.value as string)

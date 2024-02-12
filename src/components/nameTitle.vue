@@ -1,8 +1,8 @@
 <template>
   <view :class="{ container: true, comment: isComment, border: border }">
     <!-- 作者头像 -->
-    <view :class="{ authorBox: true, comment: isComment }">
-      <view class="avatar">
+    <view :class="{ authorBox: true, comment: isComment }" @tap="handleTap">
+      <view class="avatar" @tap.stop="tapAvatar">
         <image class="avatar" :src="avatarUrl" mode="scaleToFill" />
       </view>
       <view class="bodyBox">
@@ -12,20 +12,22 @@
           <view class="add"> {{ extra }}</view>
         </view>
       </view>
-      <view class="share">
+      <view class="share" v-if="candelete" @tap.stop="delComment">
         <span style="font-size: 24rpx; color: #ccc">{{ rightText }}</span>
         <uni-icons :type="icon" color="#ccc" size="18"></uni-icons>
       </view>
     </view>
     <!-- 二级评论 -->
-    <view class="commentItem">
+    <view class="commentItem" @tap="handleTap">
       <slot name="comment"></slot>
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-defineProps({
+import { http } from '@/utils/http'
+
+const props = defineProps({
   avatarUrl: {
     type: String,
     default: 'http://tmp/wpinKs1JejQv9558093d8ac2138389013e440bfe808e.jpeg',
@@ -62,7 +64,33 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  // 一级评论的id
+  commentID: {
+    type: Number,
+  },
+  candelete: {
+    type: Boolean,
+    default: false,
+  },
 })
+const emits = defineEmits(['tapAvatar', 'refleshComment', 'openInput'])
+// 点击评论区
+const handleTap = () => {
+  console.log('handleTap')
+  emits('openInput')
+}
+// 点击头像
+const tapAvatar = () => {
+  emits('tapAvatar', props.index)
+}
+// 删除评论
+const delComment = async () => {
+  await http({
+    url: `/app/comment/deleteCommentInfo?ID=${props.commentID}`,
+    method: 'DELETE',
+  })
+  emits('refleshComment')
+}
 </script>
 
 <style scoped lang="scss">
@@ -102,9 +130,9 @@ defineProps({
     .share {
       width: 100rpx;
       height: 100rpx;
+      margin-top: 10rpx;
       display: flex;
       justify-content: center;
-      align-items: center;
     }
   }
   .comment {

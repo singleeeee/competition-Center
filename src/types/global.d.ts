@@ -24,6 +24,10 @@ export type UserInfo = {
   userProfession: string
   // 获赞个数
   loveNumber: number
+  // 关注个数
+  followerNumber: number
+  // 粉丝个数
+  fansNumber: number
 }
 // 帖子列表
 export type PostList = {

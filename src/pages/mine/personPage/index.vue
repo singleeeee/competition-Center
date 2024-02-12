@@ -1,12 +1,19 @@
 <template>
-  <view class="container">
+  <view class="container" v-if="userInfo">
     <view class="header">
       <image class="bg" src="https://s11.ax1x.com/2024/01/24/pFeshjA.jpg" />
     </view>
     <view class="body">
       <view class="avatarBox">
         <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
-        <view class="edit" @tap="navigateToEdit">编辑资料</view>
+        <view class="function">
+          <view v-if="isSelf" class="edit" @tap="navigateToEdit">编辑资料</view>
+          <view v-else style="display: flex">
+            <view v-if="userInfo.isYourFollower" class="edit" @tap="cancelFollow">取消关注</view>
+            <view v-else class="edit" @tap="follow">关注</view>
+            <view class="edit" @tap="navigateToEdit">私信</view>
+          </view>
+        </view>
       </view>
       <view class="infoBox">
         <view class="nickname"
@@ -21,15 +28,15 @@
         </view>
         <view class="itemsBox">
           <view class="item">
-            <view class="num">2</view>
+            <view class="num">{{ shortenNum(userInfo.loveNumber) }}</view>
             <view class="text">获赞与收藏</view>
           </view>
           <view class="item">
-            <view class="num">0</view>
+            <view class="num">{{ shortenNum(userInfo.followerNumber) }}</view>
             <view class="text">关注</view>
           </view>
           <view class="item">
-            <view class="num">2</view>
+            <view class="num">{{ shortenNum(userInfo.fansNumber) }}</view>
             <view class="text">粉丝</view>
           </view>
         </view>
@@ -77,32 +84,63 @@
       <swiper-item class="">帖子</swiper-item>
     </swiper>
   </view>
+  <view v-else>加载中</view>
 </template>
 
 <script lang="ts" setup>
-import { useUserInfoStore } from '@/stores'
-import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
-const userID = ref(0)
-onLoad((options) => {
-  if (options.userID) {
-    userID.value = options?.userID
-    gerUserinfo()
+import { shortenNum } from '@/utils/shortenNum'
+import { myDebounce } from '@/utils/myDebounce'
+// 是否用户本人
+const isSelf = ref(false)
+// 用户信息
+const userInfo = ref()
+onLoad(async (options) => {
+  // 获取用户信息
+  await gerUserinfo(options?.userID)
+  // 转换标签
+  await stringToTag()
+  // 判断是否用户本人
+  if (+options?.userID === JSON.parse(uni.getStorageSync('UserInfo')).userInfo.ID) {
+    isSelf.value = true
   }
 })
-// 获取用户信息
-const gerUserinfo = () => {
-  const res = http({
-    url: '/app/user/getUserInfoByid',
+// 关注
+const follow = myDebounce(async () => {
+  const res = await http({
+    url: '/app/user/followUser',
     data: {
-      ID: userID,
+      followUserId: userInfo.value.ID,
     },
   })
-  console.log(res)
+  console.log('关注')
+
+  userInfo.value.followerNumber += 1
+  userInfo.value.isYourFollower = true
+}, 200)
+// 取消关注
+const cancelFollow = myDebounce(async () => {
+  const res = await http({
+    url: `/app/user/unFollowUser?unFollowUserId=${userInfo.value.ID}`,
+    method: 'DELETE',
+  })
+  console.log('取消关注')
+  userInfo.value.followerNumber -= 1
+  userInfo.value.isYourFollower = false
+}, 200)
+// 获取用户信息
+const gerUserinfo = async (ID) => {
+  const res = await http({
+    url: '/app/user/getUserInfoByid',
+    data: {
+      ID,
+    },
+  })
+  userInfo.value = res.data.reuserData
 }
-const { userInfo } = storeToRefs(useUserInfoStore())
+
 // 跳转到个人资料修改
 const navigateToEdit = () => {
   uni.navigateTo({
@@ -126,9 +164,12 @@ const activeBar = ref(0)
 
 // tag数组
 let tagList = ref<string[]>([])
-if (userInfo.value.userLabel.includes('-')) {
-  tagList.value = userInfo.value.userLabel.split('-')
-} else if (userInfo.value.userLabel !== '') tagList.value.push(userInfo.value.userLabel)
+
+const stringToTag = () => {
+  if (userInfo.value.userLabel.includes('-')) {
+    tagList.value = userInfo.value.userLabel.split('-')
+  } else if (userInfo.value.userLabel !== '') tagList.value.push(userInfo.value.userLabel)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -159,7 +200,6 @@ if (userInfo.value.userLabel.includes('-')) {
   position: relative;
   display: flex;
   justify-content: space-between;
-  background-color: #fff;
 }
 .container .body .avatarBox .avatar {
   position: absolute;
@@ -171,9 +211,14 @@ if (userInfo.value.userLabel.includes('-')) {
   border-radius: 50%;
   border: 8rpx solid #ccc;
 }
-.container .body .avatarBox .edit {
+.container .body .avatarBox .function {
   position: absolute;
-  right: 0;
+  right: 40rpx;
+  width: 70vw;
+  display: flex;
+  justify-content: flex-end;
+}
+.container .body .avatarBox .edit {
   width: 160rpx;
   height: 60rpx;
   line-height: 60rpx;
@@ -182,6 +227,7 @@ if (userInfo.value.userLabel.includes('-')) {
   border: 1rpx solid #999;
   font-weight: 700;
   background-color: #fff;
+  margin-right: 20rpx;
 }
 .container .body .infoBox {
   flex: 5;

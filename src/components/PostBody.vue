@@ -27,21 +27,31 @@
         <view>
           <uni-icons :type="isLiked ? 'hand-up-filled' : 'hand-up'" color="" size="24" />
         </view>
-        <view> 点赞 </view>
+        <view v-if="isLiked"> 已点赞 </view>
+        <view v-else> 点赞 </view>
       </view>
       <view :class="{ collect: true, active: isCollected }" @tap="collect">
         <view>
           <uni-icons :type="isCollected ? 'star-filled' : 'star'" color="" size="24" />
         </view>
-        <view>收藏</view>
+        <view v-if="isCollected"> 已收藏 </view>
+        <view v-else> 收藏 </view>
       </view>
     </view>
   </view>
 </template>
 <script lang="ts" setup>
+import { http } from '@/utils/http'
 import { ref } from 'vue'
+import { myDebounce } from '@/utils/myDebounce'
 
-defineProps({
+const props = defineProps({
+  disId: {
+    type: Number,
+  },
+  authorId: {
+    type: Number,
+  },
   title: {
     type: String,
     default: '震惊！某男子竟当众做出这样的举动',
@@ -54,15 +64,54 @@ defineProps({
     type: Array,
     default: () => [],
   },
+  liked: {
+    type: Boolean,
+  },
+  collected: {
+    type: Boolean,
+  },
 })
-const isLiked = ref(false)
-const like = () => {
-  isLiked.value = !isLiked.value
-}
-const isCollected = ref(false)
-const collect = () => {
-  isCollected.value = !isCollected.value
-}
+// 点赞
+const isLiked = ref(props.liked)
+const like = myDebounce(() => {
+  // 取消点赞
+  if (isLiked.value) {
+    http({
+      url: `/app/dis/userUnLikeDis?ID=${props.disId}&dislikeUserID=${props.authorId}`,
+      method: 'DELETE',
+    })
+    isLiked.value = !isLiked.value
+  } else {
+    http({
+      url: '/app/dis/userLikeDis',
+      data: {
+        ID: props.disId,
+        likeUserID: props.authorId,
+      },
+    })
+    isLiked.value = !isLiked.value
+  }
+}, 200)
+// 收藏
+const isCollected = ref(props.collected)
+const collect = myDebounce(() => {
+  // 取消点赞
+  if (isCollected.value) {
+    http({
+      url: `/app/dis/userCancelCollectDis?disID=${props.disId}`,
+      method: 'DELETE',
+    })
+    isCollected.value = !isCollected.value
+  } else {
+    http({
+      url: '/app/dis/userCollectDis',
+      data: {
+        disID: props.disId,
+      },
+    })
+    isCollected.value = !isCollected.value
+  }
+}, 200)
 </script>
 <style lang="scss" scoped>
 .container {

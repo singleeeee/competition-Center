@@ -6,14 +6,21 @@
         :avatar-url="postDetail.userInfo.userAvatarUrl"
         :date="postDetail.date"
         :extra="postDetail.extra"
+        @tap-avatar="toUserPage"
       ></nameTitle>
     </view>
     <PostBody
       :content="postDetail.disContent"
       :title="postDetail.disTitle"
       :img-list="postDetail.disPicture"
+      :dis-id="postDetail.ID"
+      :authorId="postDetail.userInfo.disId"
+      :liked="postDetail.isLiked"
+      :collected="postDetail.isCollected"
     ></PostBody>
-    <CommentArea :disId="postDetail.ID"></CommentArea>
+    <view class="commentArear">
+      <CommentArea :disId="postDetail.ID"></CommentArea>
+    </view>
   </view>
   <view v-else> 加载中</view>
 </template>
@@ -25,12 +32,18 @@ import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { ref } from 'vue'
 import { toLocalTime } from '@/utils/toLocalTime'
+
 // 帖子详细信息
 const postDetail = ref()
 // 控制帖子显示
 const isPostShow = ref(false)
 onLoad(async (options) => {
   const { disId } = options
+  getPostDetail(disId)
+})
+
+// 获取帖子详细信息
+const getPostDetail = async (disId: number) => {
   // 请求获取帖子详细信息
   const res = await http({
     url: `/app/dis/getDisInfoByid?ID=${disId}`,
@@ -45,10 +58,20 @@ onLoad(async (options) => {
   // 修改省份
   postDetail.value.extra = province.slice(0, province.indexOf('/'))
   isPostShow.value = true
-})
+}
+
+// 跳转到用户主页
+const toUserPage = () => {
+  uni.navigateTo({
+    url: `/pages/mine/personPage/index?userID=${postDetail.value.userInfo.ID}`,
+  })
+}
 </script>
 <style lang="scss" scoped>
 .header {
   margin: 0 20rpx;
+}
+.commentArear {
+  padding-bottom: 80rpx;
 }
 </style>

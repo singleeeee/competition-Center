@@ -8,16 +8,23 @@
         "miniprogram": {
             "list": [
                 {
-                    "name": "pages/test/index",
-                    "pathName": "pages/test/index",
-                    "query": "",
+                    "name": "帖子详情页",
+                    "pathName": "subpackage/postDetail/index",
+                    "query": "disId=9",
                     "launchMode": "default",
                     "scene": null
                 },
                 {
-                    "name": "帖子详情页",
-                    "pathName": "subpackage/postDetail/index",
-                    "query": "disID=9",
+                    "name": "个人主页",
+                    "pathName": "pages/mine/personPage/index",
+                    "query": "userID=1",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "pages/test/index",
+                    "pathName": "pages/test/index",
+                    "query": "",
                     "launchMode": "default",
                     "scene": null
                 },
@@ -59,13 +66,6 @@
                 {
                     "name": "聊天室",
                     "pathName": "pages/community/chatRoom/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "个人主页",
-                    "pathName": "pages/mine/personPage/index",
                     "query": "",
                     "launchMode": "default",
                     "scene": null

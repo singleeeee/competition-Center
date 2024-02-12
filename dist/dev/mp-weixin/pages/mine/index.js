@@ -152,8 +152,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         j: common_vendor.o(changeIsLog)
       }, {
         k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
-        l: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
-        m: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
+        l: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
+        m: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
         n: common_assets._imports_0,
         o: common_vendor.o(($event) => navigateTo("myCollection")),
         p: common_assets._imports_1,

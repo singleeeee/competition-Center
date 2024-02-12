@@ -164,11 +164,11 @@ const switchTab = (target: string) => {
             <view class="text">获赞</view>
           </view>
           <view class="liked">
-            <view class="Number">{{ userInfo.loveNumber || 0 }}</view>
+            <view class="Number">{{ userInfo.followerNumber || 0 }}</view>
             <view class="text">关注</view>
           </view>
           <view class="liked">
-            <view class="Number">{{ userInfo.loveNumber || 0 }}</view>
+            <view class="Number">{{ userInfo.fansNumber || 0 }}</view>
             <view class="text">粉丝</view>
           </view>
         </view>
