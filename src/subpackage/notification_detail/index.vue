@@ -30,7 +30,6 @@ const postDetail = ref()
 // 控制帖子显示
 const isPostShow = ref(false)
 onLoad(async (options) => {
-
   const { disId } = options
   // 请求获取帖子详细信息
   const res = await http({

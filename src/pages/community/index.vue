@@ -47,7 +47,6 @@ let windowHeight = 0
 ;(() => {
   const deviceInfo = uni.getWindowInfo()
   windowHeight = deviceInfo?.windowHeight - 40
-  console.log(windowHeight)
 })()
 
 //tab栏切换

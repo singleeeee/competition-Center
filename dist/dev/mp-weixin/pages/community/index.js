@@ -13,7 +13,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     (() => {
       const deviceInfo = common_vendor.index.getWindowInfo();
       windowHeight = (deviceInfo == null ? void 0 : deviceInfo.windowHeight) - 40;
-      console.log(windowHeight);
     })();
     let currentPage = common_vendor.ref(0);
     const swiperChange = (e) => {

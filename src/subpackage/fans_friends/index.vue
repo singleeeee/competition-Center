@@ -32,14 +32,29 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import nameTitle from '@/components/nameTitle.vue'
+import { http } from '@/utils/http'
+import { onLoad } from '@dcloudio/uni-app'
+
+onLoad((options) => {
+  options.id && (currentGroup.value = options.id)
+  getFansList()
+})
+
 // 当前分组
 const currentGroup = ref(0)
 const groupList = ref(['全部', '挚友', '家人'])
 
 const changeGroup = (e) => {
-  console.log(e)
-
   currentGroup.value = e.currentTarget.dataset.id
+}
+// 获取关注or粉丝列表
+const getFansList = async () => {
+  const res = await http({
+    url: '/app/user/showUserFans',
+    data: {
+      userID: ID,
+    },
+  })
 }
 
 const fansList = ref([

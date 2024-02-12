@@ -134,7 +134,7 @@ onReachBottom(() => {
 // 点击评论跳转到详情页
 const switchToDetail = (index: number) => {
   uni.navigateTo({
-    url: `/subpackage/postDetail/index?disID=${postList.value[index].ID}`,
+    url: `/subpackage/postDetail/index?disId=${postList.value[index].ID}`,
   })
 }
 </script>

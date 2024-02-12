@@ -12,7 +12,7 @@
         <view class="nickname"
           >{{ userInfo.userNickname }}
           <image
-            v-if="userInfo.userGender === 0"
+            v-if="userInfo.userGender === 1"
             class="gender"
             src="/static/personPage/man.png"
             mode="scaleToFill"
@@ -83,6 +83,25 @@
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { http } from '@/utils/http'
+const userID = ref(0)
+onLoad((options) => {
+  if (options.userID) {
+    userID.value = options?.userID
+    gerUserinfo()
+  }
+})
+// 获取用户信息
+const gerUserinfo = () => {
+  const res = http({
+    url: '/app/user/getUserInfoByid',
+    data: {
+      ID: userID,
+    },
+  })
+  console.log(res)
+}
 const { userInfo } = storeToRefs(useUserInfoStore())
 // 跳转到个人资料修改
 const navigateToEdit = () => {

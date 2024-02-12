@@ -3,8 +3,11 @@
     <!-- item -->
     <view class="title">
       <view class="topic">{{ title }}</view>
-      <view class="rightTitle">更多<uni-icons type="forward" size="12" /></view>
+      <view class="rightTitle" @tap="navigatetoPosts"
+        >更多<uni-icons type="forward" size="12"
+      /></view>
     </view>
+    <!-- 比赛列表 -->
     <template v-if="type">
       <view
         class="topicBox"
@@ -21,12 +24,13 @@
         </view>
       </view>
     </template>
+    <!-- 帖子列表 -->
     <template v-else>
       <view
         class="topicBox"
         v-for="(item, index) in postList"
         :key="index"
-        @click="navigatetoPosts"
+        @click="navigatetoPostDetail(item.ID)"
       >
         <view>
           <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
@@ -80,10 +84,13 @@ defineProps({
   },
 })
 // 跳转到具体页面
-const navigatetoPosts = () => {
-  uni.navigateTo({ url: '/subpackage/posts/index' })
+const navigatetoPostDetail = (disId: number) => {
+  uni.navigateTo({ url: `/subpackage/postDetail/index?disId=${disId}` })
 }
-
+// 跳转到全部帖子列表
+const navigatetoPosts = () => {
+  uni.navigateTo({ url: `/subpackage/posts/index` })
+}
 // 帖子列表数组
 const postList = ref([])
 // 获取帖子列表
