@@ -41,6 +41,8 @@ const Login = async () => {
       userLabel,
       userCity,
       loveNumber,
+      fansNumber,
+      followerNumber,
     } = resOpenid.data as UserInfo
 
     // 获取token
@@ -65,6 +67,8 @@ const Login = async () => {
       userLabel,
       userCity,
       loveNumber,
+      fansNumber,
+      followerNumber,
     }
     userInfoStore.updateUserInfo(serviceUserInfo)
     emit('changeIsLog', true)

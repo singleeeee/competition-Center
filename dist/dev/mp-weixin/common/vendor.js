@@ -9064,6 +9064,30 @@ const messages$1 = {
   "zh-Hans": zhHans$1,
   "zh-Hant": zhHant$1
 };
+const popup = {
+  data() {
+    return {};
+  },
+  created() {
+    this.popup = this.getParent();
+  },
+  methods: {
+    /**
+     * 获取父元素实例
+     */
+    getParent(name = "uniPopup") {
+      let parent = this.$parent;
+      let parentName = parent.$options.name;
+      while (parentName !== name) {
+        parent = parent.$parent;
+        if (!parent)
+          return false;
+        parentName = parent.$options.name;
+      }
+      return parent;
+    }
+  }
+};
 let mpMixins = {};
 mpMixins = {
   data() {
@@ -9127,30 +9151,6 @@ mpMixins = {
 const mpwxs = mpMixins;
 let bindIngXMixins = {};
 let otherMixins = {};
-const popup = {
-  data() {
-    return {};
-  },
-  created() {
-    this.popup = this.getParent();
-  },
-  methods: {
-    /**
-     * 获取父元素实例
-     */
-    getParent(name = "uniPopup") {
-      let parent = this.$parent;
-      let parentName = parent.$options.name;
-      while (parentName !== name) {
-        parent = parent.$parent;
-        if (!parent)
-          return false;
-        parentName = parent.$options.name;
-      }
-      return parent;
-    }
-  }
-};
 class MPAnimation {
   constructor(options, _this) {
     this.options = options;
