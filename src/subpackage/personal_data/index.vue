@@ -167,8 +167,9 @@ const genderChange = (e: any) => {
 }
 
 // 退出登录
-const logout = () => {
-  userInfoStore.clearUserInfo()
+const logout = async () => {
+  await userInfoStore.resetStore()
+  await userInfoStore.clearUserInfo()
   uni.switchTab({
     url: '/pages/mine/index',
   })

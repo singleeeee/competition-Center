@@ -71,7 +71,4 @@ const toUserPage = () => {
 .header {
   margin: 0 20rpx;
 }
-.commentArear {
-  padding-bottom: 80rpx;
-}
 </style>

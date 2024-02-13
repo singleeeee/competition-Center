@@ -76,10 +76,15 @@ import { ref } from 'vue'
 import { http } from '@/utils/http'
 import { onMounted } from 'vue'
 import { toLocalTime } from '@/utils/toLocalTime'
-import { onReachBottom } from '@dcloudio/uni-app'
+import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { myThrottle } from '@/utils/myThrottle'
+onPullDownRefresh(async () => {
+  console.log('刷新')
+  await getCommentList(props.disId)
+  uni.stopPullDownRefresh()
+})
 // 为啥用onLoad不行？
 onMounted(async () => {
   getCommentList(props.disId)
@@ -251,6 +256,7 @@ const delSecondComment = async (ID: number) => {
 }
 .container {
   margin: 0 20rpx;
+  padding-bottom: 80rpx;
 }
 .commentText {
   font-size: 28rpx;

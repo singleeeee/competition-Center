@@ -32,6 +32,10 @@ export const useUserInfoStore = defineStore(
       userProfession: '考古学',
       // 获赞个数
       loveNumber: 0,
+      // 关注个数
+      followerNumber: 0,
+      // 粉丝个数
+      fansNumber: 0,
     })
 
     // 修改某项属性
@@ -61,35 +65,40 @@ export const useUserInfoStore = defineStore(
         uni.switchTab({ url: '/pages/mine/index' })
       }
     }
+    // 重置pinia仓库
+    const resetStore = () => {
+      // ID
+      userInfo.value.ID = 0
+      // token
+      userInfo.value.token = ''
+      //wxopenid
+      userInfo.value.userWxopenid = ''
+      // 昵称
+      userInfo.value.userNickname = '微信用户'
+      // 性别
+      userInfo.value.userGender = 0
+      // 头像
+      userInfo.value.userAvatarUrl = 'https://s11.ax1x.com/2024/02/02/pFQmajg.png'
+      // 简介
+      userInfo.value.userIntroduction = '无'
+      //所在地区
+      userInfo.value.userCity = '广东'
+      // 用户标签
+      userInfo.value.userLabel = ''
+      //年级
+      userInfo.value.userGrade = 0
+      //专业
+      userInfo.value.userProfession = ''
+      // 获赞个数
+      userInfo.value.loveNumber = 0
+      // 粉丝个数
+      userInfo.value.fansNumber = 0
+      // 关注个数
+      userInfo.value.followerNumber = 0
+    }
     // 清除用户信息
     const clearUserInfo = () => {
-      // // ID
-      // userInfo.value.ID = 0
-      // // token
-      // ;(userInfo.value.token = ''),
-      //   //wxopenid
-      //   (userInfo.value.userWxopenid = ''),
-      //   // 昵称
-      //   (userInfo.value.userNickname = '微信用户'),
-      //   // 性别
-      //   (userInfo.value.userGender = 0),
-      //   // 头像
-      //   (userInfo.value.userAvatarUrl = 'https://s11.ax1x.com/2024/02/02/pFQmajg.png'),
-      //   // 简介
-      //   (userInfo.value.userIntroduction = '无'),
-      //   //所在地区
-      //   (userInfo.value.userCity = '广东'),
-      //   // 用户标签
-      //   (userInfo.value.userLabel = ''),
-      //   //年级
-      //   (userInfo.value.userGrade = 0),
-      //   //专业
-      //   (userInfo.value.userProfession = ''),
-      //   // 获赞个数
-      //   (userInfo.value.loveNumber = 0),
       uni.removeStorageSync('UserInfo')
-      // console.log('清除本地仓库后的pinia', userInfo)
-      // console.log('本地仓库', uni.getStorageSync('UserInfo'))
     }
 
     // 整体更新仓库
@@ -103,6 +112,7 @@ export const useUserInfoStore = defineStore(
       changeUserInfo,
       clearUserInfo,
       updateUserInfo,
+      resetStore,
     }
   },
   // TODO: 持久化

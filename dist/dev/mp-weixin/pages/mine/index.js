@@ -45,6 +45,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           tagList.value.push(userInfo2.userLabel);
         isHeadShow.value = true;
       } else {
+        stores_modules_userInfoStore.useUserInfoStore();
+        for (let i = 0; i < tagList.value.length; i++)
+          tagList.value.pop();
         isHeadShow.value = false;
       }
     });

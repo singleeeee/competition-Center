@@ -8,7 +8,6 @@ import type { PostList } from '@/types/global'
 import { onReachBottom } from '@dcloudio/uni-app'
 
 const userInfoStore = useUserInfoStore()
-const { userInfo } = storeToRefs(userInfoStore)
 let postList = ref<PostList[]>([])
 onMounted(() => {
   getPostList()

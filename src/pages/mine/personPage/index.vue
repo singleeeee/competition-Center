@@ -116,8 +116,7 @@ const follow = myDebounce(async () => {
     },
   })
   console.log('关注')
-
-  userInfo.value.followerNumber += 1
+  userInfo.value.fansNumber += 1
   userInfo.value.isYourFollower = true
 }, 200)
 // 取消关注
@@ -127,7 +126,7 @@ const cancelFollow = myDebounce(async () => {
     method: 'DELETE',
   })
   console.log('取消关注')
-  userInfo.value.followerNumber -= 1
+  userInfo.value.fansNumber -= 1
   userInfo.value.isYourFollower = false
 }, 200)
 // 获取用户信息

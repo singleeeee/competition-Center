@@ -36,6 +36,9 @@ onShow(() => {
     } else if (userInfo.userLabel !== '') tagList.value.push(userInfo.userLabel)
     isHeadShow.value = true
   } else {
+    useUserInfoStore()
+    // tag数组
+    for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
     isHeadShow.value = false
   }
 })
