@@ -51,6 +51,7 @@ import MyInput from '@/components/MyInput.vue'
 import { onShow, onLoad } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import { http } from '@/utils/http'
 // websocket是否连接
 let socketOpen = false
 // websocket消息队列
@@ -58,7 +59,7 @@ const socketMsgQueue = []
 // websocket连接ID
 let socketTask: UniApp.SocketTask
 // 私聊对象的ID
-let targetID
+let targetID: number
 // 获取用户id等
 const userInfoStore = useUserInfoStore()
 const { userInfo } = storeToRefs(userInfoStore)
@@ -79,18 +80,52 @@ onLoad((options) => {
     },
   })
   // 监听服务器返回信息
-  socketTask.onMessage((data) => {
+  socketTask.onMessage(async (data) => {
     // 转化返回的数据
-    console.log('服务器返回信息:', data)
-    const backMsg = JSON.stringify(data.data)
-    console.log(backMsg)
-    // 处理返回的数据
-    const message = {
-      isImg: false,
-      myWord: true,
-      content: textarea.value,
-      avatarUrl: userInfo.value.userAvatarUrl,
-      imgUrl: '',
+    // json格式
+    if (data.data[0] === '{') {
+      const returnMsg = JSON.parse(data.data)
+      console.log('服务器返回信息:', returnMsg)
+      // if (returnMsg.ID) {
+      //   // 获取对象头像
+      //   const {
+      //     data: {
+      //       reuserData: { userAvatarUrl },
+      //     },
+      //   } = await http({
+      //     url: `/app/user/getUserInfoByid?ID=${returnMsg.ID}`,
+      //   })
+      // 发的是图片
+      if (returnMsg.isImg) {
+        // 处理返回的数据
+        const message = {
+          isImg: returnMsg.isImg,
+          myWord: returnMsg.toUserId === userInfo.value.ID,
+          content: '',
+          avatarUrl:
+            'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+          imgUrl: returnMsg.messageContent,
+        }
+        ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
+        scrollToBottom()
+      }
+      // 非图片内容
+      else {
+        const message = {
+          isImg: returnMsg.isImg,
+          myWord: returnMsg.toUserId !== userInfo.value.ID,
+          content: returnMsg.messageContent,
+          avatarUrl:
+            'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+          imgUrl: '',
+        }
+        ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
+        scrollToBottom()
+      }
+      // }
+    } else {
+      // 普通文字
+      console.log('服务器返回信息:', data.data)
     }
   })
   // 监听WebSocket连接成功事件。
@@ -180,6 +215,9 @@ const wsSend = (msg) => {
       fail: (fail) => {
         console.log('发送失败', fail)
       },
+      success: (success) => {
+        scrollToBottom()
+      },
     })
   }
 }
@@ -213,7 +251,7 @@ const send = (imgList: string[]) => {
       }
       // 塞入数组。同时需要发ws
       wsSend(sendArr)
-      ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
+      // ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
     }
     // 如果有图片，则发送图片
     for (let i = 0; i < imgList.length; i++) {
@@ -221,15 +259,11 @@ const send = (imgList: string[]) => {
         isImg: true,
         myWord: true,
         content: '',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        avatarUrl: userInfo.value.userAvatarUrl,
         imgUrl: imgList[i],
       }
-      // 塞入数组，同时需要发ws
       wsSend(sendArr)
-      ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
     }
-    scrollToBottom()
     textarea.value = ''
     popup.value.close()
   } else {
@@ -238,14 +272,10 @@ const send = (imgList: string[]) => {
       isImg: false,
       myWord: true,
       content: textarea.value,
-      avatarUrl:
-        'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+      avatarUrl: userInfo.value.userAvatarUrl,
       imgUrl: '',
     }
-    // 塞入数组，同时需要发ws
     wsSend(sendArr)
-    ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
-    scrollToBottom()
     textarea.value = ''
     popup.value.close()
   }
@@ -321,6 +351,7 @@ const clearImgList = () => {
   padding: 10rpx;
   display: flex;
   min-width: 20%;
+  margin-top: 20rpx;
 }
 .chatRoom .each_time .detail_info .chat-Box .friendBox .avatar,
 .chatRoom .each_time .detail_info .chat-Box .myBox .avatar {
@@ -352,6 +383,7 @@ const clearImgList = () => {
 .chatRoom .each_time .detail_info .chat-Box .friendBox .img,
 .chatRoom .each_time .detail_info .chat-Box .myBox .img {
   width: 100%;
+  margin-left: 10rpx;
   // max-height: 300rpx;
   border-radius: 10rpx;
 }
