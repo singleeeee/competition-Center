@@ -48,13 +48,120 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import MyInput from '@/components/MyInput.vue'
-import { onShow } from '@dcloudio/uni-app'
-let bottomPx = 0
+import { onShow, onLoad } from '@dcloudio/uni-app'
+import { useUserInfoStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+import { http } from '@/utils/http'
+// websocket是否连接
+let socketOpen = false
+// websocket消息队列
+const socketMsgQueue = []
+// websocket连接ID
+let socketTask: UniApp.SocketTask
+// 私聊对象的ID
+let targetID: number
+// 获取用户id等
+const userInfoStore = useUserInfoStore()
+const { userInfo } = storeToRefs(userInfoStore)
+// 获取token用于ws
+const token = userInfoStore.userInfo.token
+onLoad((options) => {
+  targetID = options?.targetID
+  console.log('targetID', targetID)
+  // 获取用户历史信息
+  getHistoryInfo(targetID)
 
+  // 创建一个 WebSocket 连接。
+  socketTask = uni.connectSocket({
+    url: 'ws://47.113.177.192:8082/app/msg/ping',
+    header: {
+      Authorization: token,
+    },
+    success: () => {
+      console.log('发起websocket连接成功!')
+    },
+  })
+  // 监听服务器返回信息
+  socketTask.onMessage(async (data) => {
+    // 转化返回的数据
+    // json格式
+    if (data.data[0] === '{') {
+      const returnMsg = JSON.parse(data.data)
+      console.log('服务器返回信息:', returnMsg)
+      // 获取对象头像
+      const {
+        data: {
+          reuserData: { userAvatarUrl },
+        },
+      } = await http({
+        url: `/app/user/getUserInfoByid?ID=${returnMsg.formUserId}`,
+      })
+      // 发的是图片
+      if (returnMsg.isImg) {
+        // 处理返回的数据
+        const message = {
+          isImg: returnMsg.isImg,
+          myWord: returnMsg.formUserId === userInfo.value.ID,
+          content: '',
+          avatarUrl: userAvatarUrl,
+          imgUrl: returnMsg.messageContent,
+        }
+        ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
+        scrollToBottom()
+      }
+      // 非图片内容
+      else {
+        const message = {
+          isImg: returnMsg.isImg,
+          myWord: returnMsg.formUserId === userInfo.value.ID,
+          content: returnMsg.messageContent,
+          avatarUrl: userAvatarUrl,
+          imgUrl: '',
+        }
+        ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
+        scrollToBottom()
+      }
+    } else {
+      // 普通文字
+      console.log('服务器返回信息:', data.data)
+    }
+  })
+  // 监听WebSocket连接成功事件。
+  socketTask.onOpen(function (res) {
+    // 标记已经连接
+    socketOpen = true
+  })
+  // 监听连接关闭
+  socketTask.onClose(() => {
+    console.log('连接关闭')
+  })
+})
+// 查找历史记录
+let currentPageNum = 1
+let pageSize = 10
+const getHistoryInfo = async (targetID: number) => {
+  const res = await http({
+    url: '/app/msg/getHistoryMessageList',
+    data: {
+      formUserId: userInfo.value.ID,
+      toUserId: targetID,
+      messageTime: '1707839100',
+      page: currentPageNum,
+      pageSize: pageSize,
+    },
+  })
+  console.log('历史记录', res)
+
+  const insertData = res.data.list.map((item) => {
+    return item
+  })
+}
 //滚动到最新位置
 onShow(() => {
   scrollToBottom()
 })
+// 距离顶部位置
+let bottomPx = 0
 // 滚动到底部
 const scrollToBottom = () => {
   uni
@@ -73,23 +180,15 @@ const scrollToBottom = () => {
 const timeChatList = ref([
   {
     id: 1,
-    time: '15:30',
+    time: '刚刚',
     chatList: [
-      {
-        isImg: false,
-        myWord: false,
-        content: '其实我每天只想你一次',
-        avatarUrl: 'https://s11.ax1x.com/2024/02/01/pFMWV7F.jpg',
-        imgUrl: '',
-      },
-      {
-        isImg: false,
-        myWord: true,
-        content: '那么少',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-        imgUrl: '',
-      },
+      // {
+      //   isImg: false,
+      //   myWord: false,
+      //   content: '其实我每天只想你一次',
+      //   avatarUrl: 'https://s11.ax1x.com/2024/02/01/pFMWV7F.jpg',
+      //   imgUrl: '',
+      // },
     ],
   },
 ])
@@ -105,6 +204,45 @@ let textarea = ref('')
 const closeInput = () => {
   console.log(textarea.value)
 }
+// ws发送信息
+const wsSend = (msg) => {
+  // 如果发送是图片
+  if (msg.isImg) {
+    msg.content = msg.imgUrl
+  }
+  let data = JSON.stringify({
+    toUserId: +targetID,
+    isImg: msg.isImg,
+    messageContent: msg.content,
+  })
+  console.log('封装好的发送的数据', data)
+  // 连接成功
+  if (socketOpen) {
+    // 发送消息
+    socketTask.send({
+      data,
+      fail: (fail) => {
+        console.log('发送失败', fail)
+      },
+      success: () => {
+        scrollToBottom()
+      },
+    })
+  } else {
+    uni.showToast({
+      title: '请重新连接ws',
+      icon: 'none',
+    })
+  }
+}
+// 主动关闭ws连接
+const closeWsConnect = () => {
+  socketTask.close({
+    success: function () {
+      console.log('关闭成功')
+    },
+  })
+}
 // 发送信息
 const send = (imgList: string[]) => {
   console.log(imgList, textarea.value)
@@ -116,50 +254,48 @@ const send = (imgList: string[]) => {
     })
     return
   } else if (imgList.length !== 0) {
-    // 如果有信息
+    // 发送 信息（也许没有）+图片
     if (textarea.value !== '') {
       const sendArr = {
         isImg: false,
         myWord: true,
         content: textarea.value,
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        avatarUrl: userInfo.value.userAvatarUrl,
         imgUrl: '',
       }
-      ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
+      // 塞入数组。同时需要发ws
+      wsSend(sendArr)
     }
+    // 如果有图片，则发送图片
     for (let i = 0; i < imgList.length; i++) {
       const sendArr = {
         isImg: true,
         myWord: true,
         content: '',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        avatarUrl: userInfo.value.userAvatarUrl,
         imgUrl: imgList[i],
       }
-      ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
+      wsSend(sendArr)
     }
-    scrollToBottom()
     textarea.value = ''
     popup.value.close()
   } else {
+    // 发送文字
     const sendArr = {
       isImg: false,
       myWord: true,
       content: textarea.value,
-      avatarUrl:
-        'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+      avatarUrl: userInfo.value.userAvatarUrl,
       imgUrl: '',
     }
-    ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
-    scrollToBottom()
+    wsSend(sendArr)
     textarea.value = ''
     popup.value.close()
   }
 }
 // 清空组件的图片列表
 const clearImgList = () => {
-  console.log('清空')
+  console.log('清空图片列表')
 }
 </script>
 
@@ -205,7 +341,7 @@ const clearImgList = () => {
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
-  padding-bottom: 120rpx;
+  padding-bottom: 90rpx;
 }
 .chatRoom .each_time .date {
   height: 50rpx;
@@ -228,6 +364,7 @@ const clearImgList = () => {
   padding: 10rpx;
   display: flex;
   min-width: 20%;
+  margin-top: 20rpx;
 }
 .chatRoom .each_time .detail_info .chat-Box .friendBox .avatar,
 .chatRoom .each_time .detail_info .chat-Box .myBox .avatar {
@@ -259,6 +396,7 @@ const clearImgList = () => {
 .chatRoom .each_time .detail_info .chat-Box .friendBox .img,
 .chatRoom .each_time .detail_info .chat-Box .myBox .img {
   width: 100%;
+  margin-left: 10rpx;
   // max-height: 300rpx;
   border-radius: 10rpx;
 }

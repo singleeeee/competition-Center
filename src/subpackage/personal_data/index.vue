@@ -35,6 +35,30 @@
         </view>
       </view>
     </view>
+    <!-- 专业 -->
+    <view class="items" @tap="professionPopup.open('bottom')">
+      <view class="left">专业</view>
+      <view class="right">
+        <view class="back">
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            professionSelectd || '请选择专业'
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
+        </view>
+      </view>
+    </view>
+    <!-- 年级 -->
+    <view class="items" @tap="gradePopup.open('bottom')">
+      <view class="left">年级</view>
+      <view class="right">
+        <view class="back">
+          <span style="color: #ccc; margin-right: 10rpx; font-size: 28rpx">{{
+            gradeSelectd || '请选择年级'
+          }}</span>
+          <uni-icons type="right" color="#ccc" size="18" />
+        </view>
+      </view>
+    </view>
     <!-- 简介 -->
     <view class="items" @tap="introducePopup.open('center')">
       <view class="left">简介</view>
@@ -92,6 +116,27 @@
       </picker-view-column>
     </picker-view>
   </uni-popup>
+  <!-- 专业 -->
+  <uni-popup ref="professionPopup" background-color="#fff">
+    <picker-view
+      :value="professionValue"
+      immediate-change
+      @change="professionChange"
+      class="picker-view"
+    >
+      <picker-view-column>
+        <view class="item" v-for="(item, index) in professionArray" :key="index">{{ item }}</view>
+      </picker-view-column>
+    </picker-view>
+  </uni-popup>
+  <!-- 年级 -->
+  <uni-popup ref="gradePopup" background-color="#fff">
+    <picker-view :value="gradeValue" immediate-change @change="gradeChange" class="picker-view">
+      <picker-view-column>
+        <view class="item" v-for="(item, index) in gradeArray" :key="index">{{ item }}</view>
+      </picker-view-column>
+    </picker-view>
+  </uni-popup>
   <!-- 简介 -->
   <uni-popup ref="introducePopup" background-color="#fff">
     <TextareaPopup
@@ -127,8 +172,18 @@ import { storeToRefs } from 'pinia'
 const userInfoStore = useUserInfoStore()
 const { userInfo } = storeToRefs(userInfoStore)
 onShow(() => {
+  // 性别回显
   genderSelectd.value = userInfo.value.userGender === 1 ? '男' : '女'
   genderValue.value[0] = userInfo.value.userGender - 1
+  // 专业回显
+  professionSelectd.value = userInfo.value.userProfession
+  const professionValueID = professionArray.indexOf(professionSelectd.value)
+  professionValue.value[0] = professionValueID
+  // 年级回显
+  gradeSelectd.value = userInfo.value.userGrade
+  const gradeValueID = gradeArray.indexOf(gradeSelectd.value)
+  console.log(gradeValueID)
+  gradeValue.value[0] = gradeValueID
 })
 
 // 所有的弹出层
@@ -136,6 +191,8 @@ const nicknamePopup = ref()
 const genderPopup = ref()
 const introducePopup = ref()
 const labelPopup = ref()
+const professionPopup = ref()
+const gradePopup = ref()
 const successInfo = ref()
 const errorInfo = ref()
 
@@ -164,6 +221,39 @@ const genderChange = (e: any) => {
   const val = e.detail.value
   genderSelectd.value = genderArray[val[0]]
   userInfoStore.changeUserInfo('userGender', genderSelectd.value === '男' ? 1 : 2)
+}
+// 专业修改
+const professionArray = [
+  '计算机科学与技术',
+  '计算机科学与技术(国际班)',
+  '信息与计算科学',
+  '物联网工程',
+  '计算机科学与技术(三二分段)',
+  '数据科学与大数据技术',
+  '计算机科学与技术(杨班)',
+  '计算机科学与技术(工业软件)',
+  '软件工程',
+  '软件工程(卓越计划班)',
+  '网络工程',
+  '网络空间安全',
+  '软件工程(杨班)',
+  '计算机类',
+]
+const professionValue = ref([0])
+const professionSelectd = ref('计算机类')
+const professionChange = (e: any) => {
+  const val = e.detail.value
+  professionSelectd.value = professionArray[val[0]]
+  userInfoStore.changeUserInfo('userProfession', professionSelectd.value)
+}
+// 年级修改
+const gradeArray = new Array(20).fill(0).map((item, index) => 2010 + index)
+const gradeValue = ref([0])
+const gradeSelectd = ref(2023)
+const gradeChange = (e: any) => {
+  const val = e.detail.value
+  gradeSelectd.value = gradeArray[val[0]]
+  userInfoStore.changeUserInfo('userGrade', gradeSelectd.value)
 }
 
 // 退出登录

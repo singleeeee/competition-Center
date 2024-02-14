@@ -12,7 +12,7 @@
           <view>
             <image class="image" :src="item.avatar" mode="scaleToFill" />
           </view>
-          <view class="body" @tap="switchToChat">
+          <view class="body" @tap="switchToChat(item.userID)">
             <view class="nickname">{{ item.nickname }}</view>
             <view class="info">{{ item.info }}</view>
           </view>
@@ -29,8 +29,8 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-const switchToChat = () => {
-  uni.navigateTo({ url: '/pages/community/chatRoom/index' })
+const switchToChat = (targetID: number) => {
+  uni.navigateTo({ url: `/pages/test/index?targetID=${targetID}` })
 }
 
 const groupList = ref([
@@ -40,6 +40,7 @@ const groupList = ref([
     groupMember: [
       {
         id: 1,
+        userID: 3,
         nickname: '代金宇',
         avatar:
           'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',

@@ -59,7 +59,7 @@ const navigatetoPerson = () => {
 // 跳转到修改个人资料页面
 const navigatetoPersonPage = () => {
   uni.navigateTo({
-    url: '/pages/mine/personPage/index',
+    url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}`,
   })
 }
 // 主页item配置项

@@ -68,6 +68,8 @@ const token = userInfoStore.userInfo.token
 onLoad((options) => {
   targetID = options?.targetID
   console.log(targetID)
+  // 获取用户历史信息
+  getHistoryInfo()
 
   // 创建一个 WebSocket 连接。
   socketTask = uni.connectSocket({
@@ -86,24 +88,22 @@ onLoad((options) => {
     if (data.data[0] === '{') {
       const returnMsg = JSON.parse(data.data)
       console.log('服务器返回信息:', returnMsg)
-      // if (returnMsg.ID) {
-      //   // 获取对象头像
-      //   const {
-      //     data: {
-      //       reuserData: { userAvatarUrl },
-      //     },
-      //   } = await http({
-      //     url: `/app/user/getUserInfoByid?ID=${returnMsg.ID}`,
-      //   })
+      // 获取对象头像
+      const {
+        data: {
+          reuserData: { userAvatarUrl },
+        },
+      } = await http({
+        url: `/app/user/getUserInfoByid?ID=${returnMsg.formUserId}`,
+      })
       // 发的是图片
       if (returnMsg.isImg) {
         // 处理返回的数据
         const message = {
           isImg: returnMsg.isImg,
-          myWord: returnMsg.toUserId === userInfo.value.ID,
+          myWord: returnMsg.formUserId === userInfo.value.ID,
           content: '',
-          avatarUrl:
-            'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+          avatarUrl: userAvatarUrl,
           imgUrl: returnMsg.messageContent,
         }
         ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
@@ -113,16 +113,14 @@ onLoad((options) => {
       else {
         const message = {
           isImg: returnMsg.isImg,
-          myWord: returnMsg.toUserId !== userInfo.value.ID,
+          myWord: returnMsg.formUserId === userInfo.value.ID,
           content: returnMsg.messageContent,
-          avatarUrl:
-            'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+          avatarUrl: userAvatarUrl,
           imgUrl: '',
         }
         ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
         scrollToBottom()
       }
-      // }
     } else {
       // 普通文字
       console.log('服务器返回信息:', data.data)
@@ -138,6 +136,26 @@ onLoad((options) => {
     console.log('连接关闭')
   })
 })
+// 查找历史记录
+let currentPageNum = 1
+let pageSize = 10
+const getHistoryInfo = async () => {
+  const res = await http({
+    url: '/app/msg/getHistoryMessageList',
+    data: {
+      formUserId: userInfo.value.ID,
+      toUserId: targetID,
+      messageTime: '1707839100',
+      page: currentPageNum,
+      pageSize: pageSize,
+    },
+  })
+  const insertData = res.data.list.map((item) => {
+    const obj = {}
+    return item
+  })
+  console.log(insertData)
+}
 //滚动到最新位置
 onShow(() => {
   scrollToBottom()
@@ -164,21 +182,13 @@ const timeChatList = ref([
     id: 1,
     time: '15:30',
     chatList: [
-      {
-        isImg: false,
-        myWord: false,
-        content: '其实我每天只想你一次',
-        avatarUrl: 'https://s11.ax1x.com/2024/02/01/pFMWV7F.jpg',
-        imgUrl: '',
-      },
-      {
-        isImg: false,
-        myWord: true,
-        content: '那么少',
-        avatarUrl:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-        imgUrl: '',
-      },
+      // {
+      //   isImg: false,
+      //   myWord: false,
+      //   content: '其实我每天只想你一次',
+      //   avatarUrl: 'https://s11.ax1x.com/2024/02/01/pFMWV7F.jpg',
+      //   imgUrl: '',
+      // },
     ],
   },
 ])
@@ -206,7 +216,6 @@ const wsSend = (msg) => {
     messageContent: msg.content,
   })
   console.log('封装好的发送的数据', data)
-
   // 连接成功
   if (socketOpen) {
     // 发送消息
@@ -215,9 +224,14 @@ const wsSend = (msg) => {
       fail: (fail) => {
         console.log('发送失败', fail)
       },
-      success: (success) => {
+      success: () => {
         scrollToBottom()
       },
+    })
+  } else {
+    uni.showToast({
+      title: '请重新连接ws',
+      icon: 'none',
     })
   }
 }
@@ -251,7 +265,6 @@ const send = (imgList: string[]) => {
       }
       // 塞入数组。同时需要发ws
       wsSend(sendArr)
-      // ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(sendArr)
     }
     // 如果有图片，则发送图片
     for (let i = 0; i < imgList.length; i++) {
@@ -328,7 +341,7 @@ const clearImgList = () => {
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
-  padding-bottom: 120rpx;
+  padding-bottom: 90rpx;
 }
 .chatRoom .each_time .date {
   height: 50rpx;

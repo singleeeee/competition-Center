@@ -15,6 +15,13 @@
                     "scene": null
                 },
                 {
+                    "name": "聊天室",
+                    "pathName": "pages/community/chatRoom/index",
+                    "query": "targetID=4",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "帖子详情页",
                     "pathName": "subpackage/postDetail/index",
                     "query": "disId=9",
@@ -59,13 +66,6 @@
                 {
                     "name": "搜索页",
                     "pathName": "pages/competition/searchPage/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "聊天室",
-                    "pathName": "pages/community/chatRoom/index",
                     "query": "",
                     "launchMode": "default",
                     "scene": null
