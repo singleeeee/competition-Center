@@ -4,8 +4,6 @@ export type UserInfo = {
   ID: number
   // token
   token: string
-  //wxopenid
-  userWxopenid: string
   // 昵称
   userNickname: String
   // 性别

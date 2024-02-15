@@ -12,8 +12,6 @@ export const useUserInfoStore = defineStore(
       ID: 0,
       // token
       token: '',
-      //wxopenid
-      userWxopenid: '',
       // 昵称
       userNickname: '微信用户',
       // 性别
@@ -71,8 +69,6 @@ export const useUserInfoStore = defineStore(
       userInfo.value.ID = 0
       // token
       userInfo.value.token = ''
-      //wxopenid
-      userInfo.value.userWxopenid = ''
       // 昵称
       userInfo.value.userNickname = '微信用户'
       // 性别
@@ -80,9 +76,9 @@ export const useUserInfoStore = defineStore(
       // 头像
       userInfo.value.userAvatarUrl = 'https://s11.ax1x.com/2024/02/02/pFQmajg.png'
       // 简介
-      userInfo.value.userIntroduction = '无'
+      userInfo.value.userIntroduction = '请输入简介'
       //所在地区
-      userInfo.value.userCity = '广东'
+      userInfo.value.userCity = '请选择城市'
       // 用户标签
       userInfo.value.userLabel = ''
       //年级
@@ -104,7 +100,35 @@ export const useUserInfoStore = defineStore(
     // 整体更新仓库
     const updateUserInfo = (value: UserInfo) => {
       const res = JSON.parse(JSON.stringify(value))
-      userInfo.value = res
+      console.log('传过来的userinfo', res)
+      if (!res.token) res.token = userInfo.value.token
+      // ID
+      userInfo.value.ID = res.ID
+      // token
+      userInfo.value.token = res.token
+      // 昵称
+      userInfo.value.userNickname = res.userNickname
+      // 性别
+      userInfo.value.userGender = res.userGender
+      // 头像
+      userInfo.value.userAvatarUrl = res.userAvatarUrl
+      // 简介
+      userInfo.value.userIntroduction = res.userIntroduction
+      //所在地区
+      userInfo.value.userCity = res.userCity
+      // 用户标签
+      userInfo.value.userLabel = res.userLabel
+      //年级
+      userInfo.value.userGrade = res.userGrade
+      //专业
+      userInfo.value.userProfession = res.userProfession
+      // 获赞个数
+      userInfo.value.loveNumber = res.loveNumber
+      // 粉丝个数
+      userInfo.value.fansNumber = res.fansNumber
+      // 关注个数
+      userInfo.value.followerNumber = res.followerNumber
+      console.log('更新后的pinia仓库', userInfo.value)
     }
     // 记得 return
     return {

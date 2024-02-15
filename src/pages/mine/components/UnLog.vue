@@ -25,15 +25,19 @@ const Login = async () => {
     const { code } = await uni.login({
       provider: 'weixin',
     })
-    // 获取openid
-    const resOpenid = await http({
+    // 获取token和用户信息
+    const resUserInfo = await http({
       url: `/app/login?code=${code}`,
       header: {},
     })
-    console.log(resOpenid)
+    const token = resUserInfo.data.jwt
+    const userInfoStore = useUserInfoStore()
+    // 更新仓库
+    userInfoStore.changeUserInfo('token', token)
+
+    // 解构需要的数据
     const {
       ID,
-      userWxopenid,
       userNickname,
       userAvatarUrl,
       userGender,
@@ -45,23 +49,11 @@ const Login = async () => {
       loveNumber,
       fansNumber,
       followerNumber,
-    } = resOpenid.data.user as UserInfo
-    console.log('ID', ID)
-    console.log('userWxopenid', userWxopenid)
-
-    // 获取token
-    const resToken = await http({
-      url: `/app/login/getJWT?ID=${ID}`,
-      // header: {},
-    })
-    const token = resToken.data as string
-    const userInfoStore = useUserInfoStore()
-    // 更新仓库
-    userInfoStore.changeUserInfo('token', token)
+    } = resUserInfo.data.user as UserInfo
+    // 自己封装需要的数据结构
     const serviceUserInfo: UserInfo = {
       ID,
       token,
-      userWxopenid,
       userNickname,
       userAvatarUrl,
       userGender,
@@ -74,6 +66,7 @@ const Login = async () => {
       fansNumber,
       followerNumber,
     }
+    // 更新本地仓库
     userInfoStore.updateUserInfo(serviceUserInfo)
     // 开启websocket连接
     useChatHistoryStore().websocketInit()

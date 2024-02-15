@@ -2,8 +2,8 @@
 const common_vendor = require("../../common/vendor.js");
 const common_assets = require("../../common/assets.js");
 require("../../stores/index.js");
-const stores_modules_userInfoStore = require("../../stores/modules/userInfoStore.js");
 require("../../utils/http.js");
+const stores_modules_userInfoStore = require("../../stores/modules/userInfoStore.js");
 if (!Array) {
   const _easycom_uni_tag2 = common_vendor.resolveComponent("uni-tag");
   const _easycom_uni_icons2 = common_vendor.resolveComponent("uni-icons");
@@ -51,8 +51,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         isHeadShow.value = false;
       }
     });
-    common_vendor.onPullDownRefresh(() => {
-      console.log("刷新");
+    common_vendor.onPullDownRefresh(async () => {
+      console.log("下拉刷新");
       setTimeout(() => {
         common_vendor.index.stopPullDownRefresh();
       }, 1e3);

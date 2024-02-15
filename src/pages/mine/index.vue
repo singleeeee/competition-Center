@@ -4,6 +4,7 @@ import UnLog from './components/UnLog.vue'
 import { onLoad, onPullDownRefresh, onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
+import { http } from '@/utils/http'
 
 const userInfoStore = useUserInfoStore()
 // 大坑！！！！！解构赋值还是会丢失响应式的，但是log出来还是proxy？
@@ -44,8 +45,15 @@ onShow(() => {
 })
 
 // 下拉刷新
-onPullDownRefresh(() => {
-  console.log('刷新')
+onPullDownRefresh(async () => {
+  console.log('下拉刷新')
+
+  // 重新获取用户数据
+  // const res = await http({
+  //   url: `/app/user/getUserInfoByid?ID=${userInfo.value.ID}`,
+  // })
+  // 更新本地仓库
+  // userInfoStore.updateUserInfo(res.data.reuserData)
   setTimeout(() => {
     uni.stopPullDownRefresh()
   }, 1000)
