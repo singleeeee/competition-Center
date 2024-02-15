@@ -65,7 +65,7 @@ const getPostList = async () => {
     postList.value.push(obj)
     uni.hideLoading()
   }
-  console.log(postList.value)
+  console.log('修改后的帖子列表信息', postList.value)
 }
 // 点赞和取消点赞
 const likedChange = async (val: boolean, index: number) => {

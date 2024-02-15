@@ -14,7 +14,7 @@
       :title="postDetail.disTitle"
       :img-list="postDetail.disPicture"
       :dis-id="postDetail.ID"
-      :authorId="postDetail.userInfo.disId"
+      :authorId="postDetail.userInfo.ID"
       :liked="postDetail.isLiked"
       :collected="postDetail.isCollected"
     ></PostBody>

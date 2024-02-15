@@ -39,7 +39,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: `/subpackage/postDetail/index?disId=${disId}`
       });
     };
-    const swiperDataList = common_vendor.ref([]);
+    const swiperDataList = common_vendor.ref([{}]);
     const swiperChange = (e) => {
       currentImg.value = e.detail.current;
     };

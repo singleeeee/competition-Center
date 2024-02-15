@@ -2,7 +2,7 @@
 const common_vendor = require("../../common/vendor.js");
 const common_assets = require("../../common/assets.js");
 require("../../stores/index.js");
-require("../../utils/http.js");
+const utils_http = require("../../utils/http.js");
 const stores_modules_userInfoStore = require("../../stores/modules/userInfoStore.js");
 if (!Array) {
   const _easycom_uni_tag2 = common_vendor.resolveComponent("uni-tag");
@@ -53,6 +53,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     });
     common_vendor.onPullDownRefresh(async () => {
       console.log("下拉刷新");
+      const res = await utils_http.http({
+        url: `/app/user/getUserInfoByid?ID=${userInfo.value.ID}`
+      });
+      console.log("刷新返回的数据", res.data.reuserData);
+      userInfoStore.updateUserInfo(res.data.reuserData);
       setTimeout(() => {
         common_vendor.index.stopPullDownRefresh();
       }, 1e3);
@@ -114,7 +119,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
     };
     const switchTab = (target) => {
-      common_vendor.index.navigateTo({ url: `/pages/mine/${target}/index` });
+      common_vendor.index.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` });
     };
     return (_ctx, _cache) => {
       return common_vendor.e({

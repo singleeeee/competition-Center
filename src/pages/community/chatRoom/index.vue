@@ -1,10 +1,10 @@
 <template>
   <view class="container">
-    <view class="chatRoom">
+    <view class="chatRoom" v-if="historyIndex !== -1">
       <!-- 一个时间段 -->
-      <view v-for="(items, index) in timeChatList" :key="index" class="each_time">
+      <view v-for="(items, index) in chatInfoMap" :key="index" class="each_time">
         <!-- 时间 -->
-        <view class="date">{{ items.time }}</view>
+        <view class="date">{{ items.lastMessageTime }}</view>
         <!-- 聊天内容 -->
         <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
           <view class="chat-Box">
@@ -52,101 +52,70 @@ import { onShow, onLoad } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { http } from '@/utils/http'
-// websocket是否连接
-let socketOpen = false
-// websocket连接ID
-let socketTask: UniApp.SocketTask
-// 私聊对象的ID
+import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
+
 let targetID: number
 // 获取用户id等
 const userInfoStore = useUserInfoStore()
 const { userInfo } = storeToRefs(userInfoStore)
-// 获取token用于ws
-const token = userInfoStore.userInfo.token
+// 获取ws
+const chatHistoryStore = useChatHistoryStore()
+// 消息记录数组
+const { chatInfoMap } = storeToRefs(chatHistoryStore)
+// 信息记录所在下标
+let historyIndex: number
+// 消息数组
+const chatList = ref([])
+
 onLoad((options) => {
   targetID = options?.targetID
-  console.log('targetID', targetID)
-  // 获取用户历史信息
-  getHistoryInfo(targetID)
+  chatHistoryStore.changeTargetIndex(+targetID)
+  // 提取出于当前用户有关的消息记录
+  historyIndex = chatInfoMap.value.findIndex((user) => {
+    return user.userID === +targetID
+  })
+  console.log(historyIndex)
 
-  // 创建一个 WebSocket 连接。
-  socketTask = uni.connectSocket({
-    url: 'ws://47.113.177.192:8082/app/msg/ping',
-    header: {
-      Authorization: token,
-    },
-    success: () => {
-      console.log('发起websocket连接成功!')
-    },
-  })
-  // 监听服务器返回信息
-  socketTask.onMessage(async (data) => {
-    // 转化返回的数据
-    // json格式
-    if (data.data[0] === '{') {
-      const returnMsg = JSON.parse(data.data)
-      console.log('服务器返回信息:', returnMsg)
-      // 获取对象头像
-      const {
-        data: {
-          reuserData: { userAvatarUrl },
-        },
-      } = await http({
-        url: `/app/user/getUserInfoByid?ID=${returnMsg.formUserId}`,
-      })
-      // 发的是图片
-      if (returnMsg.isImg) {
-        // 处理返回的数据
-        const message = {
-          isImg: returnMsg.isImg,
-          myWord: returnMsg.formUserId === userInfo.value.ID,
-          content: '',
-          avatarUrl: userAvatarUrl,
-          imgUrl: returnMsg.messageContent,
-        }
-        ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
-        scrollToBottom()
-      }
-      // 非图片内容
-      else {
-        const message = {
-          isImg: returnMsg.isImg,
-          myWord: returnMsg.formUserId === userInfo.value.ID,
-          content: returnMsg.messageContent,
-          avatarUrl: userAvatarUrl,
-          imgUrl: '',
-        }
-        ;(timeChatList.value[timeChatList.value.length - 1] as any).chatList.push(message)
-        scrollToBottom()
-      }
-    } else {
-      // 普通文字
-      console.log('服务器返回信息:', data.data)
-    }
-  })
-  // 监听WebSocket连接成功事件。
-  socketTask.onOpen(function (res) {
-    // 标记已经连接
-    socketOpen = true
-  })
-  // 监听连接关闭
-  socketTask.onClose(() => {
-    console.log('连接关闭')
-  })
+  // 获取用户历史信息
+  getFirstLoadInfo(targetID)
 })
 // 获取第一次加载所需的历史信息
-const getFirstLoadInfo = async () => {
+const getFirstLoadInfo = async (targetID: number) => {
   // 没有未读信息的情况
   const res = await http({
     url: '/app/msg/getHistoryMessageList',
     data: {
       formUserId: userInfo.value.ID,
       toUserId: targetID,
-      messageTime: '9707839100',
+      messageTime: '9707839100', // 设置一个非常久远的死ID
       page: 1,
       pageSize: 10,
     },
   })
+
+  let avatarUrl = chatInfoMap.value[historyIndex].userAvatarUrl
+
+  // 提取数据
+  for (let i = 0; i < res.data.list.length; i++) {
+    const item = res.data.list[i]
+    // 换成我的头像
+    if (item.formUserId === userInfo.value.ID) {
+      avatarUrl = userInfo.value.userAvatarUrl
+    } else {
+      avatarUrl = chatInfoMap.value[historyIndex].userAvatarUrl
+    }
+    const message = {
+      messageTime: item.messageTime,
+      isImg: item.isImg,
+      myWord: item.formUserId === userInfo.value.ID,
+      content: item.messageContent,
+      avatarUrl,
+      imgUrl: item.messageContent,
+    }
+    chatHistoryStore.insertMessage(targetID, message)
+  }
+  scrollToBottom()
+
   // 有未读信息的情况
   // 获取未读信息数组
 }
@@ -198,22 +167,8 @@ const scrollToBottom = () => {
     })
     .exec()
 }
+
 // 消息列表
-const timeChatList = ref([
-  {
-    id: 1,
-    time: '刚刚',
-    chatList: [
-      // {
-      //   isImg: false,
-      //   myWord: false,
-      //   content: '其实我每天只想你一次',
-      //   avatarUrl: 'https://s11.ax1x.com/2024/02/01/pFMWV7F.jpg',
-      //   imgUrl: '',
-      // },
-    ],
-  },
-])
 // 输入框popup
 const popup = ref()
 // 打开输入框
@@ -237,34 +192,11 @@ const wsSend = (msg) => {
     isImg: msg.isImg,
     messageContent: msg.content,
   })
-  console.log('封装好的发送的数据', data)
-  // 连接成功
-  if (socketOpen) {
-    // 发送消息
-    socketTask.send({
-      data,
-      fail: (fail) => {
-        console.log('发送失败', fail)
-      },
-      success: () => {
-        scrollToBottom()
-      },
-    })
-  } else {
-    uni.showToast({
-      title: '请重新连接ws',
-      icon: 'none',
-    })
-  }
+  chatHistoryStore.sendMessage(+targetID, data)
+  scrollToBottom()
+  console.log('发送成功')
 }
-// 主动关闭ws连接
-const closeWsConnect = () => {
-  socketTask.close({
-    success: function () {
-      console.log('关闭成功')
-    },
-  })
-}
+
 // 发送信息
 const send = (imgList: string[]) => {
   console.log(imgList, textarea.value)

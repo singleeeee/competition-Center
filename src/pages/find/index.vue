@@ -74,7 +74,7 @@ const handleSwiperTap = (disId: number) => {
 }
 
 // 轮播图数据数组
-const swiperDataList = ref([])
+const swiperDataList = ref([{}])
 // 轮播图切换事件
 const swiperChange = (e) => {
   currentImg.value = e.detail.current

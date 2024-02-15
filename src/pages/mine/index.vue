@@ -49,11 +49,12 @@ onPullDownRefresh(async () => {
   console.log('下拉刷新')
 
   // 重新获取用户数据
-  // const res = await http({
-  //   url: `/app/user/getUserInfoByid?ID=${userInfo.value.ID}`,
-  // })
+  const res = await http({
+    url: `/app/user/getUserInfoByid?ID=${userInfo.value.ID}`,
+  })
+  console.log('刷新返回的数据', res.data.reuserData)
   // 更新本地仓库
-  // userInfoStore.updateUserInfo(res.data.reuserData)
+  userInfoStore.updateUserInfo(res.data.reuserData)
   setTimeout(() => {
     uni.stopPullDownRefresh()
   }, 1000)
@@ -64,7 +65,7 @@ const navigatetoPerson = () => {
     url: '/subpackage/personal_data/index',
   })
 }
-// 跳转到修改个人资料页面
+// 跳转到个人主页
 const navigatetoPersonPage = () => {
   uni.navigateTo({
     url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}`,
@@ -123,7 +124,7 @@ const navigateTo = (target: string) => {
 }
 // 跳转都tabbar页面
 const switchTab = (target: string) => {
-  uni.navigateTo({ url: `/pages/mine/${target}/index` })
+  uni.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` })
 }
 </script>
 

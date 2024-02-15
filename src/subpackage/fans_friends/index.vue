@@ -2,7 +2,7 @@
   <view class="container">
     <view class="UserList">
       <view class="title">
-        <view>我的关注(106人)</view>
+        <view>我的关注({{ userList.length }}人)</view>
         <view class="sort">排序</view>
       </view>
       <view class="group">
@@ -16,12 +16,14 @@
         >
       </view>
       <view class="list">
-        <view class="item" v-for="(item, index) in fansList" :key="index">
+        <view class="item" v-for="(item, index) in userList" :key="index">
           <nameTitle
-            :author="item.author"
-            :avatar-url="item.avatar"
-            :icon="item.icon"
-            :date="item.others"
+            :author="item.userNickname"
+            :avatar-url="item.userAvatarUrl"
+            :user-i-d="item.userID"
+            :date="item.userIntroduction"
+            @tapAvatar="tapAvatar"
+            icon="paperplane-filled"
           ></nameTitle>
         </view>
       </view>
@@ -34,51 +36,42 @@ import { ref } from 'vue'
 import nameTitle from '@/components/nameTitle.vue'
 import { http } from '@/utils/http'
 import { onLoad } from '@dcloudio/uni-app'
+import { useUserInfoStore } from '@/stores'
+import { storeToRefs } from 'pinia'
+const userInfoStore = useUserInfoStore()
+const { userInfo } = storeToRefs(userInfoStore)
 
 onLoad((options) => {
-  options.id && (currentGroup.value = options.id)
-  getFansList()
+  // options.id && (currentGroup.value = options.id)
+  getUserList()
 })
+// 点击头像
+const tapAvatar = (userID) => {
+  uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userID}` })
+}
 
 // 当前分组
 const currentGroup = ref(0)
-const groupList = ref(['全部', '挚友', '家人'])
+const groupList = ref(['全部', '关注', '粉丝'])
 
 const changeGroup = (e) => {
   currentGroup.value = e.currentTarget.dataset.id
 }
 // 获取关注or粉丝列表
-const getFansList = async () => {
+const getUserList = async () => {
   const res = await http({
     url: '/app/user/showUserFans',
     data: {
-      userID: ID,
+      userID: userInfo.value.ID,
     },
   })
+  for (let i = 0; i < res.data.length; i++) {
+    userList.value.push(res.data[i])
+  }
+  console.log(userList.value)
 }
 
-const fansList = ref([
-  {
-    author: 'Single',
-    avatar: 'http://tmp/wpinKs1JejQv9558093d8ac2138389013e440bfe808e.jpeg',
-    icon: 'more-filled',
-    others: '帅哥',
-  },
-  {
-    author: 'Yjddb',
-    avatar:
-      'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-    icon: 'more-filled',
-    others: '大金鱼',
-  },
-  {
-    author: '*',
-    avatar:
-      'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
-    icon: 'more-filled',
-    others: '学妹',
-  },
-])
+const userList = ref([])
 </script>
 
 <style lang="scss" scoped>

@@ -14,7 +14,7 @@
       </view>
       <view class="share" v-if="candelete" @tap.stop="delComment">
         <span style="font-size: 24rpx; color: #ccc">{{ rightText }}</span>
-        <uni-icons :type="icon" color="#ccc" size="18"></uni-icons>
+        <uni-icons :type="props.icon" color="#ccc" size="18"></uni-icons>
       </view>
     </view>
     <!-- 二级评论 -->
@@ -42,7 +42,6 @@ const props = defineProps({
   },
   extra: {
     type: String,
-    default: '广东',
   },
   icon: {
     type: String,
@@ -72,6 +71,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  userID: {
+    type: Number,
+  },
 })
 const emits = defineEmits(['tapAvatar', 'refleshComment', 'openInput'])
 // 点击评论区
@@ -81,7 +83,7 @@ const handleTap = () => {
 }
 // 点击头像
 const tapAvatar = () => {
-  emits('tapAvatar', props.index)
+  emits('tapAvatar', props.userID)
 }
 // 删除评论
 const delComment = async () => {

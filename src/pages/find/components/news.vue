@@ -1,24 +1,27 @@
 <template>
-  <view
-    class="container"
-    v-for="item in newsList"
-    :key="item.id"
-    @click="navigatetoDetail(item.ID)"
-  >
-    <view class="left">
-      <view class="title">{{ item.title }}</view>
-      <view class="bottom">
-        <view class="author">{{ item.author }}&nbsp;&nbsp;{{ item.time }}</view>
-        <view class="hot">
-          <uni-icons color="#ccc" type="fire" size="14" />{{ item.hot }}
-          <uni-icons color="#ccc" type="hand-up" size="14" />{{ item.font }}
+  <view v-if="newsList.length > 0">
+    <view
+      class="container"
+      v-for="item in newsList"
+      :key="item.id"
+      @click="navigatetoDetail(item.ID)"
+    >
+      <view class="left">
+        <view class="title">{{ item.title }}</view>
+        <view class="bottom">
+          <view class="author">{{ item.author }}&nbsp;&nbsp;{{ item.time }}</view>
+          <view class="hot">
+            <uni-icons color="#ccc" type="fire" size="14" />{{ item.hot }}
+            <uni-icons color="#ccc" type="hand-up" size="14" />{{ item.font }}
+          </view>
         </view>
       </view>
-    </view>
-    <view>
-      <image class="image" :src="item.imageUrl" mode="scaleToFill" />
+      <view>
+        <image class="image" :src="item.imageUrl" mode="scaleToFill" />
+      </view>
     </view>
   </view>
+  <view v-else style="text-align: center; color: #ccc"> 暂无数据 </view>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -40,6 +43,7 @@ const getNotificationList = async () => {
       page: currentNotificationPage.value,
       pageSize: notificationPageSize.value,
       disModel: 2, // 1为普通 2为公告 3为比赛
+      disStatus: 2, // 1待审核 2 展示中 3 有问题
     },
   })
   const resList = ref(res.data.list)
