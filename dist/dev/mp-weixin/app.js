@@ -2,7 +2,8 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 const stores_index = require("./stores/index.js");
-require("./stores/modules/userInfoStore.js");
+const stores_modules_chatHistoryStore = require("./stores/modules/chatHistoryStore.js");
+const stores_modules_userInfoStore = require("./stores/modules/userInfoStore.js");
 require("./utils/http.js");
 if (!Math) {
   "./pages/find/index.js";
@@ -25,7 +26,14 @@ if (!Math) {
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",
   setup(__props) {
+    const chatHistoryStore = stores_modules_chatHistoryStore.useChatHistoryStore();
+    const userInfoStore = stores_modules_userInfoStore.useUserInfoStore();
+    const { userInfo } = common_vendor.storeToRefs(userInfoStore);
     common_vendor.onLaunch(() => {
+      console.log("小程序启动");
+      if (userInfo.value.token) {
+        chatHistoryStore.websocketInit();
+      }
     });
     common_vendor.onShow(() => {
       console.log("App Show");

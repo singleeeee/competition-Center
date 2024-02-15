@@ -54,8 +54,6 @@ import { storeToRefs } from 'pinia'
 import { http } from '@/utils/http'
 // websocket是否连接
 let socketOpen = false
-// websocket消息队列
-const socketMsgQueue = []
 // websocket连接ID
 let socketTask: UniApp.SocketTask
 // 私聊对象的ID
@@ -136,6 +134,23 @@ onLoad((options) => {
     console.log('连接关闭')
   })
 })
+// 获取第一次加载所需的历史信息
+const getFirstLoadInfo = async () => {
+  // 没有未读信息的情况
+  const res = await http({
+    url: '/app/msg/getHistoryMessageList',
+    data: {
+      formUserId: userInfo.value.ID,
+      toUserId: targetID,
+      messageTime: '9707839100',
+      page: 1,
+      pageSize: 10,
+    },
+  })
+  // 有未读信息的情况
+  // 获取未读信息数组
+}
+
 // 查找历史记录
 let currentPageNum = 1
 let pageSize = 10
@@ -145,14 +160,21 @@ const getHistoryInfo = async (targetID: number) => {
     data: {
       formUserId: userInfo.value.ID,
       toUserId: targetID,
-      messageTime: '1707839100',
+      messageTime: '9707839100',
       page: currentPageNum,
       pageSize: pageSize,
     },
   })
   console.log('历史记录', res)
-
+  // 提取历史记录数据
   const insertData = res.data.list.map((item) => {
+    const obj = {
+      isImg: item.isImg,
+      myWord: item.formUserId === userInfo.value.ID,
+      content: item.messageContent,
+      avatarUrl: userAvatarUrl,
+      imgUrl: item.imgUrl,
+    }
     return item
   })
 }

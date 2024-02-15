@@ -8,15 +8,15 @@
         "miniprogram": {
             "list": [
                 {
-                    "name": "pages/test/index",
-                    "pathName": "pages/test/index",
-                    "query": "targetID=4",
+                    "name": "聊天室",
+                    "pathName": "pages/community/chatRoom/index",
+                    "query": "targetID=3",
                     "launchMode": "default",
                     "scene": null
                 },
                 {
-                    "name": "聊天室",
-                    "pathName": "pages/community/chatRoom/index",
+                    "name": "pages/test/index",
+                    "pathName": "pages/test/index",
                     "query": "targetID=4",
                     "launchMode": "default",
                     "scene": null

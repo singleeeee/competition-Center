@@ -16,6 +16,7 @@
 import { useUserInfoStore } from '@/stores'
 import { http } from '@/utils/http'
 import type { UserInfo } from '@/types/global'
+import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 const emit = defineEmits(['changeIsLog'])
 const Login = async () => {
   uni.showLoading()
@@ -29,6 +30,7 @@ const Login = async () => {
       url: `/app/login?code=${code}`,
       header: {},
     })
+    console.log(resOpenid)
     const {
       ID,
       userWxopenid,
@@ -43,12 +45,14 @@ const Login = async () => {
       loveNumber,
       fansNumber,
       followerNumber,
-    } = resOpenid.data as UserInfo
+    } = resOpenid.data.user as UserInfo
+    console.log('ID', ID)
+    console.log('userWxopenid', userWxopenid)
 
     // 获取token
     const resToken = await http({
       url: `/app/login/getJWT?ID=${ID}`,
-      header: {},
+      // header: {},
     })
     const token = resToken.data as string
     const userInfoStore = useUserInfoStore()
@@ -71,9 +75,12 @@ const Login = async () => {
       followerNumber,
     }
     userInfoStore.updateUserInfo(serviceUserInfo)
+    // 开启websocket连接
+    useChatHistoryStore().websocketInit()
     emit('changeIsLog', true)
     uni.hideLoading()
   } catch (error) {
+    console.log(error)
     uni.showToast({
       title: '登录或注册失败',
       icon: 'error',
