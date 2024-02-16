@@ -10,17 +10,17 @@
       <view class="content">
         <view class="frdbox" v-for="item in group.groupMember" :key="item.id">
           <view>
-            <image class="image" :src="item.avatar" mode="scaleToFill" />
+            <image class="image" :src="item.userAvatarUrl" mode="scaleToFill" />
           </view>
           <view class="body" @tap="switchToChat(item.userID)">
-            <view class="nickname">{{ item.nickname }}</view>
-            <view class="info">{{ item.info }}</view>
+            <view class="nickname">{{ item.userNickname }}</view>
+            <view class="info">{{ item.userIntroduction }}</view>
           </view>
           <view class="statusBox">
-            <view class="status" :style="{ color: item.status === '在线' ? 'green' : 'gray' }">{{
-              item.status
+            <view class="status" :style="{ color: item.isOnline ? 'green' : '#ccc' }">{{
+              item.isOnline ? '在线' : '离线'
             }}</view>
-            <button @tap="switchToChat">聊天</button>
+            <button @tap="switchToChat(item.userID)">聊天</button>
           </view>
         </view>
       </view>
@@ -29,8 +29,20 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { http } from '@/utils/http'
+onLoad(async () => {
+  const res = await http({
+    url: `/app/user/showUserFriend?userID=8`,
+  })
+  console.log('朋友列表', res.data)
+  for (let i = 0; i < res.data.length; i++) {
+    groupList.value[0].groupMember.push(res.data[i])
+  }
+})
+
 const switchToChat = (targetID: number) => {
-  uni.navigateTo({ url: `/pages/test/index?targetID=${targetID}` })
+  uni.navigateTo({ url: `/pages/community/chatRoom/index?targetID=${targetID}` })
 }
 
 const groupList = ref([
@@ -38,61 +50,14 @@ const groupList = ref([
     id: 1,
     groupName: '我的好友',
     groupMember: [
-      {
-        id: 1,
-        userID: 3,
-        nickname: '代金宇',
-        avatar:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-        info: '我踏马来啦',
-        status: '在线',
-      },
-      {
-        id: 2,
-        nickname: '马春丽',
-        avatar:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
-        info: '好极了',
-        status: '离线',
-      },
-      {
-        id: 3,
-        nickname: '阮志荣',
-        avatar:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-05/微信图片_20240201173945.jpg',
-        info: '我踏马来啦',
-        status: '在线',
-      },
-    ],
-  },
-  {
-    id: 1,
-    groupName: '重生之带学妹拿奖',
-    groupMember: [
-      {
-        id: 1,
-        nickname: '代金宇',
-        avatar:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-        info: '我踏马来啦',
-        status: '在线',
-      },
-      {
-        id: 2,
-        nickname: '马春丽',
-        avatar:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/mcl.jpg',
-        info: '好极了',
-        status: '离线',
-      },
-      {
-        id: 3,
-        nickname: '阮志荣',
-        avatar:
-          'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-02-05/微信图片_20240201173945.jpg',
-        info: '我踏马来啦',
-        status: '在线',
-      },
+      // {
+      //   userID: 3,
+      //   userNickname: '代金宇',
+      //   userAvatarUrl:
+      //     'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+      //   userIntroduction: '我踏马来啦',
+      //   isOnline: '在线',
+      // },
     ],
   },
 ])

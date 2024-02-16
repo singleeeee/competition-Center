@@ -9,7 +9,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
   // 当前连接状态
   const socketOpen = ref(false)
   // 未读信息数组
-  const unReadInfoList = ref<any[]>([])
+  const unReadInfoList = ref<any>([])
   // 与各用户的信息记录
   const chatInfoMap = ref<any>([
     {
@@ -33,15 +33,9 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       ],
     },
   ])
-  // 当前连接的用户
-  const targetIndex = ref()
-  // 修改当前对话的目标
-  const changeTargetIndex = (targetID: number) => {
-    targetIndex.value = chatInfoMap.value.findIndex((item) => item.userID === targetID)
-  }
   // 初始化函数 todo ----->检测服务器状态，服务器错误
   const websocketInit = () => {
-    uni.closeSocket()
+    if (socketOpen.value) uni.closeSocket()
     socketOpen.value = false
     connectWebSocket()
   }
@@ -73,44 +67,150 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     })
     // 监听服务器返回信息
     socketTask.value.onMessage(async (data) => {
+      let targetIndex
+      console.log('原始返回数据', data)
       // 转化返回的数据
       // json格式
       if (data.data[0] === '{') {
         const returnMsg = JSON.parse(data.data)
-        // 修改头像
-        let avatarUrl
-        if (returnMsg.toUserId !== userInfo.value.ID) {
-          avatarUrl = userInfo.value.userAvatarUrl
+        console.log('转化后的数据', returnMsg)
+        // 返回的是未读信息 1 未读信息 2 普通信息
+        if (returnMsg.type === 1) {
+          // 更新用户列表 todo
+          for (const key in returnMsg.userList) {
+            const user = {
+              userID: key,
+              userName: returnMsg.userList[key].userName,
+              userAvatarUrl: returnMsg.userList[key].userAvatarUrl,
+              lastMessage: '没有最新消息', // 默认没有最新消息，有再加
+              lastMessageTime: '9908057521', // 默认值，后面再改
+              unReadCount: 0,
+              chatList: [],
+            }
+            // 消息队列
+            chatInfoMap.value.push(user)
+            // 未读信息队列
+            unReadInfoList.value.push(user)
+          }
+          for (const key in returnMsg.unReadMessageList) {
+            // 有未读信息
+            if (returnMsg.unReadMessageList[key].length > 0) {
+              console.log('有未读信息')
+              // 查找该用户所在数组下标
+              const userIndex = chatInfoMap.value.findIndex((item) => item.userID === key)
+              // 最后一天未读信息的时间
+              chatInfoMap.value[userIndex].lastMessageTime =
+                returnMsg.unReadMessageList[key][0].messageTime
+              // 未读信息的数量
+              chatInfoMap.value[userIndex].unReadCount = returnMsg.unReadMessageList[key].length
+              // 最后一条未读信息
+              chatInfoMap.value[userIndex].lastMesssage =
+                returnMsg.unReadMessageList[key][
+                  returnMsg.unReadMessageList[key].length - 1
+                ].messageContent
+              // 遍历每一条未读信息并插入消息队列
+              for (let i = 0; i < returnMsg.unReadMessageList[key].length; i++) {
+                // 提取所需数据
+                const messageNeed = {
+                  messageTime: returnMsg.unReadMessageList[key][i].messageTime,
+                  isImg: returnMsg.unReadMessageList[key][i].isImg,
+                  myWord: returnMsg.unReadMessageList[key][i].toUserId === userInfo.value.ID,
+                  content: returnMsg.unReadMessageList[key][i].messageContent,
+                  avatarUrl:
+                    returnMsg.unReadMessageList[key][i].toUserId === userInfo.value.ID
+                      ? userInfo.value.userAvatarUrl
+                      : chatInfoMap.value[userIndex].userAvatarUrl,
+                  imgUrl: returnMsg.unReadMessageList[key][i].messageContent,
+                }
+                console.log('提取出的每条未读信息:', messageNeed)
+                // 推送到消息队列
+                chatInfoMap.value[userIndex].chatList.push(messageNeed)
+                // 推送到未读信息队列
+                unReadInfoList.value[userIndex].chatList.push(messageNeed)
+              }
+            }
+          }
+          console.log('未读信息队列', unReadInfoList.value)
+        }
+        // 返回的是普通聊天信息
+        else if (returnMsg.type === 2) {
+          console.log('type=====2')
+
+          // 我的信息
+          if (
+            returnMsg.formUserId === userInfo.value.ID ||
+            returnMsg.toUserId === userInfo.value.ID
+          ) {
+            console.log('包括我')
+
+            // 确定接收用户
+            let targetIndex
+            if (returnMsg.formUserId === userInfo.value.ID) {
+              targetIndex = chatInfoMap.value.findIndex(
+                (item) => item.userID === returnMsg.toUserId,
+              )
+            } else {
+              targetIndex = chatInfoMap.value.findIndex(
+                (item) => item.userID === returnMsg.formUserId,
+              )
+            }
+            console.log('目标用户的index', targetIndex)
+
+            // 修改头像
+            let avatarUrl
+            if (returnMsg.toUserId !== userInfo.value.ID) {
+              avatarUrl = userInfo.value.userAvatarUrl
+            } else {
+              avatarUrl = chatInfoMap.value[targetIndex].userAvatarUrl
+            }
+            // 处理返回的数据
+            const message = {
+              isImg: returnMsg.isImg,
+              myWord: returnMsg.formUserId === userInfo.value.ID,
+              content: returnMsg.messageContent,
+              avatarUrl,
+              imgUrl: returnMsg.messageContent,
+            }
+            // 本地回显
+            chatInfoMap.value[targetIndex].chatList.push(message)
+          }
+          // 不包括我
+          else {
+            // 接收的ID
+            const targetIndex = chatInfoMap.value.findIndex(
+              (item) => item.userID === returnMsg.toUserId,
+            )
+            // 发送的ID
+            const sendIndex = chatInfoMap.value.findIndex(
+              (item) => item.userID === returnMsg.formUserId,
+            )
+            // 发送者的信息
+            const messageSend = {
+              isImg: returnMsg.isImg,
+              myWord: true,
+              content: returnMsg.messageContent,
+              avatarUrl: chatInfoMap.value[sendIndex].userAvatarUrl,
+              imgUrl: returnMsg.messageContent,
+            }
+            chatInfoMap.value[sendIndex].chatList.push(messageSend)
+            // 接受者的信息
+            const messageGet = {
+              isImg: returnMsg.isImg,
+              myWord: false,
+              content: returnMsg.messageContent,
+              avatarUrl: chatInfoMap.value[sendIndex].userAvatarUrl,
+              imgUrl: returnMsg.messageContent,
+            }
+            chatInfoMap.value[targetIndex].chatList.push(messageGet)
+          }
         } else {
-          avatarUrl = chatInfoMap.value[targetIndex.value].userAvatarUrl
+          console.log('未知返回信息')
         }
-        if (returnMsg.isImg) {
-          // 发的是图片
-          // 处理返回的数据
-          const message = {
-            isImg: returnMsg.isImg,
-            myWord: returnMsg.formUserId === userInfo.value.ID,
-            content: '',
-            avatarUrl,
-            imgUrl: returnMsg.messageContent,
-          }
-          // 本地回显
-          chatInfoMap.value[targetIndex.value].chatList.push(message)
-        }
-        // 非图片内容
-        else {
-          const message = {
-            isImg: returnMsg.isImg,
-            myWord: returnMsg.formUserId === userInfo.value.ID,
-            content: returnMsg.messageContent,
-            avatarUrl: avatarUrl,
-            imgUrl: '',
-          }
-          chatInfoMap.value[targetIndex.value].chatList.push(message)
-        }
+      } else if (data.data === 'pong') {
+        console.log('接收到服务器的心跳')
       } else {
         // 普通文字
-        console.log('服务器返回信息:', data.data)
+        console.log(data.data)
       }
     })
     /*
@@ -197,6 +297,5 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     websocketInit,
     sendMessage,
     insertMessage,
-    changeTargetIndex,
   }
 })

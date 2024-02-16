@@ -69,12 +69,11 @@ const chatList = ref([])
 
 onLoad((options) => {
   targetID = options?.targetID
-  chatHistoryStore.changeTargetIndex(+targetID)
   // 提取出于当前用户有关的消息记录
   historyIndex = chatInfoMap.value.findIndex((user) => {
     return user.userID === +targetID
   })
-  console.log(historyIndex)
+  console.log('聊天对象在用户数组的下标：', historyIndex)
 
   // 获取用户历史信息
   getFirstLoadInfo(targetID)

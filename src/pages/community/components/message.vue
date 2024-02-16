@@ -1,49 +1,51 @@
 <template>
-  <view class="container">
-    <view class="messageBox" v-for="item in messageList" :key="item.id">
-      <view class="avatar"></view>
+  <view class="container" v-if="messageList.length > 0">
+    <view
+      class="messageBox"
+      v-for="item in messageList"
+      :key="item.id"
+      @tap="navigateToChat(item.userID)"
+    >
+      <view>
+        <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+      </view>
       <view class="bodyBox">
-        <view class="nickname">{{ item.nickname }}</view>
-        <view class="message">{{ item.message }}</view>
+        <view class="nickname">{{ item.userName }}</view>
+        <view class="message">{{ item.lastMessage }}</view>
       </view>
       <view class="timeBox">
-        <view class="time">{{ item.time }}</view>
+        <view class="time">{{ item.lastMessageTime }}</view>
         <view class="num"
-          ><uni-tag :circle="true" :text="item.num" type="error" size="mini"
+          ><uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini"
         /></view>
       </view>
     </view>
   </view>
+  <view v-else> zan</view>
 </template>
 <script lang="ts" setup>
+import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { ref } from 'vue'
-const messageList = ref([
-  {
-    id: 1,
-    avatar: '',
-    nickname: '马春丽',
-    message: '我想回家',
-    time: '刚刚',
-    num: '99+',
-  },
-  {
-    id: 2,
-    avatar: '',
-    nickname: '代金宇',
-    message: '今晚吃驴肉火烧',
-    time: '下午 13:25',
-    num: '20',
-  },
+const chatHistoryStore = useChatHistoryStore()
+const messageList = ref(chatHistoryStore.unReadInfoList)
+console.log(messageList.value, '未读信息')
 
-  {
-    id: 3,
-    avatar: '',
-    nickname: '张涵',
-    message: '原神，启动！',
-    time: '昨天',
-    num: '1',
-  },
-])
+// 跳转到聊天页面
+const navigateToChat = (userID) => {
+  uni.navigateTo({
+    url: `/pages/community/chatRoom/index?targetID=${userID}`,
+  })
+}
+// const messageList = ref([
+//   // {
+//   //   id: 1,
+//   //   avatar: '',
+//   //   nickname: '马春丽',
+//   //   message: '我想回家',
+//   //   time: '刚刚',
+//   //   num: '99+',
+//   // },
+// ])
 </script>
 <style scoped lang="scss">
 .container {
