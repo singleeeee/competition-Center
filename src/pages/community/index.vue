@@ -15,10 +15,17 @@
     >
       <!-- 大厅 -->
       <swiper-item>
-        <scroll-view scroll-y :style="{ height: windowHeight * 2 - 40 + 'rpx' }">
+        <scroll-view
+          scroll-y
+          :style="{ height: windowHeight * 2 - 40 + 'rpx' }"
+          @refresherrefresh="pulldownRefresh"
+          :refresher-triggered="pulldownTriggered"
+          :refresher-threshold="50"
+          :refresher-enabled="true"
+        >
           <view class="hall">
-            <topic title="热门比赛" :type="true"></topic>
-            <topic title="热门帖子" :type="false"></topic>
+            <topic title="热门比赛" :type="true" ref="topicRef"></topic>
+            <topic title="热门帖子" :type="false" ref="postRef"></topic>
           </view>
         </scroll-view>
       </swiper-item>
@@ -42,6 +49,22 @@ import topic from './components/topic.vue'
 import friends from './components/friends.vue'
 import { ref } from 'vue'
 import message from './components/message.vue'
+// 控制下拉刷新
+let pulldownTriggered = false
+// 监听刷新事件
+const pulldownRefresh = () => {
+  if (!pulldownTriggered) {
+    pulldownTriggered = true
+    // topicRef.value.getComList()
+    // topicRef.value.getCommentList()
+    setTimeout(() => {
+      pulldownTriggered = false
+    }, 1000)
+  }
+}
+// 子组件ref
+const postRef = ref()
+const topicRef = ref()
 let windowHeight = 0
 // 获取可用屏幕高度
 ;(() => {

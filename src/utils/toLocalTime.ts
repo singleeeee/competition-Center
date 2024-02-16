@@ -1,4 +1,4 @@
-export const toLocalTime = (resource: string, type: boolean = true): string => {
+export const toLocalTime = (resource: string | number, type: boolean = true): string => {
   // 传过来的数据
   const data = new Date(resource)
   const year = data.getFullYear()

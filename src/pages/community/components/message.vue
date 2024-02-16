@@ -14,10 +14,10 @@
         <view class="message">{{ item.lastMessage }}</view>
       </view>
       <view class="timeBox">
-        <view class="time">{{ item.lastMessageTime }}</view>
-        <view class="num"
-          ><uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini"
-        /></view>
+        <view class="time">{{ toLocalTime(item.lastMessageTime * 1000, false) }}</view>
+        <view class="num">
+          <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+        </view>
       </view>
     </view>
   </view>
@@ -26,6 +26,7 @@
 <script lang="ts" setup>
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { ref } from 'vue'
+import { toLocalTime } from '@/utils/toLocalTime'
 const chatHistoryStore = useChatHistoryStore()
 const messageList = ref(chatHistoryStore.unReadInfoList)
 console.log(messageList.value, '未读信息')
@@ -36,21 +37,11 @@ const navigateToChat = (userID) => {
     url: `/pages/community/chatRoom/index?targetID=${userID}`,
   })
 }
-// const messageList = ref([
-//   // {
-//   //   id: 1,
-//   //   avatar: '',
-//   //   nickname: '马春丽',
-//   //   message: '我想回家',
-//   //   time: '刚刚',
-//   //   num: '99+',
-//   // },
-// ])
 </script>
 <style scoped lang="scss">
 .container {
   .messageBox {
-    height: 130rpx;
+    height: 140rpx;
     display: flex;
     align-items: center;
     background-color: #fff;
@@ -59,8 +50,8 @@ const navigateToChat = (userID) => {
     box-sizing: border-box;
     border-bottom: 1px solid #ebeef5;
     .avatar {
-      width: 90rpx;
-      height: 90rpx;
+      width: 100rpx;
+      height: 100rpx;
       border-radius: 50%;
       background-color: skyblue;
     }
@@ -69,7 +60,7 @@ const navigateToChat = (userID) => {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      height: 80rpx;
+      height: 120rpx;
       padding: 0 20rpx;
       box-sizing: border-box;
       .nickname {
@@ -78,6 +69,12 @@ const navigateToChat = (userID) => {
       }
       .message {
         font-size: 20rpx;
+        color: #aaa;
+        overflow: hidden;
+        -webkit-line-clamp: 1;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
       }
     }
     .timeBox {
@@ -85,10 +82,9 @@ const navigateToChat = (userID) => {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-around;
-      width: 120rpx;
+      justify-content: space-evenly;
+      width: 200rpx;
       font-size: 20rpx;
-      // background-color: pink;
 
       .num {
         padding-top: 10rpx;

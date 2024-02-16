@@ -37,7 +37,7 @@
     <view class="section"> <view class="line"></view> <view class="title">近期通告</view> </view>
     <!-- 通告栏 -->
     <view class="report">
-      <news></news>
+      <news @getNotificationList="getNotificationList"></news>
     </view>
   </view>
 </template>
@@ -47,9 +47,22 @@ import { ref } from 'vue'
 import news from './components/news.vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
+import { onPullDownRefresh } from '@dcloudio/uni-app'
 onLoad(() => {
   getSwiperData()
 })
+onPullDownRefresh(() => {
+  getSwiperData()
+  getNotificationList()
+  setTimeout(() => {
+    uni.stopPullDownRefresh()
+  }, 1000)
+})
+// 获取通告数据
+const getNotificationList = () => {
+  // 调用接口获取通告数据
+  console.log('获取通告数据')
+}
 // 获取轮播图数据
 const getSwiperData = async () => {
   // 调用接口获取轮播图数据
@@ -74,7 +87,7 @@ const handleSwiperTap = (disId: number) => {
 }
 
 // 轮播图数据数组
-const swiperDataList = ref([{}])
+const swiperDataList = ref([])
 // 轮播图切换事件
 const swiperChange = (e) => {
   currentImg.value = e.detail.current

@@ -109,8 +109,12 @@ const getCommentList = async () => {
   for (let i = 0; i < res.data.list.length; i++) {
     postList.value.push(res.data.list[i])
   }
-  console.log(postList.value)
 }
+
+defineExpose({
+  getCommentList,
+  getComList,
+})
 </script>
 
 <style scoped lang="scss">

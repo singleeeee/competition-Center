@@ -28,6 +28,15 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { toLocalTime } from '@/utils/toLocalTime'
+import { onPullDownRefresh } from '@dcloudio/uni-app'
+// 下拉刷新
+onPullDownRefresh(async () => {
+  getNotificationList()
+  console.log('获取通告数据')
+  setTimeout(() => {
+    uni.stopPullDownRefresh()
+  }, 1000)
+})
 // 加载比赛列表
 onLoad(() => {
   getNotificationList()
@@ -47,6 +56,7 @@ const getNotificationList = async () => {
     },
   })
   const resList = ref(res.data.list)
+  newsList.value = []
   for (let i = 0; i < resList.value.length; i++) {
     const obj = {
       ID: resList.value[i].ID, //帖子ID

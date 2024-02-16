@@ -4,7 +4,7 @@
       <!-- 一个时间段 -->
       <view v-for="(items, index) in chatInfoMap" :key="index" class="each_time">
         <!-- 时间 -->
-        <view class="date">{{ items.lastMessageTime }}</view>
+        <view class="date">{{ toLocalTime(items.lastMessageTime) }}</view>
         <!-- 聊天内容 -->
         <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
           <view class="chat-Box">
@@ -53,6 +53,7 @@ import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { http } from '@/utils/http'
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
+import { toLocalTime } from '@/utils/toLocalTime'
 
 let targetID: number
 // 获取用户id等
@@ -70,30 +71,30 @@ const chatList = ref([])
 onLoad((options) => {
   targetID = options?.targetID
   // 提取出于当前用户有关的消息记录
+  console.log(chatInfoMap.value, '聊天室获取的信息列表')
   historyIndex = chatInfoMap.value.findIndex((user) => {
     return user.userID === +targetID
   })
-  console.log('聊天对象在用户数组的下标：', historyIndex)
 
   // 获取用户历史信息
   getFirstLoadInfo(targetID)
 })
 // 获取第一次加载所需的历史信息
 const getFirstLoadInfo = async (targetID: number) => {
+  console.log('historyIndex', historyIndex)
+
   // 没有未读信息的情况
   const res = await http({
     url: '/app/msg/getHistoryMessageList',
     data: {
       formUserId: userInfo.value.ID,
       toUserId: targetID,
-      messageTime: '9707839100', // 设置一个非常久远的死ID
+      messageTime: chatInfoMap.value[historyIndex].lastMessageTime, // 设置一个非常久远的死ID
       page: 1,
       pageSize: 10,
     },
   })
-
   let avatarUrl = chatInfoMap.value[historyIndex].userAvatarUrl
-
   // 提取数据
   for (let i = 0; i < res.data.list.length; i++) {
     const item = res.data.list[i]

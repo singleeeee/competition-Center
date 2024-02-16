@@ -20,6 +20,16 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     common_vendor.onLoad(() => {
       getSwiperData();
     });
+    common_vendor.onPullDownRefresh(() => {
+      getSwiperData();
+      getNotificationList();
+      setTimeout(() => {
+        common_vendor.index.stopPullDownRefresh();
+      }, 1e3);
+    });
+    const getNotificationList = () => {
+      console.log("获取通告数据");
+    };
     const getSwiperData = async () => {
       const {
         data: { list }
@@ -39,7 +49,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: `/subpackage/postDetail/index?disId=${disId}`
       });
     };
-    const swiperDataList = common_vendor.ref([{}]);
+    const swiperDataList = common_vendor.ref([]);
     const swiperChange = (e) => {
       currentImg.value = e.detail.current;
     };
@@ -79,7 +89,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           mode: "nav",
           field: "content"
         })
-      } : {});
+      } : {}, {
+        i: common_vendor.o(getNotificationList)
+      });
     };
   }
 });

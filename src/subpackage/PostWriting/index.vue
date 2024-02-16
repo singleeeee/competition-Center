@@ -1,5 +1,19 @@
 <template>
   <view class="container">
+    <!-- 关联比赛 -->
+    <uni-section title="关联比赛" type="line">
+      <view style="padding: 0 20rpx">
+        <uni-data-select
+          class="select"
+          :localdata="matchList"
+          field="appid as value, name as text"
+          v-model="relativeCom"
+          placeholder="请选择关联的比赛"
+          emptyTips="暂无比赛"
+        />
+      </view>
+    </uni-section>
+
     <view class="inputTitleBox">
       <view class="info">标题:</view>
       <input class="inputTitle" v-model="title" placeholder="输入标题" @input="titleChange" />
@@ -45,8 +59,27 @@ import { useUserInfoStore } from '@/stores'
 import { http } from '@/utils/http'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+onLoad(async () => {
+  // 获取比赛列表
+  const res = await http({
+    url: '/app/com/getComInfoList',
+  })
+  console.log(res.data.list, '比赛列表')
+  for (let i = 0; i < res.data.list.length; i++) {
+    const matchItem = {
+      value: res.data.list[i].ID,
+      text: res.data.list[i].comTitle,
+    }
+    matchList.value.push(matchItem)
+  }
+})
 // 内容区
 const textarea = ref('')
+// 关联比赛
+const relativeCom = ref()
+// 比赛列表
+const matchList = ref<any>([])
 // 标题
 const title = ref('')
 
@@ -103,11 +136,21 @@ const send = () => {
       data: {
         disTitle: title.value,
         disContent: textarea.value,
-        disComId: 1,
+        disComId: relativeCom.value,
         disUserId: userInfo.value.ID,
         disPicture: imgList.value,
       },
       method: 'POST',
+    })
+    uni.showToast({
+      title: '发布成功!',
+      icon: 'success',
+      duration: 1400,
+      success: () => {
+        uni.navigateTo({
+          url: '/subpackage/posts/index',
+        })
+      },
     })
   } else {
     uni.showToast({
@@ -148,16 +191,19 @@ const send = () => {
   .content {
     background-color: #eee;
     border-radius: 10rpx;
-    min-height: 200rpx;
     margin: 0 20rpx;
+    padding: 10rpx;
+    padding-bottom: 300rpx;
   }
   .img {
     position: fixed;
+    z-index: 9999;
     bottom: 100rpx;
     width: 100%;
     display: flex;
     align-items: center;
     min-height: 180rpx;
+    background-color: #fff;
     .imageItem {
       position: relative;
       width: 120rpx;
@@ -178,6 +224,7 @@ const send = () => {
   .function {
     box-sizing: border-box;
     position: fixed;
+    z-index: 9999;
     bottom: 0;
     width: 100%;
     padding: 0 40rpx;
@@ -186,7 +233,8 @@ const send = () => {
     align-items: center;
     justify-content: space-between;
     height: 100rpx;
-    box-shadow: 2rpx 0 0 4rpx #eee;
+    box-shadow: 2rpx 0 0 2rpx #eee;
+    background-color: #fff;
     .icon {
       width: 30vw;
       display: flex;

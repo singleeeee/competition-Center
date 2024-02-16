@@ -31,11 +31,12 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
+import { useUserInfoStore } from '@/stores'
+
 onLoad(async () => {
   const res = await http({
-    url: `/app/user/showUserFriend?userID=8`,
+    url: `/app/user/showUserFriend?userID=${useUserInfoStore().userInfo.ID}`,
   })
-  console.log('朋友列表', res.data)
   for (let i = 0; i < res.data.length; i++) {
     groupList.value[0].groupMember.push(res.data[i])
   }
