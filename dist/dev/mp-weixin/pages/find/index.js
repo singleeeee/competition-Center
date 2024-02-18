@@ -20,16 +20,16 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     common_vendor.onLoad(() => {
       getSwiperData();
     });
-    common_vendor.onPullDownRefresh(() => {
-      getSwiperData();
-      getNotificationList();
+    const newsRef = common_vendor.ref();
+    common_vendor.onPullDownRefresh(async () => {
+      newsRef.value.notificationListInit();
       setTimeout(() => {
         common_vendor.index.stopPullDownRefresh();
       }, 1e3);
     });
-    const getNotificationList = () => {
-      console.log("获取通告数据");
-    };
+    common_vendor.onReachBottom(() => {
+      newsRef.value.getNotificationList();
+    });
     const getSwiperData = async () => {
       const {
         data: { list }
@@ -90,7 +90,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           field: "content"
         })
       } : {}, {
-        i: common_vendor.o(getNotificationList)
+        i: common_vendor.sr(newsRef, "1b8b30bc-2", {
+          "k": "newsRef"
+        })
       });
     };
   }

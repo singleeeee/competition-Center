@@ -1,14 +1,14 @@
 <template>
   <view class="container">
     <!-- item -->
-    <view class="title">
-      <view class="topic">{{ title }}</view>
-      <view class="rightTitle" @tap="navigatetoPosts"
-        >更多<uni-icons type="forward" size="12"
-      /></view>
-    </view>
-    <!-- 比赛列表 -->
-    <template v-if="type">
+    <view class="item">
+      <view class="title">
+        <view class="topic">{{ title }}</view>
+        <view class="rightTitle" @tap="navigatetoPosts"
+          >更多<uni-icons type="forward" size="12"
+        /></view>
+      </view>
+      <!-- 比赛列表 -->
       <view
         class="topicBox"
         v-for="(item, index) in competitionList"
@@ -23,9 +23,13 @@
           <view class="introduce">{{ item.comSubTitle }}</view>
         </view>
       </view>
-    </template>
-    <!-- 帖子列表 -->
-    <template v-else>
+      <view class="title">
+        <view class="topic">热门帖子</view>
+        <view class="rightTitle" @tap="navigatetoPosts"
+          >更多<uni-icons type="forward" size="12"
+        /></view>
+      </view>
+      <!-- 帖子列表 -->
       <view
         class="topicBox"
         v-for="(item, index) in postList"
@@ -40,7 +44,7 @@
           <view class="introduce">{{ item.disContent }}</view>
         </view>
       </view>
-    </template>
+    </view>
   </view>
 </template>
 
@@ -48,15 +52,49 @@
 import { http } from '@/utils/http'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+const emit = defineEmits(['handleSkeletonShow'])
 
 onLoad(() => {
   // 获取比赛列表
-  getComList()
-  getCommentList()
+  refresh()
 })
 
+// 父组件传来的数据
+defineProps({
+  title: {
+    type: String,
+  },
+})
+// 跳转到具体页面
+const navigatetoPostDetail = (disId: number) => {
+  uni.navigateTo({ url: `/subpackage/postDetail/index?disId=${disId}` })
+}
+// 跳转到全部帖子列表
+const navigatetoPosts = () => {
+  uni.navigateTo({ url: `/subpackage/posts/index` })
+}
+// 帖子列表数组
+const postList = ref([])
 // 比赛列表数组
 const competitionList = ref([])
+// 获取帖子列表
+const getPostList = async () => {
+  const res = await http({
+    url: '/app/dis/getDisInfoList',
+    data: {
+      disModel: 1,
+      disStatus: 2,
+      page: 1,
+      pageSize: 5,
+      sort: 'dis_hot',
+      order: 'descending',
+    },
+  })
+  postList.value = []
+  for (let i = 0; i < res.data.list.length; i++) {
+    postList.value.push(res.data.list[i])
+  }
+}
 // 获取比赛列表
 const getComList = async () => {
   const res = await http({
@@ -70,50 +108,22 @@ const getComList = async () => {
       order: 'descending',
     },
   })
+  competitionList.value = []
   for (let i = 0; i < res.data.list.length; i++) {
     competitionList.value.push(res.data.list[i])
   }
 }
-// 父组件传来的数据
-defineProps({
-  title: {
-    type: String,
-  },
-  type: {
-    type: Boolean,
-  },
-})
-// 跳转到具体页面
-const navigatetoPostDetail = (disId: number) => {
-  uni.navigateTo({ url: `/subpackage/postDetail/index?disId=${disId}` })
+// 刷新页面
+const refresh = async () => {
+  emit('handleSkeletonShow', true)
+  await getPostList()
+  await getComList()
+  setTimeout(() => {
+    emit('handleSkeletonShow', false)
+  }, 500)
 }
-// 跳转到全部帖子列表
-const navigatetoPosts = () => {
-  uni.navigateTo({ url: `/subpackage/posts/index` })
-}
-// 帖子列表数组
-const postList = ref([])
-// 获取帖子列表
-const getCommentList = async () => {
-  const res = await http({
-    url: '/app/dis/getDisInfoList',
-    data: {
-      disModel: 1,
-      disStatus: 2,
-      page: 1,
-      pageSize: 5,
-      sort: 'dis_hot',
-      order: 'descending',
-    },
-  })
-  for (let i = 0; i < res.data.list.length; i++) {
-    postList.value.push(res.data.list[i])
-  }
-}
-
 defineExpose({
-  getCommentList,
-  getComList,
+  refresh,
 })
 </script>
 

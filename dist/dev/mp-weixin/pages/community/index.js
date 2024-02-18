@@ -9,16 +9,19 @@ const message = () => "./components/message.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
-    let pulldownTriggered = false;
-    const pulldownRefresh = () => {
-      if (!pulldownTriggered) {
-        pulldownTriggered = true;
-        setTimeout(() => {
-          pulldownTriggered = false;
-        }, 1e3);
-      }
+    let isSkeletonShow = common_vendor.ref(false);
+    let handleSkeletonShow = (boolean) => {
+      isSkeletonShow.value = boolean;
     };
-    const postRef = common_vendor.ref();
+    let pulldownTriggered = common_vendor.ref(false);
+    const pulldownRefresh = () => {
+      pulldownTriggered.value = true;
+      setTimeout(() => {
+        console.log(topicRef.value.refresh());
+        pulldownTriggered.value = false;
+      }, 1e3);
+    };
+    common_vendor.ref();
     const topicRef = common_vendor.ref();
     let windowHeight = 0;
     (() => {
@@ -40,24 +43,19 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         g: common_vendor.sr(topicRef, "485a05f3-0", {
           "k": "topicRef"
         }),
-        h: common_vendor.p({
-          title: "热门比赛",
-          type: true
+        h: common_vendor.o(common_vendor.unref(handleSkeletonShow)),
+        i: common_vendor.p({
+          title: "热门比赛"
         }),
-        i: common_vendor.sr(postRef, "485a05f3-1", {
-          "k": "postRef"
-        }),
-        j: common_vendor.p({
-          title: "热门帖子",
-          type: false
-        }),
-        k: common_vendor.unref(windowHeight) * 2 - 40 + "rpx",
-        l: common_vendor.o(pulldownRefresh),
-        m: common_vendor.unref(pulldownTriggered),
+        j: common_vendor.unref(windowHeight) * 2 - 40 + "rpx",
+        k: common_vendor.o(pulldownRefresh),
+        l: common_vendor.unref(pulldownTriggered),
+        m: !common_vendor.unref(isSkeletonShow),
         n: common_vendor.unref(windowHeight) * 2 - 40 + "rpx",
         o: common_vendor.o(swiperChange),
         p: common_vendor.unref(currentPage),
-        q: common_vendor.s(`height:${common_vendor.unref(windowHeight)}*2 + 'rpx'`)
+        q: common_vendor.unref(isSkeletonShow),
+        r: common_vendor.s(`height:${common_vendor.unref(windowHeight)}*2 + 'rpx'`)
       };
     };
   }

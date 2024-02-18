@@ -138,7 +138,6 @@ const getCompetitionList = async () => {
     },
   })
   console.log(res)
-
   //   for (let i = 0; i < (data as any).list.length; i++) {
   //     const obj = {
   //       ID: data.list[i].ID,

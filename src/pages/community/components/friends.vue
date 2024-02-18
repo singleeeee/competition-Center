@@ -34,6 +34,7 @@ import { http } from '@/utils/http'
 import { useUserInfoStore } from '@/stores'
 
 onLoad(async () => {
+  // 获取朋友列表
   const res = await http({
     url: `/app/user/showUserFriend?userID=${useUserInfoStore().userInfo.ID}`,
   })

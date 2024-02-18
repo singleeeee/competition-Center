@@ -11,7 +11,7 @@
           <view v-else style="display: flex">
             <view v-if="userInfo.isYourFollower" class="edit" @tap="cancelFollow">取消关注</view>
             <view v-else class="edit" @tap="follow">关注</view>
-            <view class="edit" @tap="navigateToEdit">私信</view>
+            <view class="edit" @tap="navigateToChat">私信</view>
           </view>
         </view>
       </view>
@@ -97,7 +97,10 @@ import { myDebounce } from '@/utils/myDebounce'
 const isSelf = ref(false)
 // 用户信息
 const userInfo = ref()
+// 页面的ID
+const userID = ref()
 onLoad(async (options) => {
+  userID.value = options?.userID
   // 获取用户信息
   await gerUserinfo(options?.userID)
   // 转换标签
@@ -107,6 +110,12 @@ onLoad(async (options) => {
     isSelf.value = true
   }
 })
+// 私聊
+const navigateToChat = (targetID) => {
+  uni.navigateTo({
+    url: `/pages/community/chatRoom/index?targetID=${targetID}`,
+  })
+}
 // 关注
 const follow = myDebounce(async () => {
   const res = await http({

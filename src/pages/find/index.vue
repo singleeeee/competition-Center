@@ -34,10 +34,11 @@
         </swiper-item>
       </swiper>
     </uni-swiper-dot>
-    <view class="section"> <view class="line"></view> <view class="title">近期通告</view> </view>
+    <view v-else style="margin-top: 80rpx"></view>
+    <view class="section"><view class="line"></view> <view class="title">近期通告</view> </view>
     <!-- 通告栏 -->
     <view class="report">
-      <news @getNotificationList="getNotificationList"></news>
+      <news ref="newsRef"></news>
     </view>
   </view>
 </template>
@@ -48,21 +49,25 @@ import news from './components/news.vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
+import { onReachBottom } from '@dcloudio/uni-app'
 onLoad(() => {
   getSwiperData()
 })
-onPullDownRefresh(() => {
-  getSwiperData()
-  getNotificationList()
+
+// news组件
+const newsRef = ref()
+// 下拉刷新状态
+onPullDownRefresh(async () => {
+  newsRef.value.notificationListInit()
   setTimeout(() => {
     uni.stopPullDownRefresh()
   }, 1000)
 })
-// 获取通告数据
-const getNotificationList = () => {
-  // 调用接口获取通告数据
-  console.log('获取通告数据')
-}
+// 上拉加载
+onReachBottom(() => {
+  newsRef.value.getNotificationList()
+})
+
 // 获取轮播图数据
 const getSwiperData = async () => {
   // 调用接口获取轮播图数据
@@ -85,7 +90,6 @@ const handleSwiperTap = (disId: number) => {
     url: `/subpackage/postDetail/index?disId=${disId}`,
   })
 }
-
 // 轮播图数据数组
 const swiperDataList = ref([])
 // 轮播图切换事件
@@ -107,7 +111,13 @@ const closeNoticebar = () => {
 </script>
 <style scoped lang="scss">
 .container {
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
+  height: 100vh;
+  .report {
+    height: 100%;
+  }
 }
 .swiper {
   height: 300rpx;

@@ -13,7 +13,7 @@
 			"style": {
 				"navigationBarTitleText": "发现",
 				"enablePullDownRefresh": true,
-				"backgroundTextStyle": "dark"
+				"onReachBottomDistance": 20
 			}
 		},
 		{

@@ -4,7 +4,7 @@
       <!-- 一个时间段 -->
       <view v-for="(items, index) in chatInfoMap" :key="index" class="each_time">
         <!-- 时间 -->
-        <view class="date">{{ toLocalTime(items.lastMessageTime) }}</view>
+        <view class="date">{{ toLocalTime(items.lastMessageTime * 1000, false) }}</view>
         <!-- 聊天内容 -->
         <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
           <view class="chat-Box">

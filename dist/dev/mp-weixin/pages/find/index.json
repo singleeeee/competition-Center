@@ -1,7 +1,7 @@
 {
   "navigationBarTitleText": "发现",
   "enablePullDownRefresh": true,
-  "backgroundTextStyle": "dark",
+  "onReachBottomDistance": 20,
   "usingComponents": {
     "uni-notice-bar": "../../node-modules/@dcloudio/uni-ui/lib/uni-notice-bar/uni-notice-bar",
     "uni-swiper-dot": "../../node-modules/@dcloudio/uni-ui/lib/uni-swiper-dot/uni-swiper-dot",

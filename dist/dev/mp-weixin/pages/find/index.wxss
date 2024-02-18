@@ -24,7 +24,13 @@
 /* 透明度 */
 /* 文章场景相关 */
 .container.data-v-1b8b30bc {
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
+  height: 100vh;
+}
+.container .report.data-v-1b8b30bc {
+  height: 100%;
 }
 .swiper.data-v-1b8b30bc {
   height: 300rpx;
