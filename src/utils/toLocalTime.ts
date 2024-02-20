@@ -5,7 +5,12 @@ export const toLocalTime = (resource: string | number, type: boolean = true): st
   const month = data.getMonth() + 1
   const day = data.getDate()
   const hours = data.getHours()
-  const minutes = data.getMinutes()
+  let minutes: number | string = data.getMinutes()
+  // 将minutes转为string类型
+  if (minutes < 10) minutes = `0${minutes}`
+  else if (minutes === 0) {
+    minutes = '00'
+  }
   const time = `${year}/${month}/${day} ${hours}:${minutes}`
   if (type) {
     return time
