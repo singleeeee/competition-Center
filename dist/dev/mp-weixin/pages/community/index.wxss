@@ -27,7 +27,7 @@
   background-color: #eee;
 }
 .container .swiper.data-v-485a05f3 {
-  margin-top: 100rpx;
+  margin-top: 8vh;
 }
 .container .topTab.data-v-485a05f3 {
   position: fixed;
@@ -42,7 +42,6 @@
   background-color: #fff;
 }
 .container .topTab .item.data-v-485a05f3 {
-  height: 120rpx;
   width: 100%;
   color: #bbb;
   font-size: 30rpx;

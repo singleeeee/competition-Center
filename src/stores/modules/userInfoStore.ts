@@ -100,7 +100,6 @@ export const useUserInfoStore = defineStore(
     // 整体更新仓库
     const updateUserInfo = (value: UserInfo) => {
       const res = JSON.parse(JSON.stringify(value))
-      console.log('传过来的userinfo', res)
       if (!res.token) res.token = userInfo.value.token
       // ID
       userInfo.value.ID = res.ID
@@ -128,7 +127,6 @@ export const useUserInfoStore = defineStore(
       userInfo.value.fansNumber = res.fansNumber
       // 关注个数
       userInfo.value.followerNumber = res.followerNumber
-      console.log('更新后的pinia仓库', userInfo.value)
     }
     // 记得 return
     return {

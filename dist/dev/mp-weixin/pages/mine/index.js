@@ -28,7 +28,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         userInfo2 = JSON.parse(userInfo2);
         userInfo2 = userInfo2.userInfo;
         stores_modules_userInfoStore.useUserInfoStore().updateUserInfo(userInfo2);
-        console.log("显示头像");
         isHeadShow.value = true;
       } else {
         isHeadShow.value = false;
@@ -44,17 +43,13 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     });
     const formatLabel = () => {
       if (userInfo.value) {
-        console.log(userInfo.value.userLabel);
         for (let i = 0; i < tagList.value.length; i++)
           tagList.value.pop();
         if (userInfo.value.userLabel.includes("-")) {
-          console.log("include - ");
           tagList.value = userInfo.value.userLabel.split("-");
         } else if (userInfo.value.userLabel !== "") {
-          console.log("只有一个数据");
           tagList.value.push(userInfo.value.userLabel);
         } else {
-          console.log("标签为空");
           for (let i = 0; i < tagList.value.length; i++)
             tagList.value.pop();
         }

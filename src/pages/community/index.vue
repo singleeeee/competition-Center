@@ -288,7 +288,7 @@ const swiperChange = (e) => {
 .container {
   background-color: #eee;
   .swiper {
-    margin-top: 100rpx;
+    margin-top: 8vh;
   }
   .topTab {
     position: fixed;
@@ -302,7 +302,6 @@ const swiperChange = (e) => {
     box-shadow: 0 0 1rpx 2rpx #eee;
     background-color: #fff;
     .item {
-      height: 120rpx;
       width: 100%;
       color: #bbb;
       font-size: 30rpx;

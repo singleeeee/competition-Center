@@ -6,8 +6,9 @@
       :key="item.id"
       @tap="navigateToChat(item.userID)"
     >
-      <view>
+      <view style="position: relative">
         <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+        <view class="dot" v-show="item.unReadCount > 0"></view>
       </view>
       <view class="bodyBox">
         <view class="nickname">{{ item.userName }}</view>
@@ -21,12 +22,14 @@
       </view>
     </view>
   </view>
-  <view v-else> zan</view>
+  <view v-else class="login"> 请先登录!</view>
 </template>
 <script lang="ts" setup>
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { ref } from 'vue'
 import { toLocalTime } from '@/utils/toLocalTime'
+import { onShow } from '@dcloudio/uni-app'
+onShow(() => {})
 const chatHistoryStore = useChatHistoryStore()
 const messageList = ref(chatHistoryStore.unReadInfoList)
 console.log(messageList.value, '未读信息')
@@ -41,7 +44,7 @@ const navigateToChat = (userID) => {
 <style scoped lang="scss">
 .container {
   .messageBox {
-    height: 140rpx;
+    height: 130rpx;
     display: flex;
     align-items: center;
     background-color: #fff;
@@ -52,15 +55,27 @@ const navigateToChat = (userID) => {
     .avatar {
       width: 100rpx;
       height: 100rpx;
-      border-radius: 50%;
+      border-radius: 10%;
       background-color: skyblue;
+    }
+    .dot {
+      position: absolute;
+      height: 10rpx;
+      width: 10rpx;
+      top: -10rpx;
+      right: -6rpx;
+      background-color: red;
+      padding: 6rpx;
+      font-size: 18rpx;
+      color: #fff;
+      border-radius: 20rpx;
     }
     .bodyBox {
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      height: 120rpx;
+      justify-content: space-around;
+      height: 100rpx;
       padding: 0 20rpx;
       box-sizing: border-box;
       .nickname {
@@ -69,7 +84,7 @@ const navigateToChat = (userID) => {
       }
       .message {
         font-size: 20rpx;
-        color: #aaa;
+        color: #888;
         overflow: hidden;
         -webkit-line-clamp: 1;
         text-overflow: ellipsis;
@@ -78,14 +93,14 @@ const navigateToChat = (userID) => {
       }
     }
     .timeBox {
-      height: 80%;
+      height: 100rpx;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-evenly;
+      justify-content: space-around;
       width: 200rpx;
       font-size: 20rpx;
-
+      color: #666;
       .num {
         padding-top: 10rpx;
         display: flex;
@@ -94,5 +109,10 @@ const navigateToChat = (userID) => {
       }
     }
   }
+}
+.login {
+  text-align: center;
+  margin-top: 10vh;
+  font-size: 40rpx;
 }
 </style>

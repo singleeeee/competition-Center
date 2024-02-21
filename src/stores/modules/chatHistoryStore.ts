@@ -65,11 +65,10 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     // 监听服务器返回信息
     socketTask.value.onMessage(async (data) => {
       // console.log('原始返回数据', data)
-      // 转化返回的数据
-      // json格式
+      // 转化返回的数据为json格式
       if (data.data[0] === '{') {
         const returnMsg = JSON.parse(data.data)
-        // console.log('转化后的数据', returnMsg)
+        console.log('转化后的数据', returnMsg)
         // 返回的是未读信息 1 未读信息 2 普通信息
         if (returnMsg.type === 1) {
           // 更新用户列表 todo
@@ -83,19 +82,18 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               unReadCount: 0,
               chatList: [],
             }
-
             // 消息队列
             chatInfoMap.value.push(user)
             // 未读信息队列
             unReadInfoList.value.push(user)
           }
+          // 更新消息记录
           for (const key in returnMsg.unReadMessageList) {
             // 有未读信息
             if (returnMsg.unReadMessageList[key].length > 0) {
               // 查找该用户所在数组下标
               const userIndex = chatInfoMap.value.findIndex((item) => item.userID === +key)
-
-              // 最后一天未读信息的时间
+              // 最后一条未读信息的时间
               chatInfoMap.value[userIndex].lastMessageTime =
                 returnMsg.unReadMessageList[key][
                   returnMsg.unReadMessageList[key].length - 1
@@ -128,7 +126,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               }
             }
           }
-          // console.log('未读信息队列', unReadInfoList.value)
+          console.log('消息记录更新完毕', unReadInfoList.value)
         }
         // 返回的是普通聊天信息
         else if (returnMsg.type === 2) {
@@ -240,12 +238,13 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
   }
   // 插入历史信息
   const insertMessage = (targetID: number, message: any) => {
-    // console.log('插入历史信息')
+    console.log('插入历史信息,插入对象的ID为', targetID)
     for (let i = 0; i < chatInfoMap.value.length; i++) {
       if (chatInfoMap.value[i].userID === +targetID) {
         chatInfoMap.value[i].chatList.unshift(message)
       }
     }
+    console.log(chatInfoMap.value, '仓库信息')
   }
   return {
     socketTask,

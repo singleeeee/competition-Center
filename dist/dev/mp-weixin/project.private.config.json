@@ -10,7 +10,7 @@
                 {
                     "name": "聊天室",
                     "pathName": "pages/community/chatRoom/index",
-                    "query": "targetID=4",
+                    "query": "targetID=8",
                     "launchMode": "default",
                     "scene": null
                 },

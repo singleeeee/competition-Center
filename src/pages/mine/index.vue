@@ -19,7 +19,6 @@ onLoad(() => {
     userInfo = JSON.parse(userInfo)
     userInfo = userInfo.userInfo
     useUserInfoStore().updateUserInfo(userInfo)
-    console.log('显示头像')
     isHeadShow.value = true
   } else {
     isHeadShow.value = false
@@ -36,19 +35,13 @@ onShow(() => {
 // 标签格式化
 const formatLabel = () => {
   if (userInfo.value) {
-    console.log(userInfo.value.userLabel)
-
     // tag数组处理
     for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
     if (userInfo.value.userLabel.includes('-')) {
-      console.log('include - ')
-
       tagList.value = userInfo.value.userLabel.split('-')
     } else if (userInfo.value.userLabel !== '') {
-      console.log('只有一个数据')
       tagList.value.push(userInfo.value.userLabel)
     } else {
-      console.log('标签为空')
       // tag数组
       for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
     }
