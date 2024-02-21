@@ -305,7 +305,7 @@ const comChange = (e: any) => {
       }
       .active {
         // background: linear-gradient(to top, rgb(44, 141, 192), rgb(90, 196, 238));
-        background: linear-gradient(to top, rgb(15, 101, 27), rgb(65, 224, 86));
+        background: linear-gradient(to top, rgb(6, 93, 160), rgb(88, 162, 228));
         color: #fff;
       }
     }

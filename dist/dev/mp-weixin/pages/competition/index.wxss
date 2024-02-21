@@ -100,7 +100,7 @@
   padding: 10rpx 20rpx;
 }
 .container .headBox .tagList .active.data-v-3e564a22 {
-  background: linear-gradient(to top, rgb(15, 101, 27), rgb(65, 224, 86));
+  background: linear-gradient(to top, rgb(6, 93, 160), rgb(88, 162, 228));
   color: #fff;
 }
 .container .itemList.data-v-3e564a22 {

@@ -52,7 +52,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       },
       success: (res) => {},
       fail: (err) => {
-        console.log('发起ws连接失败！', err)
+        // console.log('发起ws连接失败！', err)
       },
     })
     // 监听WebSocket连接成功事件
@@ -64,12 +64,12 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     })
     // 监听服务器返回信息
     socketTask.value.onMessage(async (data) => {
-      console.log('原始返回数据', data)
+      // console.log('原始返回数据', data)
       // 转化返回的数据
       // json格式
       if (data.data[0] === '{') {
         const returnMsg = JSON.parse(data.data)
-        console.log('转化后的数据', returnMsg)
+        // console.log('转化后的数据', returnMsg)
         // 返回的是未读信息 1 未读信息 2 普通信息
         if (returnMsg.type === 1) {
           // 更新用户列表 todo
@@ -128,7 +128,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               }
             }
           }
-          console.log('未读信息队列', unReadInfoList.value)
+          // console.log('未读信息队列', unReadInfoList.value)
         }
         // 返回的是普通聊天信息
         else if (returnMsg.type === 2) {
@@ -141,7 +141,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               (item) => item.userID === returnMsg.formUserId,
             )
           }
-          console.log('目标用户的index', targetIndex)
+          // console.log('目标用户的index', targetIndex)
 
           // 修改头像
           let avatarUrl
@@ -163,13 +163,13 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
           // 本地回显
           chatInfoMap.value[targetIndex].chatList.push(message)
         } else {
-          console.log('未知返回信息')
+          // console.log('未知返回信息')
         }
       } else if (data.data === 'pong') {
         console.log('接收到服务器的心跳')
       } else {
         // 普通文字
-        console.log(data.data)
+        // console.log(data.data)
       }
     })
     /*
@@ -177,7 +177,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     */
     // 监听WebSocket连接关闭事件
     socketTask.value.onClose(() => {
-      console.log('WebSocket连接关闭')
+      // console.log('WebSocket连接关闭')
       // 修改连接状态
       socketOpen.value = false
       reconnect()
@@ -201,11 +201,11 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       clearTimeout(socketTimer)
       // 为啥共用定时器，这两个不可能同时存在
       socketTimer = setTimeout(() => {
-        console.log('开始重连...')
+        // console.log('开始重连...')
         connectWebSocket()
       }, RECONNECT_INTERVAL)
     } else {
-      console.log('WebSocket连接已打开，无需重连！')
+      // console.log('WebSocket连接已打开，无需重连！')
     }
   }
   // 心跳检测
@@ -233,16 +233,14 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
         //网络发送
         socketTask.value.send({
           data: message,
-          success: () => {
-            console.log('发送成功')
-          },
+          success: () => {},
         })
       }
     }
   }
   // 插入历史信息
   const insertMessage = (targetID: number, message: any) => {
-    console.log('插入历史信息')
+    // console.log('插入历史信息')
     for (let i = 0; i < chatInfoMap.value.length; i++) {
       if (chatInfoMap.value[i].userID === +targetID) {
         chatInfoMap.value[i].chatList.unshift(message)

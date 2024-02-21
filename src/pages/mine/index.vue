@@ -10,6 +10,7 @@ const userInfoStore = useUserInfoStore()
 // 大坑！！！！！解构赋值还是会丢失响应式的，但是log出来还是proxy？
 const { userInfo } = storeToRefs(userInfoStore)
 let tagList = ref<string[]>([])
+let isHeadShow = ref(true)
 
 onLoad(() => {
   let userInfo = uni.getStorageSync('UserInfo')
@@ -18,31 +19,43 @@ onLoad(() => {
     userInfo = JSON.parse(userInfo)
     userInfo = userInfo.userInfo
     useUserInfoStore().updateUserInfo(userInfo)
+    console.log('显示头像')
     isHeadShow.value = true
   } else {
     isHeadShow.value = false
   }
 })
 onShow(() => {
-  let userInfo = uni.getStorageSync('UserInfo')
-  if (userInfo) {
-    userInfo = JSON.parse(userInfo)
-    userInfo = userInfo.userInfo
-    // console.log('onshow重新赋值')
-    // useUserInfoStore().changeUserInfo('userLabel', userInfo.userLabel)
-    // tag数组
-    for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
-    if (userInfo.userLabel.includes('-')) {
-      tagList.value = userInfo.userLabel.split('-')
-    } else if (userInfo.userLabel !== '') tagList.value.push(userInfo.userLabel)
+  formatLabel()
+  if (userInfo.value.token) {
     isHeadShow.value = true
   } else {
-    useUserInfoStore()
-    // tag数组
-    for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
     isHeadShow.value = false
   }
 })
+// 标签格式化
+const formatLabel = () => {
+  if (userInfo.value) {
+    console.log(userInfo.value.userLabel)
+
+    // tag数组处理
+    for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
+    if (userInfo.value.userLabel.includes('-')) {
+      console.log('include - ')
+
+      tagList.value = userInfo.value.userLabel.split('-')
+    } else if (userInfo.value.userLabel !== '') {
+      console.log('只有一个数据')
+      tagList.value.push(userInfo.value.userLabel)
+    } else {
+      console.log('标签为空')
+      // tag数组
+      for (let i = 0; i < tagList.value.length; i++) tagList.value.pop()
+    }
+  } else {
+    isHeadShow.value = false
+  }
+}
 
 // 下拉刷新
 onPullDownRefresh(async () => {
@@ -110,9 +123,9 @@ const configItems = [
   },
 ]
 
-let isHeadShow = ref(false)
 // 改变登录状态
 const changeIsLog = (val: boolean) => {
+  formatLabel()
   isHeadShow.value = val
 }
 

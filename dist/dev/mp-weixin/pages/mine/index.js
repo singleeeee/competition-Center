@@ -21,36 +21,47 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const userInfoStore = stores_modules_userInfoStore.useUserInfoStore();
     const { userInfo } = common_vendor.storeToRefs(userInfoStore);
     let tagList = common_vendor.ref([]);
+    let isHeadShow = common_vendor.ref(true);
     common_vendor.onLoad(() => {
       let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
       if (userInfo2) {
         userInfo2 = JSON.parse(userInfo2);
         userInfo2 = userInfo2.userInfo;
         stores_modules_userInfoStore.useUserInfoStore().updateUserInfo(userInfo2);
+        console.log("显示头像");
         isHeadShow.value = true;
       } else {
         isHeadShow.value = false;
       }
     });
     common_vendor.onShow(() => {
-      let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
-      if (userInfo2) {
-        userInfo2 = JSON.parse(userInfo2);
-        userInfo2 = userInfo2.userInfo;
-        for (let i = 0; i < tagList.value.length; i++)
-          tagList.value.pop();
-        if (userInfo2.userLabel.includes("-")) {
-          tagList.value = userInfo2.userLabel.split("-");
-        } else if (userInfo2.userLabel !== "")
-          tagList.value.push(userInfo2.userLabel);
+      formatLabel();
+      if (userInfo.value.token) {
         isHeadShow.value = true;
       } else {
-        stores_modules_userInfoStore.useUserInfoStore();
-        for (let i = 0; i < tagList.value.length; i++)
-          tagList.value.pop();
         isHeadShow.value = false;
       }
     });
+    const formatLabel = () => {
+      if (userInfo.value) {
+        console.log(userInfo.value.userLabel);
+        for (let i = 0; i < tagList.value.length; i++)
+          tagList.value.pop();
+        if (userInfo.value.userLabel.includes("-")) {
+          console.log("include - ");
+          tagList.value = userInfo.value.userLabel.split("-");
+        } else if (userInfo.value.userLabel !== "") {
+          console.log("只有一个数据");
+          tagList.value.push(userInfo.value.userLabel);
+        } else {
+          console.log("标签为空");
+          for (let i = 0; i < tagList.value.length; i++)
+            tagList.value.pop();
+        }
+      } else {
+        isHeadShow.value = false;
+      }
+    };
     common_vendor.onPullDownRefresh(async () => {
       console.log("下拉刷新");
       const res = await utils_http.http({
@@ -109,8 +120,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         icon: "redo"
       }
     ];
-    let isHeadShow = common_vendor.ref(false);
     const changeIsLog = (val) => {
+      formatLabel();
       isHeadShow.value = val;
     };
     const navigateTo = (target) => {
