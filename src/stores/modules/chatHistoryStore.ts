@@ -177,6 +177,8 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     socketTask.value.onClose(() => {
       // console.log('WebSocket连接关闭')
       // 修改连接状态
+      chatInfoMap.value = []
+      unReadInfoList.value = []
       socketOpen.value = false
       reconnect()
     })
@@ -200,6 +202,8 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       // 为啥共用定时器，这两个不可能同时存在
       socketTimer = setTimeout(() => {
         // console.log('开始重连...')
+        chatInfoMap.value = []
+        unReadInfoList.value = []
         connectWebSocket()
       }, RECONNECT_INTERVAL)
     } else {
@@ -238,13 +242,56 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
   }
   // 插入历史信息
   const insertMessage = (targetID: number, message: any) => {
-    console.log('插入历史信息,插入对象的ID为', targetID)
     for (let i = 0; i < chatInfoMap.value.length; i++) {
       if (chatInfoMap.value[i].userID === +targetID) {
         chatInfoMap.value[i].chatList.unshift(message)
       }
     }
-    console.log(chatInfoMap.value, '仓库信息')
+  }
+  // 删除最新的十条消息避免冲突
+  const delLatestInfo = (targetID: number) => {
+    console.log('删除匹配到ID', targetID.value)
+    console.log(chatInfoMap.value, '删除前仓库的样子')
+
+    for (let i = 0; i < chatInfoMap.value.length; i++) {
+      if (chatInfoMap.value[i].userID === +targetID) {
+        console.log(chatInfoMap.value[i].chatList, '退出前仓库的样子')
+        const length =
+          chatInfoMap.value[i].chatList.length >= 10 ? 10 : chatInfoMap.value[i].chatList.length
+        for (let j = 0; j < length; j++) {
+          if (j < 10) {
+            console.log(chatInfoMap.value[i].chatList)
+            chatInfoMap.value[i].chatList.pop()
+            console.log('删除')
+          }
+        }
+      }
+    }
+  }
+  // 清空未读信息
+  const delUnreadList = (targetID: number) => {
+    unReadInfoList.value = [
+      {
+        //   userID: 4,
+        //   userAvatarUrl:
+        //     'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        //   userName: 'yjddb',
+        //   lastMessage: '你好',
+        //   lastMessageTime: '',
+        //   unReadCount: 0,
+        //   chatList: [
+        //     {
+        //       messageTime: '2024',
+        //       isImg: false,
+        //       myWord: false,
+        //       content: '你好',
+        //       avatarUrl:
+        //         'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
+        //       imgUrl: '',
+        //     },
+        //   ],
+      },
+    ]
   }
   return {
     socketTask,
@@ -253,5 +300,6 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     websocketInit,
     sendMessage,
     insertMessage,
+    delLatestInfo,
   }
 })

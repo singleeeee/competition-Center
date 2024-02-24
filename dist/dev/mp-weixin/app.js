@@ -17,11 +17,12 @@ if (!Math) {
   "./subpackage/notification_detail/index.js";
   "./subpackage/personal_data/index.js";
   "./subpackage/posts/index.js";
-  "./subpackage/fans_friends/index.js";
+  "./subpackage/myFriends/index.js";
   "./subpackage/myCollection/index.js";
   "./subpackage/PostWriting/index.js";
   "./subpackage/subscribe/index.js";
   "./subpackage/postDetail/index.js";
+  "./subpackage/myFollowers/index.js";
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",

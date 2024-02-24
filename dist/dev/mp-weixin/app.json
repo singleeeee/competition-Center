@@ -29,7 +29,7 @@
       ]
     },
     {
-      "root": "subpackage/fans_friends",
+      "root": "subpackage/myFriends",
       "pages": [
         "index"
       ]
@@ -54,6 +54,12 @@
     },
     {
       "root": "subpackage/postDetail",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/myFollowers",
       "pages": [
         "index"
       ]

@@ -84,7 +84,7 @@
       <swiper-item class="">帖子</swiper-item>
     </swiper>
   </view>
-  <view v-else>加载中</view>
+  <view v-else> <skeleton></skeleton> </view>
 </template>
 
 <script lang="ts" setup>
@@ -93,6 +93,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { shortenNum } from '@/utils/shortenNum'
 import { myDebounce } from '@/utils/myDebounce'
+import skeleton from '../components/skeleton.vue'
 // 是否用户本人
 const isSelf = ref(false)
 // 用户信息
@@ -268,7 +269,7 @@ const stringToTag = () => {
 .container .body .infoBox .information {
   max-height: 100rpx;
   padding: 8rpx 0;
-  color: #ccc;
+  color: #888;
   font-size: 28rpx;
 }
 .container .body .infoBox .tag .label {

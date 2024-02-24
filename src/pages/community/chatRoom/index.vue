@@ -2,13 +2,14 @@
   <view class="container">
     <view class="chatRoom" v-if="historyIndex !== -1">
       <!-- 一个时间段 -->
-      <view v-for="(items, index) in chatInfoMap[1]" :key="index" class="each_time">
+      <!-- {{ chatInfoMap[historyIndex].chatList }} -->
+      <view class="each_time">
         <!-- 时间 -->
         <view class="date" v-show="index < 1">{{
-          toLocalTime(items.lastMessageTime * 1000, false)
+          toLocalTime(chatInfoMap[historyIndex].lastMessageTime * 1000, false)
         }}</view>
         <!-- 聊天内容 -->
-        <view v-for="(item, index) in items.chatList" :key="index" class="detail_info">
+        <view v-for="(item, i) in chatInfoMap[historyIndex].chatList" :key="i" class="detail_info">
           <view class="chat-Box">
             <!-- 对面发的 -->
             <view v-if="!item.myWord" class="friendBox">
@@ -21,9 +22,9 @@
               </view>
             </view>
             <!-- 自己发的 -->
-            <view wx:else class="myBox">
+            <view v-else class="myBox">
               <view class="avatar">
-                <image class="avatar" :src="item.avatarUrl" alt="" />
+                <image class="avatar" :src="item.avatarUrl" />
               </view>
               <!-- 内容 -->
               <view v-if="!item.isImg" class="content">{{ item.content }}</view>
@@ -49,7 +50,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import MyInput from '@/components/MyInput.vue'
-import { onShow, onLoad } from '@dcloudio/uni-app'
+import { onShow, onLoad, onUnload } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { http } from '@/utils/http'
@@ -57,9 +58,9 @@ import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { toLocalTime } from '@/utils/toLocalTime'
 
 // 目前对话用户的userID
-let targetID: number
+let targetID = ref(0)
 // 目前对话用户所在下标
-let historyIndex: number
+let historyIndex = ref(0)
 // 获取用户id等
 const userInfoStore = useUserInfoStore()
 const { userInfo } = storeToRefs(userInfoStore)
@@ -69,18 +70,18 @@ const chatHistoryStore = useChatHistoryStore()
 const { chatInfoMap } = storeToRefs(chatHistoryStore)
 
 onLoad((options) => {
-  targetID = options?.targetID
+  targetID.value = options?.targetID
   // 提取出于当前用户有关的消息记录
   // console.log(chatInfoMap.value, '聊天室获取的信息列表')
   console.log('进入聊天页面')
 
-  historyIndex = chatInfoMap.value.findIndex((user) => {
-    return user.userID === +targetID
+  historyIndex.value = chatInfoMap.value.findIndex((user) => {
+    return user.userID === +targetID.value
   })
   console.log('historyIndex', historyIndex)
 
   // 获取用户历史信息
-  getFirstLoadInfo(targetID)
+  getFirstLoadInfo(targetID.value)
 })
 // 获取第一次加载所需的历史信息
 const getFirstLoadInfo = async (targetID: number) => {
@@ -90,20 +91,22 @@ const getFirstLoadInfo = async (targetID: number) => {
     data: {
       formUserId: userInfo.value.ID,
       toUserId: targetID,
-      messageTime: chatInfoMap.value[historyIndex].lastMessageTime, // 设置一个非常久远的死ID
+      messageTime: chatInfoMap.value[historyIndex.value].lastMessageTime, // 设置一个非常久远的死ID
       page: 1,
       pageSize: 10,
     },
   })
-  let avatarUrl = chatInfoMap.value[historyIndex].userAvatarUrl
+  let avatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
   // 提取数据
+  console.log(res.data.list, '返回的历史记录')
+
   for (let i = 0; i < res.data.list.length; i++) {
     const item = res.data.list[i]
     // 换成我的头像
     if (item.formUserId === userInfo.value.ID) {
       avatarUrl = userInfo.value.userAvatarUrl
     } else {
-      avatarUrl = chatInfoMap.value[historyIndex].userAvatarUrl
+      avatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
     }
     const message = {
       messageTime: item.messageTime,
@@ -115,8 +118,13 @@ const getFirstLoadInfo = async (targetID: number) => {
     }
     chatHistoryStore.insertMessage(targetID, message)
   }
+  console.log(chatInfoMap.value)
   scrollToBottom()
 }
+onUnload(() => {
+  console.log('卸载')
+  chatHistoryStore.delLatestInfo(targetID.value)
+})
 // 查找历史记录
 let currentPageNum = 1
 let pageSize = 10
@@ -165,7 +173,6 @@ const scrollToBottom = () => {
     .exec()
 }
 
-// 消息列表
 // 输入框popup
 const popup = ref()
 // 打开输入框
@@ -185,11 +192,11 @@ const wsSend = (msg) => {
     msg.content = msg.imgUrl
   }
   let data = JSON.stringify({
-    toUserId: +targetID,
+    toUserId: +targetID.value,
     isImg: msg.isImg,
     messageContent: msg.content,
   })
-  chatHistoryStore.sendMessage(+targetID, data)
+  chatHistoryStore.sendMessage(+targetID.value, data)
   scrollToBottom()
 }
 

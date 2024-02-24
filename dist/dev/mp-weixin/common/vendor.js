@@ -7874,6 +7874,7 @@ const onShow = /* @__PURE__ */ createHook(ON_SHOW);
 const onHide = /* @__PURE__ */ createHook(ON_HIDE);
 const onLaunch = /* @__PURE__ */ createHook(ON_LAUNCH);
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
+const onUnload = /* @__PURE__ */ createHook(ON_UNLOAD);
 const onReachBottom = /* @__PURE__ */ createHook(ON_REACH_BOTTOM);
 const onPullDownRefresh = /* @__PURE__ */ createHook(ON_PULL_DOWN_REFRESH);
 const icons = {
@@ -9269,7 +9270,7 @@ const subPackages = [
     ]
   },
   {
-    root: "subpackage/fans_friends",
+    root: "subpackage/myFriends",
     pages: [
       {
         path: "index",
@@ -9321,6 +9322,17 @@ const subPackages = [
           navigationBarTitleText: "帖子详情页",
           enablePullDownRefresh: true,
           onReachBottomDistance: 150
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/myFollowers",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "我的关注"
         }
       }
     ]
@@ -12567,6 +12579,7 @@ exports.onMounted = onMounted;
 exports.onPullDownRefresh = onPullDownRefresh;
 exports.onReachBottom = onReachBottom;
 exports.onShow = onShow;
+exports.onUnload = onUnload;
 exports.otherMixins = otherMixins;
 exports.p = p$1;
 exports.popup = popup;

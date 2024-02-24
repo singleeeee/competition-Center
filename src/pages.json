@@ -99,7 +99,7 @@
 			]
 		},
 		{
-			"root": "subpackage/fans_friends",
+			"root": "subpackage/myFriends",
 			"pages": [
 				{
 					"path": "index",
@@ -151,6 +151,17 @@
 						"navigationBarTitleText": "帖子详情页",
 						"enablePullDownRefresh": true,
 						"onReachBottomDistance": 150
+					}
+				}
+			]
+		},
+		{
+			"root": "subpackage/myFollowers",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "我的关注"
 					}
 				}
 			]
