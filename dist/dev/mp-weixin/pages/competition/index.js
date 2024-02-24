@@ -22,7 +22,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       getCompetitionList();
     });
     const currentComPage = 0;
-    const comPageSize = 5;
+    const comPageSize = 20;
+    const comList = common_vendor.ref([]);
     const getCompetitionList = async () => {
       const res = await utils_http.http({
         url: "/app/com/getComInfoList",
@@ -31,7 +32,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           pageSize: comPageSize
         }
       });
-      console.log(res);
+      const resData = res.data.list;
+      for (let i = 0; i < resData.length; i++) {
+        comList.value.push(resData[i]);
+      }
     };
     const navigateToSearch = () => {
       common_vendor.index.navigateTo({
@@ -130,58 +134,30 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           size: "12"
         }),
         g: common_vendor.o(($event) => comPopup.value.open("bottom")),
-        h: common_vendor.p({
-          title: "互联网+",
-          ["sub-title"]: "中国国际“互联网+”大学生创新创业大赛",
-          thumbnail: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
+        h: common_vendor.f(comList.value, (item, index, i0) => {
+          return {
+            a: common_vendor.t(item.comIntroduction),
+            b: "3e564a22-2-" + i0,
+            c: common_vendor.p({
+              title: item.comTitle,
+              ["sub-title"]: item.comSubTitle,
+              thumbnail: item.comPicture
+            }),
+            d: index
+          };
         }),
-        i: common_vendor.p({
-          title: "挑战杯",
-          ["sub-title"]: "“挑战杯”全国大学生课外学术科技作品竞赛",
-          extra: "大挑",
-          thumbnail: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-        }),
-        j: common_vendor.p({
-          title: "挑战杯",
-          ["sub-title"]: "“挑战杯”中国大学生创业大赛",
-          extra: "小挑",
-          thumbnail: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-        }),
-        k: common_vendor.p({
-          title: "国际大学生程序设计竞赛",
-          ["sub-title"]: "算法比赛",
-          extra: "ICPC",
-          thumbnail: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-        }),
-        l: common_vendor.p({
-          title: "蓝桥杯全国软件和信息技术专业人才大赛",
-          ["sub-title"]: "算法比赛",
-          extra: "篮球杯",
-          thumbnail: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-        }),
-        m: common_vendor.p({
-          title: "全国大学生数学建模竞赛",
-          ["sub-title"]: "数学建模",
-          extra: "数学建模比赛",
-          thumbnail: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-        }),
-        n: common_vendor.p({
-          title: "广东省大学生计算机设计大赛",
-          ["sub-title"]: "计算机设计大赛",
-          thumbnail: "https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png"
-        }),
-        o: common_vendor.f(comArray, (item, index, i0) => {
+        i: common_vendor.f(comArray, (item, index, i0) => {
           return {
             a: common_vendor.t(item),
             b: index
           };
         }),
-        p: comValue.value,
-        q: common_vendor.o(comChange),
-        r: common_vendor.sr(comPopup, "3e564a22-9", {
+        j: comValue.value,
+        k: common_vendor.o(comChange),
+        l: common_vendor.sr(comPopup, "3e564a22-3", {
           "k": "comPopup"
         }),
-        s: common_vendor.p({
+        m: common_vendor.p({
           ["background-color"]: "#fff"
         })
       };

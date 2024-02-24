@@ -33,8 +33,12 @@
             <view class="chat">
               <span v-if="item.isisOnline" class="online" style="color: green">在线</span>
               <span v-else class="online">离线</span>
-              <button plain v-if="followed" @tap="cancelFollow(item.userID)">取消关注</button>
-              <button plain v-else @tap="Follow(item.userID)" style="width: 120rpx">关注</button>
+              <button plain v-if="item.followed" @tap="cancelFollow(item.userID, index)">
+                取消关注
+              </button>
+              <button plain v-else @tap="Follow(item.userID, index)" style="width: 120rpx">
+                关注
+              </button>
             </view>
           </view>
         </view>
@@ -61,13 +65,14 @@ const toPersonPage = (userID: number) => {
   uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userID}` })
 }
 // 关注
-const Follow = (userID: number) => {
+const Follow = (userID: number, index: number) => {
   const res = http({
     url: '/app/user/followUser',
     data: {
       followUserId: userID,
     },
   })
+  userList.value[index].followed = true
   uni.showToast({
     title: '关注成功',
     icon: 'none',
@@ -76,12 +81,14 @@ const Follow = (userID: number) => {
   })
 }
 // 取消关注
-const cancelFollow = (targetID: number) => {
+const cancelFollow = (targetID: number, index: number) => {
+  console.log(typeof index, index)
+
   const res = http({
     url: '/app/user/unFollowUser?unFollowUserId=' + targetID,
     method: 'DELETE',
   })
-  followed.value = false
+  userList.value[index].followed = false
   uni.showToast({
     title: '取消关注成功!',
     icon: 'none',
@@ -106,6 +113,7 @@ const getUserList = async () => {
     },
   })
   for (let i = 0; i < res.data.length; i++) {
+    res.data[i].followed = true
     userList.value.push(res.data[i])
   }
   console.log(userList.value)

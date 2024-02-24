@@ -125,6 +125,12 @@ const follow = myDebounce(async () => {
       followUserId: userInfo.value.ID,
     },
   })
+  uni.showToast({
+    title: '关注成功',
+    icon: 'none',
+    mask: true,
+    duration: 500,
+  })
   console.log('关注')
   userInfo.value.fansNumber += 1
   userInfo.value.isYourFollower = true

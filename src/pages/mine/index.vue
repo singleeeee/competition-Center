@@ -199,11 +199,11 @@ const switchTab = (target: string) => {
             <image class="img" src="@/static/mine/subscribe.png" mode="scaleToFill" />
             订阅</view
           >
-          <view class="items" @tap="navigateTo('fans_friends')">
+          <view class="items" @tap="navigateTo('myFollowers')">
             <image class="img" src="@/static/mine/follow.png" mode="scaleToFill" />
             关注</view
           >
-          <view class="items" @tap="navigateTo('fans_friends')">
+          <view class="items" @tap="navigateTo('myFriends')">
             <image class="img" src="@/static/mine/fans.png" mode="scaleToFill" />
             粉丝</view
           >

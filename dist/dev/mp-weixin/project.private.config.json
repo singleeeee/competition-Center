@@ -8,16 +8,16 @@
         "miniprogram": {
             "list": [
                 {
-                    "name": "个人主页",
-                    "pathName": "pages/mine/personPage/index",
-                    "query": "userID=4",
+                    "name": "我的关注",
+                    "pathName": "subpackage/myFollowers/index",
+                    "query": "",
                     "launchMode": "default",
                     "scene": null
                 },
                 {
-                    "name": "subpackage/myFollowers/index",
-                    "pathName": "subpackage/myFollowers/index",
-                    "query": "",
+                    "name": "个人主页",
+                    "pathName": "pages/mine/personPage/index",
+                    "query": "userID=4",
                     "launchMode": "default",
                     "scene": null
                 },
