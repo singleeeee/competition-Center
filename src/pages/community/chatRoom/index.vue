@@ -3,7 +3,14 @@
     <view class="chatRoom" v-if="historyIndex !== -1">
       <!-- 一个时间段 -->
       <!-- {{ chatInfoMap[historyIndex].chatList }} -->
-      <view class="each_time">
+      <scroll-view
+        id="scrollBox"
+        scroll-y
+        class="each_time"
+        :upper-threshold="50"
+        @scrolltoupper="scrollToUpper"
+      >
+        <uni-load-more v-show="isLoadingShow" status="loading" :contentText="LoadingText" />
         <!-- 时间 -->
         <view class="date" v-show="index < 1">{{
           toLocalTime(chatInfoMap[historyIndex].lastMessageTime * 1000, false)
@@ -34,8 +41,9 @@
             </view>
           </view>
         </view>
-      </view>
+      </scroll-view>
     </view>
+    <view v-else>查无此人</view>
     <!-- 底部输入提示框 -->
     <view class="inputArea">
       <view class="input" @tap="openInput">
@@ -49,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import MyInput from '@/components/MyInput.vue'
 import { onShow, onLoad, onUnload } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
@@ -57,6 +65,23 @@ import { storeToRefs } from 'pinia'
 import { http } from '@/utils/http'
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { toLocalTime } from '@/utils/toLocalTime'
+import { myDebounce } from '@/utils/myDebounce'
+// 加载状态
+const isLoadingShow = ref(false)
+// 加载文字
+const LoadingText = {
+  contentdown: '',
+  contentrefresh: ' ',
+  contentnomore: '',
+}
+// 滚动到顶部事件
+const scrollToUpper = myDebounce(async () => {
+  console.log('滚动到顶部')
+  setTimeout(() => {
+    getHistoryInfo(targetID.value)
+    isLoadingShow.value = false
+  }, 1000)
+})
 
 // 目前对话用户的userID
 let targetID = ref(0)
@@ -71,38 +96,35 @@ const chatHistoryStore = useChatHistoryStore()
 const { chatInfoMap } = storeToRefs(chatHistoryStore)
 
 onLoad((options) => {
-  targetID.value = options?.targetID
+  targetID.value = +options?.targetID
   // 提取出于当前用户有关的消息记录
-  // console.log(chatInfoMap.value, '聊天室获取的信息列表')
-  console.log('进入聊天页面')
-
+  // 直接使用小程序打开是没有chatInfoMap的，因为还没加载好
   historyIndex.value = chatInfoMap.value.findIndex((user) => {
-    return user.userID === +targetID.value
+    return user.userID === targetID.value
   })
-  console.log('historyIndex', historyIndex)
-
   // 获取用户历史信息
-  getFirstLoadInfo(targetID.value)
+  getFirstLoadInfo()
 })
+// 动态维护获取历史记录时需要的时间
+let earliestTime = ref(0)
 // 获取第一次加载所需的历史信息
-const getFirstLoadInfo = async (targetID: number) => {
-  // 没有未读信息的情况
+const getFirstLoadInfo = async () => {
   const res = await http({
     url: '/app/msg/getHistoryMessageList',
     data: {
       formUserId: userInfo.value.ID,
-      toUserId: targetID,
-      messageTime: chatInfoMap.value[historyIndex.value].lastMessageTime, // 设置一个非常久远的死ID
+      toUserId: targetID.value,
+      messageTime: chatInfoMap.value[historyIndex.value].lastMessageTime, // 由未读信息的上一次时间决定
       page: 1,
-      pageSize: 10,
+      pageSize: 20,
     },
   })
   let avatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
   // 提取数据
-  console.log(res.data.list, '返回的历史记录')
-
   for (let i = 0; i < res.data.list.length; i++) {
     const item = res.data.list[i]
+    // 动态维护最久以前的信息时间
+    if (i === res.data.list.length - 1) earliestTime.value = item.messageTime
     // 换成我的头像
     if (item.formUserId === userInfo.value.ID) {
       avatarUrl = userInfo.value.userAvatarUrl
@@ -117,44 +139,66 @@ const getFirstLoadInfo = async (targetID: number) => {
       avatarUrl,
       imgUrl: item.messageContent,
     }
-    chatHistoryStore.insertMessage(targetID, message)
+    chatHistoryStore.insertMessage(targetID.value, message)
   }
-  console.log(chatInfoMap.value)
-  scrollToBottom()
+  nextTick(() => {
+    scrollToBottom()
+  })
 }
 onUnload(() => {
   console.log('卸载')
   chatHistoryStore.delLatestInfo(targetID.value)
 })
 // 查找历史记录
-let currentPageNum = 1
-let pageSize = 10
+let currentPageNum = 2
+let pageSize = 20
+// 获取历史记录
 const getHistoryInfo = async (targetID: number) => {
   const res = await http({
     url: '/app/msg/getHistoryMessageList',
     data: {
       formUserId: userInfo.value.ID,
-      toUserId: targetID,
-      messageTime: '9707839100',
+      toUserId: +targetID,
+      messageTime: earliestTime.value,
       page: currentPageNum,
       pageSize: pageSize,
     },
   })
-  console.log('历史记录', res)
   // 提取历史记录数据
   const insertData = res.data.list.map((item) => {
+    // 动态维护最久以前的信息时间
+    earliestTime.value = item.messageTime
+    let userAvatarUrl = ''
+    // 换成我的头像
+    if (item.formUserId === userInfo.value.ID) {
+      userAvatarUrl = userInfo.value.userAvatarUrl
+    } else {
+      userAvatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
+    }
     const obj = {
       isImg: item.isImg,
       myWord: item.formUserId === userInfo.value.ID,
       content: item.messageContent,
       avatarUrl: userAvatarUrl,
-      imgUrl: item.imgUrl,
+      imgUrl: item.messageContent,
     }
-    return item
+    return obj
   })
+  console.log('历史记录', insertData)
+  if (insertData.length === 0) return
+  else {
+    isLoadingShow.value = true
+    for (let i = 0; i < insertData.length; i++) {
+      chatHistoryStore.insertMessage(targetID, insertData[i])
+    }
+    currentPageNum++
+    setTimeout(() => {
+      isLoadingShow.value = false
+    }, 1000)
+  }
 }
 //滚动到最新位置
-onShow(() => {
+onMounted(() => {
   scrollToBottom()
 })
 // 距离顶部位置
@@ -163,7 +207,7 @@ let bottomPx = 0
 const scrollToBottom = () => {
   uni
     .createSelectorQuery()
-    .select('.container')
+    .select('#scrollBox')
     .boundingClientRect((res) => {
       bottomPx = res.bottom
       uni.pageScrollTo({
@@ -172,6 +216,7 @@ const scrollToBottom = () => {
       })
     })
     .exec()
+  console.log('底部位置', bottomPx)
 }
 
 // 输入框popup
@@ -276,7 +321,7 @@ const clearImgList = () => {
   position: fixed;
   bottom: 0;
   z-index: 99;
-  height: 80rpx;
+  height: 7vh;
   background-color: #eee;
   display: flex;
   align-items: center;
@@ -299,7 +344,10 @@ const clearImgList = () => {
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
-  padding-bottom: 90rpx;
+  padding-bottom: 7vh;
+}
+.chatRoom .each_time {
+  height: 93vh;
 }
 .chatRoom .each_time .date {
   height: 50rpx;

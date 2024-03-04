@@ -65,7 +65,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     // 监听服务器返回信息
     socketTask.value.onMessage(async (data) => {
       // console.log('原始返回数据', data)
-      // 转化返回的数据为json格式
+      // 转为json格式
       if (data.data[0] === '{') {
         const returnMsg = JSON.parse(data.data)
         console.log('转化后的数据', returnMsg)
@@ -95,9 +95,8 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               const userIndex = chatInfoMap.value.findIndex((item) => item.userID === +key)
               // 最后一条未读信息的时间
               chatInfoMap.value[userIndex].lastMessageTime =
-                returnMsg.unReadMessageList[key][
-                  returnMsg.unReadMessageList[key].length - 1
-                ].messageTime
+                returnMsg.unReadMessageList[key][returnMsg.unReadMessageList[key].length - 1]
+                  .messageTime || '1807839100'
               // 未读信息的数量
               chatInfoMap.value[userIndex].unReadCount = returnMsg.unReadMessageList[key].length
               // 最后一条未读信息
@@ -250,19 +249,13 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
   }
   // 删除最新的十条消息避免冲突
   const delLatestInfo = (targetID: number) => {
-    console.log('删除匹配到ID', targetID.value)
-    console.log(chatInfoMap.value, '删除前仓库的样子')
-
     for (let i = 0; i < chatInfoMap.value.length; i++) {
       if (chatInfoMap.value[i].userID === +targetID) {
-        console.log(chatInfoMap.value[i].chatList, '退出前仓库的样子')
         const length =
           chatInfoMap.value[i].chatList.length >= 10 ? 10 : chatInfoMap.value[i].chatList.length
         for (let j = 0; j < length; j++) {
           if (j < 10) {
-            console.log(chatInfoMap.value[i].chatList)
             chatInfoMap.value[i].chatList.pop()
-            console.log('删除')
           }
         }
       }

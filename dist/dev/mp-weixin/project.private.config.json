@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "聊天室",
+                    "pathName": "pages/community/chatRoom/index",
+                    "query": "targetID=9",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "我的关注",
                     "pathName": "subpackage/myFollowers/index",
                     "query": "",
@@ -25,13 +32,6 @@
                     "name": "粉丝关注",
                     "pathName": "subpackage/myFriends/index",
                     "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "聊天室",
-                    "pathName": "pages/community/chatRoom/index",
-                    "query": "targetID=8",
                     "launchMode": "default",
                     "scene": null
                 },

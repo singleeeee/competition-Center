@@ -1,5 +1,5 @@
 <template>
-  <view class="container" v-if="messageList.length > 0">
+  <view class="container">
     <scroll-view
       scroll-y
       :style="{ height: windowHeight * 2 - 100 + 'rpx' }"
@@ -8,38 +8,43 @@
       :refresher-threshold="50"
       :refresher-enabled="true"
     >
-      <view
-        class="messageBox"
-        v-for="item in messageList"
-        :key="item.id"
-        @tap="navigateToChat(item.userID)"
-      >
-        <view style="position: relative">
-          <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
-          <view class="dot" v-show="item.unReadCount > 0"></view>
-        </view>
-        <view class="bodyBox">
-          <view class="nickname">{{ item.userName }}</view>
-          <view class="message">{{ item.lastMessage }}</view>
-        </view>
-        <view class="timeBox">
-          <view class="time">{{ toLocalTime(item.lastMessageTime * 1000, false) }}</view>
-          <view class="num">
-            <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+      <view v-if="messageList.length > 0">
+        <view
+          class="messageBox"
+          v-for="item in messageList"
+          :key="item.id"
+          @tap="navigateToChat(item.userID)"
+        >
+          <view style="position: relative">
+            <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+            <view class="dot" v-show="item.unReadCount > 0"></view>
+          </view>
+          <view class="bodyBox">
+            <view class="nickname">{{ item.userName }}</view>
+            <view class="message">{{ item.lastMessage }}</view>
+          </view>
+          <view class="timeBox">
+            <view class="time">{{ toLocalTime(item.lastMessageTime * 1000, false) }}</view>
+            <view class="num">
+              <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+            </view>
           </view>
         </view>
       </view>
-      <uni-load-more iconType="circle" :status="messageStatus" :contentText="loadingText" />
+      <view v-else-if="!userInfoStore.userInfo.token" class="login"> 请先登录!</view>
+      <view v-else>
+        <uni-load-more iconType="circle" :status="messageStatus" :contentText="loadingText" />
+      </view>
     </scroll-view>
   </view>
-  <view v-else class="login"> 请先登录!</view>
 </template>
 <script lang="ts" setup>
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { ref } from 'vue'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { onShow } from '@dcloudio/uni-app'
-
+import { useUserInfoStore } from '@/stores/modules/userInfoStore'
+const userInfoStore = useUserInfoStore()
 onShow(() => {})
 // 信息状态
 let messageStatus = ref('noMore')
@@ -54,7 +59,6 @@ let windowHeight = 0
 ;(() => {
   const deviceInfo = uni.getWindowInfo()
   windowHeight = deviceInfo?.windowHeight - 40
-  console.log(windowHeight, '可用屏幕高度')
 })()
 // 控制下拉刷新
 let pulldownTriggered = ref(false)
@@ -62,6 +66,7 @@ let pulldownTriggered = ref(false)
 const pulldownRefresh = () => {
   pulldownTriggered.value = true
   messageStatus.value = 'loading'
+  messageList.value = []
   setTimeout(() => {
     messageList.value = chatHistoryStore.unReadInfoList
     pulldownTriggered.value = false
@@ -70,7 +75,6 @@ const pulldownRefresh = () => {
 }
 const chatHistoryStore = useChatHistoryStore()
 let messageList = ref(chatHistoryStore.unReadInfoList)
-console.log(messageList.value, '未读信息')
 
 // 跳转到聊天页面
 const navigateToChat = (userID) => {

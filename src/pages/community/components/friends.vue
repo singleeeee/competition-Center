@@ -46,7 +46,6 @@ const getFriends = async () => {
   const res = await http({
     url: `/app/user/showUserFriend?userID=${useUserInfoStore().userInfo.ID}`,
   })
-  console.log(res, '返回的好友列表')
   for (let i = 0; i < res.data.length; i++) {
     groupList.value[0].groupMember.push(res.data[i])
   }
