@@ -72,6 +72,7 @@
   color: #ccc;
 }
 .container .headBox .scrollBox .scroll-view .active.data-v-3e564a22 {
+  font-size: 30rpx;
   color: #000;
   font-weight: 700;
   border-bottom: 4rpx solid #12a661;

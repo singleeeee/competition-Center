@@ -36,6 +36,7 @@
         </view>
       </view>
     </view>
+    <!-- 底部输入提示框 -->
     <view class="inputArea">
       <view class="input" @tap="openInput">
         <uni-icons style="padding-right: 10rpx" type="compose" color="#ccc" size="24" />

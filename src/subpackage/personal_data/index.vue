@@ -98,8 +98,6 @@
   </view>
 
   <button class="btn" @tap="logout">退出登录</button>
-  <!-- 弹窗 -->
-  <!-- --------------- -->
   <!-- 昵称 -->
   <uni-popup ref="nicknamePopup" background-color="#fff">
     <InputPopup

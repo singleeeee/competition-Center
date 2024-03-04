@@ -24,7 +24,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const currentComPage = 0;
     const comPageSize = 20;
     const comList = common_vendor.ref([]);
-    const getCompetitionList = async () => {
+    const getCompetitionList = async (comType) => {
       const res = await utils_http.http({
         url: "/app/com/getComInfoList",
         data: {
@@ -32,6 +32,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           pageSize: comPageSize
         }
       });
+      comList.value = [];
       const resData = res.data.list;
       for (let i = 0; i < resData.length; i++) {
         comList.value.push(resData[i]);

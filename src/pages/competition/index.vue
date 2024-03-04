@@ -70,7 +70,8 @@ const currentComPage = 0
 const comPageSize = 20
 // 比赛列表
 const comList = ref([])
-const getCompetitionList = async () => {
+// 获取比赛列表
+const getCompetitionList = async (comType: number) => {
   const res = await http({
     url: '/app/com/getComInfoList',
     data: {
@@ -78,11 +79,13 @@ const getCompetitionList = async () => {
       pageSize: comPageSize,
     },
   })
+  comList.value = []
   const resData = res.data.list
   for (let i = 0; i < resData.length; i++) {
     comList.value.push(resData[i])
   }
 }
+// 跳转到搜索页面
 const navigateToSearch = () => {
   uni.navigateTo({
     url: '/pages/competition/searchPage/index',
@@ -135,7 +138,6 @@ const tagList = [
 // 当前tag
 const currentTag = ref(0)
 
-// 切换tag
 // 切换tab
 const tagTap = (e) => {
   currentTag.value = e.currentTarget.dataset.id
@@ -155,7 +157,7 @@ const comArray = [
 ]
 const comValue = ref([0])
 const comSelectd = ref(comArray[0])
-
+// 比赛种类tab栏切换
 const comChange = (e: any) => {
   const val = e.detail.value
   comSelectd.value = comArray[val[0]]
@@ -210,6 +212,7 @@ const comChange = (e: any) => {
           color: #ccc;
         }
         .active {
+          font-size: 30rpx;
           color: #000;
           font-weight: 700;
           border-bottom: 4rpx solid #12a661;

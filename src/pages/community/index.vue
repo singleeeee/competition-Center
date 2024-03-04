@@ -271,8 +271,8 @@ const pulldownRefresh = () => {
 // 子组件ref
 const postRef = ref()
 const topicRef = ref()
-let windowHeight = 0
 // 获取可用屏幕高度
+let windowHeight = 0
 ;(() => {
   const deviceInfo = uni.getWindowInfo()
   windowHeight = deviceInfo?.windowHeight - 40
