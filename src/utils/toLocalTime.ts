@@ -32,7 +32,7 @@ export const toLocalTime = (resource: string | number, type: boolean = true): st
       return `${nowHours - hours} 小时前`
     }
     const nowMinutes = now.getMinutes()
-    if (nowMinutes !== minutes) {
+    if (nowMinutes !== Number(minutes)) {
       return `${nowMinutes - +minutes} 分钟前`
     }
     return `刚刚`

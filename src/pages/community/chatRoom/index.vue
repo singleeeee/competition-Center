@@ -9,8 +9,9 @@
         class="each_time"
         :upper-threshold="50"
         @scrolltoupper="scrollToUpper"
+        :scroll-top="scrollTop"
       >
-        <uni-load-more v-show="isLoadingShow" status="loading" :contentText="LoadingText" />
+        <uni-load-more :status="loadingStatus" color="#007AFF" :contentText="LoadingText" />
         <!-- 时间 -->
         <view class="date" v-show="index < 1">{{
           toLocalTime(chatInfoMap[historyIndex].lastMessageTime * 1000, false)
@@ -57,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, getCurrentInstance } from 'vue'
 import MyInput from '@/components/MyInput.vue'
 import { onShow, onLoad, onUnload } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
@@ -67,20 +68,17 @@ import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { myDebounce } from '@/utils/myDebounce'
 // 加载状态
-const isLoadingShow = ref(false)
+let loadingStatus = 'more'
 // 加载文字
 const LoadingText = {
-  contentdown: '',
+  contentdown: '查看更多信息',
   contentrefresh: ' ',
-  contentnomore: '',
+  contentnomore: ' ',
 }
 // 滚动到顶部事件
 const scrollToUpper = myDebounce(async () => {
   console.log('滚动到顶部')
-  setTimeout(() => {
-    getHistoryInfo(targetID.value)
-    isLoadingShow.value = false
-  }, 1000)
+  getHistoryInfo(targetID.value)
 })
 
 // 目前对话用户的userID
@@ -114,9 +112,9 @@ const getFirstLoadInfo = async () => {
     data: {
       formUserId: userInfo.value.ID,
       toUserId: targetID.value,
-      messageTime: chatInfoMap.value[historyIndex.value].lastMessageTime, // 由未读信息的上一次时间决定
+      messageTime: 1907839100, // 由未读信息的上一次时间决定 × ，第二次进去就看不到登录之后发的信息了
       page: 1,
-      pageSize: 20,
+      pageSize: 10, // 要与删除那边同步大小
     },
   })
   let avatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
@@ -141,9 +139,7 @@ const getFirstLoadInfo = async () => {
     }
     chatHistoryStore.insertMessage(targetID.value, message)
   }
-  nextTick(() => {
-    scrollToBottom()
-  })
+  scrollToBottom()
 }
 onUnload(() => {
   console.log('卸载')
@@ -151,9 +147,18 @@ onUnload(() => {
 })
 // 查找历史记录
 let currentPageNum = 2
-let pageSize = 20
+let pageSize = 10
 // 获取历史记录
-const getHistoryInfo = async (targetID: number) => {
+const getHistoryInfo = myDebounce(async (targetID: number) => {
+  const query = uni.createSelectorQuery()
+  query
+    .select('#scrollBox')
+    .boundingClientRect((res) => {
+      console.log('节点高度', res)
+      bottomPx = res.height
+    })
+    .exec()
+  loadingStatus = 'loading'
   const res = await http({
     url: '/app/msg/getHistoryMessageList',
     data: {
@@ -185,38 +190,35 @@ const getHistoryInfo = async (targetID: number) => {
     return obj
   })
   console.log('历史记录', insertData)
-  if (insertData.length === 0) return
-  else {
-    isLoadingShow.value = true
+  if (insertData.length === 0) {
+    loadingStatus = 'noMore'
+    return
+  } else {
     for (let i = 0; i < insertData.length; i++) {
       chatHistoryStore.insertMessage(targetID, insertData[i])
     }
     currentPageNum++
     setTimeout(() => {
-      isLoadingShow.value = false
+      loadingStatus = 'more'
     }, 1000)
   }
-}
+  scrollTop = bottomPx
+})
 //滚动到最新位置
 onMounted(() => {
   scrollToBottom()
 })
 // 距离顶部位置
 let bottomPx = 0
+// 获取当前组件实例
+const instance = getCurrentInstance()
+// 滚动条位置
+let scrollTop = 0
 // 滚动到底部
 const scrollToBottom = () => {
-  uni
-    .createSelectorQuery()
-    .select('#scrollBox')
-    .boundingClientRect((res) => {
-      bottomPx = res.bottom
-      uni.pageScrollTo({
-        scrollTop: bottomPx,
-        duration: 100,
-      })
-    })
-    .exec()
-  console.log('底部位置', bottomPx)
+  nextTick(() => {
+    scrollTop = 100000
+  })
 }
 
 // 输入框popup

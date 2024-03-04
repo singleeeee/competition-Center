@@ -12,7 +12,7 @@
         <view
           class="messageBox"
           v-for="item in messageList"
-          :key="item.id"
+          :key="item.messageTime"
           @tap="navigateToChat(item.userID)"
         >
           <view style="position: relative">
@@ -79,12 +79,11 @@ let messageList = ref(chatHistoryStore.unReadInfoList)
 // 跳转到聊天页面
 const navigateToChat = (userID) => {
   uni.navigateTo({
-    url: `/pages/community/chatRoom/index?targetID=${userID}`,
+    url: `/pages/community/chatRoom/index?targetID=${+userID}`,
   })
 }
 </script>
 <style scoped lang="scss">
-$width: 8vh;
 .container {
   .messageBox {
     height: 130rpx;
