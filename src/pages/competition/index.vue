@@ -8,14 +8,14 @@
         >
       </view>
       <view class="scrollBox">
-        <scroll-view class="scroll-view" :scroll-x="true" bindscroll="scroll" style="width: 100%">
+        <scroll-view class="scroll-view" :scroll-x="true" style="width: 100%">
           <view
-            v-for="(item, index) in tabList"
-            :key="index"
+            v-for="(item, index) in comTypeList"
+            :key="item.ID"
             :class="{ scrollViewItem: true, active: currentTab === index }"
             :data-id="index"
             @tap="tabTap"
-            >{{ item.text }}</view
+            >{{ item.label }}</view
           >
         </scroll-view>
       </view>
@@ -40,11 +40,31 @@
     </view>
     <!-- 卡片列表 -->
     <view class="itemList">
-      <view v-for="(item, index) in comList" :key="index">
-        <!-- 卡片 -->
-        <uni-card :title="item.comTitle" :sub-title="item.comSubTitle" :thumbnail="item.comPicture">
-          <text>{{ item.comIntroduction }}</text>
-        </uni-card>
+      <view v-if="comList.length > 0">
+        <view v-for="(item, index) in comList" :key="index">
+          <!-- 卡片 -->
+          <uni-card
+            :title="item.comTitle"
+            :sub-title="item.comSubTitle"
+            :thumbnail="item.comPicture"
+          >
+            <text>{{ item.comIntroduction }}</text>
+          </uni-card>
+        </view>
+        <uni-load-more
+          :status="comListStatus"
+          :contentText="{
+            contentrefresh: '比赛信息加载中...',
+            contentnomore: '没有更多比赛信息了',
+          }"
+        />
+      </view>
+      <view v-else>
+        <uni-load-more
+          iconType="circle"
+          :status="loadingStatus"
+          :contentText="{ contentrefresh: ' ', contentnomore: '暂无比赛数据' }"
+        />
       </view>
     </view>
   </view>
@@ -52,7 +72,7 @@
   <uni-popup ref="comPopup" background-color="#fff">
     <picker-view :value="comValue" immediate-change @change="comChange" class="picker-view">
       <picker-view-column>
-        <view class="item" v-for="(item, index) in comArray" :key="index">{{ item }}</view>
+        <view class="item" v-for="(item, index) in comArray" :key="index">{{ item.label }}</view>
       </picker-view-column>
     </picker-view>
   </uni-popup>
@@ -62,66 +82,122 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
-onLoad(() => {
-  getCompetitionList()
+onLoad(async () => {
+  await getComType()
+  await getAllCom()
 })
-// 获取全部比赛列表
-const currentComPage = 0
-const comPageSize = 20
-// 比赛列表
-const comList = ref([])
-// 获取比赛列表
-const getCompetitionList = async (comType: number) => {
-  const res = await http({
-    url: '/app/com/getComInfoList',
-    data: {
-      page: currentComPage,
-      pageSize: comPageSize,
-    },
-  })
-  comList.value = []
-  const resData = res.data.list
-  for (let i = 0; i < resData.length; i++) {
-    comList.value.push(resData[i])
-  }
-}
 // 跳转到搜索页面
 const navigateToSearch = () => {
   uni.navigateTo({
     url: '/pages/competition/searchPage/index',
   })
 }
-const currentTab = ref(0)
-
-// tab数组
-const tabList = [
-  {
-    text: '算法比赛',
-  },
-  {
-    text: '开发比赛',
-  },
-  {
-    text: '创新创业比赛',
-  },
-  {
-    text: '设计比赛',
-  },
-  {
-    text: '文学类比赛',
-  },
-  {
-    text: '学科竞赛',
-  },
-  {
-    text: '体育竞赛',
-  },
-]
-
-// 切换tab
-const tabTap = (e) => {
-  currentTab.value = e.currentTarget.dataset.id
+// 获取比赛种类
+const getComType = async () => {
+  comTypeList.value = []
+  const res = await http({
+    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
+    data: {
+      page: 1,
+      pageSize: 100,
+      sysDictionaryID: 9,
+    },
+  })
+  comTypeList.value.push({
+    ID: 1,
+    label: '全部比赛',
+  })
+  comArray.value.push({
+    ID: 1,
+    label: '全部比赛',
+  })
+  for (let i = 0; i < res.data.list.length; i++) {
+    comTypeList.value.push(res.data.list[i])
+    comArray.value.push(res.data.list[i])
+  }
 }
+// 获取所有比赛
+const getAllCom = async () => {
+  const res = await http({
+    url: '/app/com/getComInfoList',
+    data: {
+      sort: 'com_hot',
+      order: 'descending',
+    },
+  })
+  comList.value = []
+  const resData = res.data.list
+  // 判断是否还有下一页
+  if (res.data.total <= currentComPage * comPageSize) {
+    comListStatus.value = 'noMore'
+  }
+  for (let i = 0; i < resData.length; i++) {
+    comList.value.push(resData[i])
+  }
+}
+// 获取比赛列表分页器
+let currentComPage = 1
+const comPageSize = 5
+// 比赛列表
+const comList = ref([])
+// 获取比赛列表
+const getCompetitionList = async (comType: number) => {
+  // 第一次请求清空，否则继续添加
+  if (currentComPage === 1) {
+    comList.value = []
+  }
+  const res = await http({
+    url: '/app/com/getComInfoList',
+    data: {
+      comType: comType,
+      page: currentComPage,
+      pageSize: comPageSize,
+      sort: 'com_hot',
+      order: 'descending',
+    },
+  })
+  const resData = res.data.list
+  // 判断是否还有下一页
+  if (res.data.total <= currentComPage * comPageSize) {
+    comListStatus.value = 'noMore'
+  }
+  // 判断是否该类比赛暂无数据
+  if (resData.length === 0) {
+    loadingStatus.value = 'noMore'
+    return
+  }
+  currentComPage++
+  for (let i = 0; i < resData.length; i++) {
+    comList.value.push(resData[i])
+  }
+}
+
+// 当前比赛种类
+const currentTab = ref(0)
+// 比赛种类列表
+const comTypeList = ref([
+  {
+    ID: 0,
+    label: '暂无数据',
+  },
+])
+
+// 加载状态
+let loadingStatus = ref('loading')
+// 切换比赛种类
+const tabTap = (e) => {
+  // 重置分页器
+  currentComPage = 1
+  currentTab.value = e.currentTarget.dataset.id
+  const index = currentTab.value
+  if (index !== 0) {
+    getCompetitionList(comTypeList.value[index].value)
+  } else {
+    getAllCom()
+  }
+}
+// 下拉状态 todo
+let comListStatus = ref('more')
 
 // tag 数组
 const tagList = [
@@ -143,24 +219,15 @@ const tagTap = (e) => {
   currentTag.value = e.currentTarget.dataset.id
 }
 
-// 比赛列表
+// 下拉比赛列表
 const comPopup = ref()
-const comArray = [
-  '全部比赛',
-  '算法比赛',
-  '开发比赛',
-  '创新创业比赛',
-  '设计比赛',
-  '文学类比赛',
-  '学科竞赛',
-  '体育竞赛',
-]
+const comArray = ref([])
 const comValue = ref([0])
-const comSelectd = ref(comArray[0])
-// 比赛种类tab栏切换
+const comSelectd = ref(comArray.value[0])
+// 下拉比赛种类tab栏切换
 const comChange = (e: any) => {
   const val = e.detail.value
-  comSelectd.value = comArray[val[0]]
+  comSelectd.value = comArray.value[val[0]].label
 }
 </script>
 

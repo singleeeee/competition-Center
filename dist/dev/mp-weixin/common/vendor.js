@@ -9049,16 +9049,19 @@ const icons = {
   ]
 };
 const en$1 = {
-  "uni-search-bar.cancel": "cancel",
-  "uni-search-bar.placeholder": "Search enter content"
+  "uni-load-more.contentdown": "Pull up to show more",
+  "uni-load-more.contentrefresh": "loading...",
+  "uni-load-more.contentnomore": "No more data"
 };
 const zhHans$1 = {
-  "uni-search-bar.cancel": "取消",
-  "uni-search-bar.placeholder": "请输入搜索内容"
+  "uni-load-more.contentdown": "上拉显示更多",
+  "uni-load-more.contentrefresh": "正在加载...",
+  "uni-load-more.contentnomore": "没有更多数据了"
 };
 const zhHant$1 = {
-  "uni-search-bar.cancel": "取消",
-  "uni-search-bar.placeholder": "請輸入搜索內容"
+  "uni-load-more.contentdown": "上拉顯示更多",
+  "uni-load-more.contentrefresh": "正在加載...",
+  "uni-load-more.contentnomore": "沒有更多數據了"
 };
 const messages$1 = {
   en: en$1,
@@ -9066,19 +9069,16 @@ const messages$1 = {
   "zh-Hant": zhHant$1
 };
 const en = {
-  "uni-load-more.contentdown": "Pull up to show more",
-  "uni-load-more.contentrefresh": "loading...",
-  "uni-load-more.contentnomore": "No more data"
+  "uni-search-bar.cancel": "cancel",
+  "uni-search-bar.placeholder": "Search enter content"
 };
 const zhHans = {
-  "uni-load-more.contentdown": "上拉显示更多",
-  "uni-load-more.contentrefresh": "正在加载...",
-  "uni-load-more.contentnomore": "没有更多数据了"
+  "uni-search-bar.cancel": "取消",
+  "uni-search-bar.placeholder": "请输入搜索内容"
 };
 const zhHant = {
-  "uni-load-more.contentdown": "上拉顯示更多",
-  "uni-load-more.contentrefresh": "正在加載...",
-  "uni-load-more.contentnomore": "沒有更多數據了"
+  "uni-search-bar.cancel": "取消",
+  "uni-search-bar.placeholder": "請輸入搜索內容"
 };
 const messages = {
   en,
