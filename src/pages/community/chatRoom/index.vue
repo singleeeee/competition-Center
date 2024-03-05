@@ -7,11 +7,13 @@
         id="scrollBox"
         scroll-y
         class="each_time"
-        :upper-threshold="50"
-        @scrolltoupper="scrollToUpper"
         :scroll-top="scrollTop"
+        :upper-threshold="50"
+        refresher-enabled
+        refresher-background="#f0f0f0"
+        :refresher-triggered="loadingStatus"
+        @refresherrefresh="onRefresh"
       >
-        <uni-load-more :status="loadingStatus" color="#007AFF" :contentText="LoadingText" />
         <!-- 时间 -->
         <view class="date" v-show="index < 1">{{
           toLocalTime(chatInfoMap[historyIndex].lastMessageTime * 1000, false)
@@ -67,20 +69,14 @@ import { http } from '@/utils/http'
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { myDebounce } from '@/utils/myDebounce'
-// 加载状态
-let loadingStatus = 'more'
-// 加载文字
-const LoadingText = {
-  contentdown: '查看更多信息',
-  contentrefresh: ' ',
-  contentnomore: ' ',
-}
-// 滚动到顶部事件
-const scrollToUpper = myDebounce(async () => {
-  console.log('滚动到顶部')
+// 下拉加载状态
+let loadingStatus = ref(false)
+// 下拉刷新
+const onRefresh = () => {
+  loadingStatus.value = true
+  console.log('下拉刷新')
   getHistoryInfo(targetID.value)
-})
-
+}
 // 目前对话用户的userID
 let targetID = ref(0)
 // 目前对话用户所在下标
@@ -150,15 +146,6 @@ let currentPageNum = 2
 let pageSize = 10
 // 获取历史记录
 const getHistoryInfo = myDebounce(async (targetID: number) => {
-  const query = uni.createSelectorQuery()
-  query
-    .select('#scrollBox')
-    .boundingClientRect((res) => {
-      console.log('节点高度', res)
-      bottomPx = res.height
-    })
-    .exec()
-  loadingStatus = 'loading'
   const res = await http({
     url: '/app/msg/getHistoryMessageList',
     data: {
@@ -191,17 +178,19 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
   })
   console.log('历史记录', insertData)
   if (insertData.length === 0) {
-    loadingStatus = 'noMore'
+    uni.showToast({
+      title: '没有更多历史信息了',
+      icon: 'none',
+    })
+    loadingStatus.value = false
     return
   } else {
     for (let i = 0; i < insertData.length; i++) {
       chatHistoryStore.insertMessage(targetID, insertData[i])
     }
     currentPageNum++
-    setTimeout(() => {
-      loadingStatus = 'more'
-    }, 1000)
   }
+  loadingStatus.value = false
   scrollTop = bottomPx
 })
 //滚动到最新位置
