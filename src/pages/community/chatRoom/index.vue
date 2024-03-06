@@ -69,6 +69,9 @@ import { http } from '@/utils/http'
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { myDebounce } from '@/utils/myDebounce'
+
+// 还有个问题我看完未读信息之后，外面的消息列表不会更新(todo)
+
 // 下拉加载状态
 let loadingStatus = ref(false)
 // 下拉刷新

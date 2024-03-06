@@ -50,7 +50,7 @@
 }
 .container .headBox .scrollBox.data-v-3e564a22 {
   height: 60rpx;
-  padding-bottom: 10rpx;
+  margin: 20rpx 0;
 }
 .container .headBox .scrollBox .scroll-view.data-v-3e564a22 {
   height: 60rpx;
@@ -92,8 +92,13 @@
 }
 .container .headBox .tagList .left.data-v-3e564a22 {
   display: flex;
+  flex: 1;
+  margin-right: 80rpx;
+  overflow-x: scroll;
 }
 .container .headBox .tagList .tag.data-v-3e564a22 {
+  text-align: center;
+  min-width: 120rpx;
   background-color: #eee;
   color: #aaa;
   font-size: 26rpx;

@@ -14,7 +14,7 @@
             :key="item.ID"
             :class="{ scrollViewItem: true, active: currentTab === index }"
             :data-id="index"
-            @tap="tabTap"
+            @tap="comTypeChange"
             >{{ item.label }}</view
           >
         </scroll-view>
@@ -22,17 +22,17 @@
       <view class="tagList">
         <view class="left">
           <view
-            v-for="(item, index) in tagList"
-            :key="index"
+            v-for="(item, index) in comStatusList"
+            :key="item.ID"
             :class="{ tag: true, active: currentTag === index }"
             :data-id="index"
-            @tap="tagTap"
-            >{{ item.text }}</view
+            @tap="comStatusChange"
+            >{{ item.label }}</view
           >
         </view>
         <view class="right">
           <view class="tag" @tap="comPopup.open('bottom')"
-            >{{ comSelectd }}
+            >{{ comSelected }}
             <uni-icons type="right" color="" size="12" />
           </view>
         </view>
@@ -41,6 +41,7 @@
     <!-- 卡片列表 -->
     <view class="itemList">
       <view v-if="comList.length > 0">
+        <!-- 比赛列表 -->
         <view v-for="(item, index) in comList" :key="index">
           <!-- 卡片 -->
           <uni-card
@@ -72,7 +73,9 @@
   <uni-popup ref="comPopup" background-color="#fff">
     <picker-view :value="comValue" immediate-change @change="comChange" class="picker-view">
       <picker-view-column>
-        <view class="item" v-for="(item, index) in comArray" :key="index">{{ item.label }}</view>
+        <view class="item" v-for="(item, index) in comSelectArray" :key="index">{{
+          item.label
+        }}</view>
       </picker-view-column>
     </picker-view>
   </uni-popup>
@@ -84,7 +87,9 @@ import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 onLoad(async () => {
   await getComType()
-  await getAllCom()
+  await getSelectCom()
+  await getComStatus()
+  await getCompetitionList()
 })
 // 跳转到搜索页面
 const navigateToSearch = () => {
@@ -103,65 +108,61 @@ const getComType = async () => {
       sysDictionaryID: 9,
     },
   })
-  comTypeList.value.push({
-    ID: 1,
-    label: '全部比赛',
-  })
-  comArray.value.push({
-    ID: 1,
-    label: '全部比赛',
-  })
   for (let i = 0; i < res.data.list.length; i++) {
     comTypeList.value.push(res.data.list[i])
-    comArray.value.push(res.data.list[i])
   }
 }
-// 获取所有比赛
-const getAllCom = async () => {
+// 获取比赛进行状态
+const getComStatus = async () => {
+  comStatusList.value = []
   const res = await http({
-    url: '/app/com/getComInfoList',
+    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
     data: {
-      sort: 'com_hot',
-      order: 'descending',
+      page: 1,
+      pageSize: 100,
+      sysDictionaryID: 12,
     },
   })
-  comList.value = []
-  const resData = res.data.list
-  // 判断是否还有下一页
-  if (res.data.total <= currentComPage * comPageSize) {
-    comListStatus.value = 'noMore'
+  for (let i = 0; i < res.data.list.length; i++) {
+    comStatusList.value.push(res.data.list[i])
   }
-  for (let i = 0; i < resData.length; i++) {
-    comList.value.push(resData[i])
-  }
+  console.log(comStatusList.value, '比赛进行状态')
 }
 // 获取比赛列表分页器
 let currentComPage = 1
 const comPageSize = 5
 // 比赛列表
 const comList = ref([])
+// 0 表示全部比赛
+let currentComType = 0,
+  currentComModel = 0,
+  currentComStatus = 0
+// 比赛列表是否为空加载状态
+let loadingStatus = ref('loading')
 // 获取比赛列表
-const getCompetitionList = async (comType: number) => {
-  // 第一次请求清空，否则继续添加
+const getCompetitionList = async () => {
   if (currentComPage === 1) {
     comList.value = []
   }
   const res = await http({
     url: '/app/com/getComInfoList',
     data: {
-      comType: comType,
+      comType: currentComType, // 筛选的比赛类别
+      comModel: currentComModel, // 筛选的比赛等级
+      comStatus: currentComStatus, // 筛选的比赛状态
       page: currentComPage,
       pageSize: comPageSize,
       sort: 'com_hot',
       order: 'descending',
     },
   })
+  // 更新比赛总数
   const resData = res.data.list
   // 判断是否还有下一页
   if (res.data.total <= currentComPage * comPageSize) {
     comListStatus.value = 'noMore'
   }
-  // 判断是否该类比赛暂无数据
+  // 判断是否比赛列表为空
   if (resData.length === 0) {
     loadingStatus.value = 'noMore'
     return
@@ -171,7 +172,6 @@ const getCompetitionList = async (comType: number) => {
     comList.value.push(resData[i])
   }
 }
-
 // 当前比赛种类
 const currentTab = ref(0)
 // 比赛种类列表
@@ -181,53 +181,66 @@ const comTypeList = ref([
     label: '暂无数据',
   },
 ])
-
-// 加载状态
-let loadingStatus = ref('loading')
 // 切换比赛种类
-const tabTap = (e) => {
+const comTypeChange = (e) => {
   // 重置分页器
   currentComPage = 1
   currentTab.value = e.currentTarget.dataset.id
+  currentComType = comTypeList.value[currentTab.value].value
   const index = currentTab.value
-  if (index !== 0) {
-    getCompetitionList(comTypeList.value[index].value)
-  } else {
-    getAllCom()
+  getCompetitionList(comTypeList.value[index].value)
+}
+// 比赛列表下拉状态
+let comListStatus = ref('more')
+//  比赛进行状态数组
+const comStatusList = ref([])
+// 当前比赛状态tag
+const currentTag = ref(0)
+// 切换比赛状态
+const comStatusChange = (e) => {
+  currentComPage = 1
+  currentTag.value = e.currentTarget.dataset.id
+  currentComStatus = comStatusList.value[currentTag.value].value
+  getCompetitionList()
+}
+// 下拉比赛列表 todo
+const comPopup = ref()
+const comSelectArray = ref([
+  {
+    ID: 1,
+    label: '比赛等级',
+    value: 0,
+  },
+])
+// 当前分类所有比赛
+let currentComList = ref([])
+// 当前的比赛等级
+let currentComRating = ref(0)
+const comValue = ref([0])
+const comSelected = ref(comSelectArray.value[0].label)
+// 获取下拉比赛列表
+const getSelectCom = async () => {
+  comSelectArray.value = []
+  const res = await http({
+    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
+    data: {
+      page: 1,
+      pageSize: 100,
+      sysDictionaryID: 8,
+    },
+  })
+  for (let i = 0; i < res.data.list.length; i++) {
+    comSelectArray.value.push(res.data.list[i])
   }
 }
-// 下拉状态 todo
-let comListStatus = ref('more')
-
-// tag 数组
-const tagList = [
-  {
-    text: '近期',
-  },
-  {
-    text: '往期',
-  },
-  {
-    text: '热门',
-  },
-]
-// 当前tag
-const currentTag = ref(0)
-
-// 切换tab
-const tagTap = (e) => {
-  currentTag.value = e.currentTarget.dataset.id
-}
-
-// 下拉比赛列表
-const comPopup = ref()
-const comArray = ref([])
-const comValue = ref([0])
-const comSelectd = ref(comArray.value[0])
 // 下拉比赛种类tab栏切换
 const comChange = (e: any) => {
-  const val = e.detail.value
-  comSelectd.value = comArray.value[val[0]].label
+  currentComPage = 1
+  const index = e.detail.value
+  comSelected.value = comSelectArray.value[index[0]].label
+  // 修改当前的比赛等级
+  currentComModel = comSelectArray.value[index[0]].value
+  getCompetitionList()
 }
 </script>
 
@@ -259,7 +272,7 @@ const comChange = (e: any) => {
     }
     .scrollBox {
       height: 60rpx;
-      padding-bottom: 10rpx;
+      margin: 20rpx 0;
       .scroll-view {
         height: 60rpx;
         white-space: nowrap;
@@ -300,8 +313,14 @@ const comChange = (e: any) => {
       align-items: center;
       .left {
         display: flex;
+        flex: 1;
+        margin-right: 80rpx;
+        overflow-x: scroll;
       }
+
       .tag {
+        text-align: center;
+        min-width: 120rpx;
         background-color: #eee;
         color: #aaa;
         font-size: 26rpx;

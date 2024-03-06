@@ -22,7 +22,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   setup(__props) {
     common_vendor.onLoad(async () => {
       await getComType();
-      await getAllCom();
+      await getSelectCom();
+      await getComStatus();
+      await getCompetitionList();
     });
     const navigateToSearch = () => {
       common_vendor.index.navigateTo({
@@ -39,47 +41,43 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           sysDictionaryID: 9
         }
       });
-      comTypeList.value.push({
-        ID: 1,
-        label: "全部比赛"
-      });
-      comArray.value.push({
-        ID: 1,
-        label: "全部比赛"
-      });
       for (let i = 0; i < res.data.list.length; i++) {
         comTypeList.value.push(res.data.list[i]);
-        comArray.value.push(res.data.list[i]);
       }
     };
-    const getAllCom = async () => {
+    const getComStatus = async () => {
+      comStatusList.value = [];
       const res = await utils_http.http({
-        url: "/app/com/getComInfoList",
+        url: "http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic",
         data: {
-          sort: "com_hot",
-          order: "descending"
+          page: 1,
+          pageSize: 100,
+          sysDictionaryID: 12
         }
       });
-      comList.value = [];
-      const resData = res.data.list;
-      if (res.data.total <= currentComPage * comPageSize) {
-        comListStatus.value = "noMore";
+      for (let i = 0; i < res.data.list.length; i++) {
+        comStatusList.value.push(res.data.list[i]);
       }
-      for (let i = 0; i < resData.length; i++) {
-        comList.value.push(resData[i]);
-      }
+      console.log(comStatusList.value, "比赛进行状态");
     };
     let currentComPage = 1;
     const comPageSize = 5;
     const comList = common_vendor.ref([]);
-    const getCompetitionList = async (comType) => {
+    let currentComType = 0, currentComModel = 0, currentComStatus = 0;
+    let loadingStatus = common_vendor.ref("loading");
+    const getCompetitionList = async () => {
       if (currentComPage === 1) {
         comList.value = [];
       }
       const res = await utils_http.http({
         url: "/app/com/getComInfoList",
         data: {
-          comType,
+          comType: currentComType,
+          // 筛选的比赛类别
+          comModel: currentComModel,
+          // 筛选的比赛等级
+          comStatus: currentComStatus,
+          // 筛选的比赛状态
           page: currentComPage,
           pageSize: comPageSize,
           sort: "com_hot",
@@ -106,40 +104,54 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         label: "暂无数据"
       }
     ]);
-    let loadingStatus = common_vendor.ref("loading");
-    const tabTap = (e) => {
+    const comTypeChange = (e) => {
       currentComPage = 1;
       currentTab.value = e.currentTarget.dataset.id;
+      currentComType = comTypeList.value[currentTab.value].value;
       const index = currentTab.value;
-      if (index !== 0) {
-        getCompetitionList(comTypeList.value[index].value);
-      } else {
-        getAllCom();
-      }
+      getCompetitionList(comTypeList.value[index].value);
     };
     let comListStatus = common_vendor.ref("more");
-    const tagList = [
-      {
-        text: "近期"
-      },
-      {
-        text: "往期"
-      },
-      {
-        text: "热门"
-      }
-    ];
+    const comStatusList = common_vendor.ref([]);
     const currentTag = common_vendor.ref(0);
-    const tagTap = (e) => {
+    const comStatusChange = (e) => {
+      currentComPage = 1;
       currentTag.value = e.currentTarget.dataset.id;
+      currentComStatus = comStatusList.value[currentTag.value].value;
+      getCompetitionList();
     };
     const comPopup = common_vendor.ref();
-    const comArray = common_vendor.ref([]);
+    const comSelectArray = common_vendor.ref([
+      {
+        ID: 1,
+        label: "比赛等级",
+        value: 0
+      }
+    ]);
+    common_vendor.ref([]);
+    common_vendor.ref(0);
     const comValue = common_vendor.ref([0]);
-    const comSelectd = common_vendor.ref(comArray.value[0]);
+    const comSelected = common_vendor.ref(comSelectArray.value[0].label);
+    const getSelectCom = async () => {
+      comSelectArray.value = [];
+      const res = await utils_http.http({
+        url: "http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic",
+        data: {
+          page: 1,
+          pageSize: 100,
+          sysDictionaryID: 8
+        }
+      });
+      for (let i = 0; i < res.data.list.length; i++) {
+        comSelectArray.value.push(res.data.list[i]);
+      }
+    };
     const comChange = (e) => {
-      const val = e.detail.value;
-      comSelectd.value = comArray.value[val[0]].label;
+      currentComPage = 1;
+      const index = e.detail.value;
+      comSelected.value = comSelectArray.value[index[0]].label;
+      currentComModel = comSelectArray.value[index[0]].value;
+      getCompetitionList();
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
@@ -155,19 +167,19 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             b: item.ID,
             c: currentTab.value === index ? 1 : "",
             d: index,
-            e: common_vendor.o(tabTap, item.ID)
+            e: common_vendor.o(comTypeChange, item.ID)
           };
         }),
-        d: common_vendor.f(tagList, (item, index, i0) => {
+        d: common_vendor.f(comStatusList.value, (item, index, i0) => {
           return {
-            a: common_vendor.t(item.text),
-            b: index,
+            a: common_vendor.t(item.label),
+            b: item.ID,
             c: currentTag.value === index ? 1 : "",
             d: index,
-            e: common_vendor.o(tagTap, index)
+            e: common_vendor.o(comStatusChange, item.ID)
           };
         }),
-        e: common_vendor.t(comSelectd.value),
+        e: common_vendor.t(comSelected.value),
         f: common_vendor.p({
           type: "right",
           color: "",
@@ -205,7 +217,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           }
         })
       }, {
-        l: common_vendor.f(comArray.value, (item, index, i0) => {
+        l: common_vendor.f(comSelectArray.value, (item, index, i0) => {
           return {
             a: common_vendor.t(item.label),
             b: index
