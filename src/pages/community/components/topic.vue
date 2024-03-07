@@ -19,7 +19,7 @@
           <image class="img" :src="item.comPicture" mode="scaleToFill" />
         </view>
         <view class="content">
-          <view class="topicTitle"> #{{ item.comTitle }}</view>
+          <view class="topicTitle comTitle"> {{ item.comTitle }}</view>
           <view class="introduce">{{ item.comSubTitle }}</view>
         </view>
       </view>
@@ -178,6 +178,9 @@ defineExpose({
         display: inline;
         font-size: 26rpx;
         color: rgb(245, 169, 29);
+      }
+      .comTitle {
+        color: rgb(35, 149, 231);
       }
       .introduce {
         font-size: 24rpx;

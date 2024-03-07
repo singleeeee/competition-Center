@@ -12,6 +12,10 @@
       :content="postDetail.disContent"
       :title="postDetail.disTitle"
       :img-list="postDetail.disPicture"
+      :dis-id="postDetail.ID"
+      :authorId="postDetail.userInfo.ID"
+      :liked="postDetail.isLiked"
+      :collected="postDetail.isCollected"
     ></PostBody>
     <CommentArea :disId="postDetail.ID"></CommentArea>
   </view>

@@ -39,7 +39,7 @@
                       }}</view
                     >
                   </view>
-                  <view class="right" @tap.stop="delSecondComment(items.ID)">
+                  <view class="right" @tap.stop="showTips(items.ID)">
                     <view v-if="items.userInfo.ID === userInfo.ID">
                       <uni-icons type="closeempty" color="#ccc" size="18" />
                     </view>
@@ -57,7 +57,7 @@
     <!-- 首页或自动打开 -->
     <view class="input" @tap="openInput(props.disId, false)">
       <uni-icons style="padding-right: 10rpx" type="compose" color="#ccc" size="24" />
-      文明发言</view
+      请文明发言</view
     >
   </view>
   <!-- 评论弹窗 -->
@@ -67,6 +67,18 @@
       @send="send(currentCommentID, isSecondComment)"
       @clearImgList="clearImgList"
     ></MyInput>
+  </uni-popup>
+  <!-- 确定删除弹窗 -->
+  <uni-popup ref="alertDialog" type="dialog">
+    <uni-popup-dialog
+      type="warn"
+      cancelText="取消"
+      confirmText="确认"
+      title="警告"
+      content="您确认要删除这条评论吗？"
+      @confirm="delSecondComment(secondCommentId)"
+      @close="dialogClose"
+    ></uni-popup-dialog>
   </uni-popup>
 </template>
 <script lang="ts" setup>
@@ -115,6 +127,13 @@ const props = defineProps({
     default: 1,
   },
 })
+// 确认删除评论弹窗ref
+const alertDialog = ref()
+let secondCommentId = 0
+const showTips = (ID: number) => {
+  secondCommentId = ID
+  alertDialog.value.open()
+}
 
 // 初始化仓库数据
 const { userInfo } = storeToRefs(useUserInfoStore())
@@ -161,7 +180,6 @@ const getCommentList = async (disId: number) => {
 }
 // 跳转到用户页面
 const toUserHome = (disId: number) => {
-  console.log('点击了头像')
   uni.navigateTo({
     url: `/pages/mine/personPage/index?userID=${disId}`,
   })
@@ -231,12 +249,12 @@ const closeInput = () => {
 const clearImgList = () => {
   console.log('清空')
 }
-// 删除评论
+
+// 刷新评论区，回到顶部
 const refleshComment = () => {
   currentPageNum.value = 1
   getCommentList(props.disId)
 }
-
 // 删除二级评论
 const delSecondComment = async (ID: number) => {
   await http({

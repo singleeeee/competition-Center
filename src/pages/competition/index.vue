@@ -247,7 +247,6 @@ const comChange = (e: any) => {
 <style lang="scss" scoped>
 .container {
   .headBox {
-    height: 240rpx;
     width: 100%;
     z-index: 999;
     position: fixed;
@@ -335,7 +334,7 @@ const comChange = (e: any) => {
     }
   }
   .itemList {
-    margin-top: 250rpx;
+    margin-top: 280rpx;
   }
 }
 .picker-view {

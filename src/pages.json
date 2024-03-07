@@ -11,7 +11,7 @@
 		{
 			"path": "pages/find/index",
 			"style": {
-				"navigationBarTitleText": "发现",
+				"navigationBarTitleText": "资讯",
 				"enablePullDownRefresh": true,
 				"onReachBottomDistance": 20
 			}
@@ -182,7 +182,7 @@
 		"borderStyle": "white",
 		"list": [
 			{
-				"text": "发现",
+				"text": "资讯",
 				"pagePath": "pages/find/index",
 				"iconPath": "static/tab-images/find-unactive.png",
 				"selectedIconPath": "static/tab-images/find-active.png"

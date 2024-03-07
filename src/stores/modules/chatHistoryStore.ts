@@ -247,17 +247,11 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       }
     }
   }
-  // 删除最新的十条消息避免冲突
+  // 第二次进入聊天室时重置聊天记录
   const delLatestInfo = (targetID: number) => {
     for (let i = 0; i < chatInfoMap.value.length; i++) {
       if (chatInfoMap.value[i].userID === +targetID) {
-        const length =
-          chatInfoMap.value[i].chatList.length >= 10 ? 10 : chatInfoMap.value[i].chatList.length
-        for (let j = 0; j < length; j++) {
-          if (j < 10) {
-            chatInfoMap.value[i].chatList.pop()
-          }
-        }
+        chatInfoMap.value[i].chatList = []
       }
     }
   }

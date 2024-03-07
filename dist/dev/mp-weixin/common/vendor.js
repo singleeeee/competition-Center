@@ -9048,42 +9048,42 @@ const icons = {
     }
   ]
 };
-const en$1 = {
+const en$2 = {
   "uni-load-more.contentdown": "Pull up to show more",
   "uni-load-more.contentrefresh": "loading...",
   "uni-load-more.contentnomore": "No more data"
 };
-const zhHans$1 = {
+const zhHans$2 = {
   "uni-load-more.contentdown": "上拉显示更多",
   "uni-load-more.contentrefresh": "正在加载...",
   "uni-load-more.contentnomore": "没有更多数据了"
 };
-const zhHant$1 = {
+const zhHant$2 = {
   "uni-load-more.contentdown": "上拉顯示更多",
   "uni-load-more.contentrefresh": "正在加載...",
   "uni-load-more.contentnomore": "沒有更多數據了"
+};
+const messages$2 = {
+  en: en$2,
+  "zh-Hans": zhHans$2,
+  "zh-Hant": zhHant$2
+};
+const en$1 = {
+  "uni-search-bar.cancel": "cancel",
+  "uni-search-bar.placeholder": "Search enter content"
+};
+const zhHans$1 = {
+  "uni-search-bar.cancel": "取消",
+  "uni-search-bar.placeholder": "请输入搜索内容"
+};
+const zhHant$1 = {
+  "uni-search-bar.cancel": "取消",
+  "uni-search-bar.placeholder": "請輸入搜索內容"
 };
 const messages$1 = {
   en: en$1,
   "zh-Hans": zhHans$1,
   "zh-Hant": zhHant$1
-};
-const en = {
-  "uni-search-bar.cancel": "cancel",
-  "uni-search-bar.placeholder": "Search enter content"
-};
-const zhHans = {
-  "uni-search-bar.cancel": "取消",
-  "uni-search-bar.placeholder": "请输入搜索内容"
-};
-const zhHant = {
-  "uni-search-bar.cancel": "取消",
-  "uni-search-bar.placeholder": "請輸入搜索內容"
-};
-const messages = {
-  en,
-  "zh-Hans": zhHans,
-  "zh-Hant": zhHant
 };
 const popup = {
   data() {
@@ -9182,7 +9182,7 @@ const pages = [
   {
     path: "pages/find/index",
     style: {
-      navigationBarTitleText: "发现",
+      navigationBarTitleText: "资讯",
       enablePullDownRefresh: true,
       onReachBottomDistance: 20
     }
@@ -9351,7 +9351,7 @@ const tabBar = {
   borderStyle: "white",
   list: [
     {
-      text: "发现",
+      text: "资讯",
       pagePath: "pages/find/index",
       iconPath: "static/tab-images/find-unactive.png",
       selectedIconPath: "static/tab-images/find-active.png"
@@ -12008,6 +12008,32 @@ function createAnimation(option, _this) {
   clearTimeout(_this.timer);
   return new MPAnimation(option, _this);
 }
+const en = {
+  "uni-popup.cancel": "cancel",
+  "uni-popup.ok": "ok",
+  "uni-popup.placeholder": "pleace enter",
+  "uni-popup.title": "Hint",
+  "uni-popup.shareTitle": "Share to"
+};
+const zhHans = {
+  "uni-popup.cancel": "取消",
+  "uni-popup.ok": "确定",
+  "uni-popup.placeholder": "请输入",
+  "uni-popup.title": "提示",
+  "uni-popup.shareTitle": "分享到"
+};
+const zhHant = {
+  "uni-popup.cancel": "取消",
+  "uni-popup.ok": "確定",
+  "uni-popup.placeholder": "請輸入",
+  "uni-popup.title": "提示",
+  "uni-popup.shareTitle": "分享到"
+};
+const messages = {
+  en,
+  "zh-Hans": zhHans,
+  "zh-Hant": zhHant
+};
 const dataPicker = {
   props: {
     localdata: {
@@ -12567,8 +12593,9 @@ exports.icons = icons;
 exports.index = index;
 exports.initVueI18n = initVueI18n;
 exports.isRef = isRef;
-exports.messages = messages$1;
-exports.messages$1 = messages;
+exports.messages = messages$2;
+exports.messages$1 = messages$1;
+exports.messages$2 = messages;
 exports.mpwxs = mpwxs;
 exports.n = n$1;
 exports.nextTick$1 = nextTick$1;

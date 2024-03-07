@@ -72,6 +72,8 @@ const props = defineProps({
   },
 })
 // 点赞
+console.log(props, 'props')
+
 const isLiked = ref(props.liked)
 const like = myDebounce(() => {
   // 取消点赞

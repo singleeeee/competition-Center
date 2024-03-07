@@ -12,7 +12,7 @@
           <view class="add"> {{ extra }}</view>
         </view>
       </view>
-      <view class="share" v-if="candelete" @tap.stop="delComment">
+      <view class="share" v-if="candelete" @tap.stop="alertDialog.open()">
         <span style="font-size: 24rpx; color: #ccc">{{ rightText }}</span>
         <uni-icons :type="props.icon" color="#ccc" size="18"></uni-icons>
       </view>
@@ -22,11 +22,25 @@
       <slot name="comment"></slot>
     </view>
   </view>
+  <!-- 确定删除弹窗 -->
+  <uni-popup ref="alertDialog" type="dialog">
+    <uni-popup-dialog
+      type="warn"
+      cancelText="取消"
+      confirmText="确认"
+      title="警告"
+      content="您确认要删除这条评论吗？"
+      @confirm="delComment"
+      @close="alertDialog.close()"
+    ></uni-popup-dialog>
+  </uni-popup>
 </template>
 
 <script lang="ts" setup>
 import { http } from '@/utils/http'
-
+import { ref } from 'vue'
+// 删除弹窗ref
+const alertDialog = ref()
 const props = defineProps({
   avatarUrl: {
     type: String,
