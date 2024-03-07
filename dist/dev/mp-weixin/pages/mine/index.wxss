@@ -68,8 +68,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 120rpx;
-  width: 70rpx;
+  height: 80rpx;
+  width: 80rpx;
 }
 .container .body.data-v-9023ef44 {
   position: relative;

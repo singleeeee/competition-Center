@@ -8,6 +8,20 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "更多设置",
+                    "pathName": "subpackage/moreSetting/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "我的奖项",
+                    "pathName": "subpackage/myMedal/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "聊天室",
                     "pathName": "pages/community/chatRoom/index",
                     "query": "targetID=9",
@@ -39,13 +53,6 @@
                     "name": "帖子详情页",
                     "pathName": "subpackage/postDetail/index",
                     "query": "disId=1",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "发现页面",
-                    "pathName": "pages/find/index",
-                    "query": "",
                     "launchMode": "default",
                     "scene": null
                 },

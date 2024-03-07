@@ -63,6 +63,48 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "subpackage/myMedal",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/myTeam",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/myExperience",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/signUpCom",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/aboutUs",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/moreSetting",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/customerService",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {

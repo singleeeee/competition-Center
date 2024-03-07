@@ -9336,6 +9336,83 @@ const subPackages = [
         }
       }
     ]
+  },
+  {
+    root: "subpackage/myMedal",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "我的奖项"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/myTeam",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "我的队伍"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/myExperience",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "我的经历"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/signUpCom",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "报名参赛"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/aboutUs",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "关于我们"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/moreSetting",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "更多设置"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/customerService",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "联系客服"
+        }
+      }
+    ]
   }
 ];
 const globalStyle = {

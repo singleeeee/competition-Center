@@ -83,36 +83,43 @@ const configItems = [
     id: 1,
     title: '我的奖项',
     icon: 'medal',
+    url: 'myMedal',
   },
   {
     id: 2,
     title: '我的队伍',
     icon: 'flag',
+    url: 'myTeam',
   },
   {
     id: 3,
     title: '参赛报名',
     icon: 'paperplane',
+    url: 'myTeam',
   },
   {
     id: 4,
     title: '我的经历',
     icon: 'person',
+    url: 'myExperience',
   },
   {
     id: 5,
     title: '联系客服',
     icon: 'headphones',
+    url: 'customerService',
   },
   {
     id: 6,
     title: '更多设置',
     icon: 'gear',
+    url: 'moreSetting',
   },
   {
     id: 7,
-    title: '关于',
+    title: '关于我们',
     icon: 'redo',
+    url: 'aboutUs',
   },
 ]
 
@@ -124,6 +131,13 @@ const changeIsLog = (val: boolean) => {
 
 // 跳转非tabbar页面
 const navigateTo = (target: string) => {
+  if (target === 'customerService' || target === 'moreSetting') {
+    uni.showToast({
+      title: '暂未开放',
+      icon: 'none',
+    })
+    return
+  }
   uni.navigateTo({
     url: `/subpackage/${target}/index`,
   })
@@ -141,7 +155,7 @@ const switchTab = (target: string) => {
         <view class="avatar">
           <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
         </view>
-        <view class="bodyBox" @tap="navigatetoPersonPage">
+        <view class="bodyBox" @click="navigatetoPerson">
           <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
             <view class="tag-view">
@@ -168,7 +182,7 @@ const switchTab = (target: string) => {
             </view>
           </view>
         </view>
-        <view class="detail" @click="navigatetoPerson">
+        <view class="detail">
           <uni-icons type="right" color="#ccc" size="20"></uni-icons>
         </view>
       </view>
@@ -230,9 +244,9 @@ const switchTab = (target: string) => {
         </view>
       </view>
       <view class="list">
-        <view class="item" v-for="item in configItems" :key="item.id">
+        <view class="item" v-for="item in configItems" :key="item.id" @tap="navigateTo(item.url)">
           <view class="left">
-            <uni-icons style="vertical-align: middle" :type="item.icon" color="" size="24" />
+            <uni-icons style="vertical-align: middle" :type="item.icon" size="24" />
             {{ item.title }}</view
           >
           <view class="right">
@@ -289,8 +303,8 @@ const switchTab = (target: string) => {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 120rpx;
-        width: 70rpx;
+        height: 80rpx;
+        width: 80rpx;
       }
     }
   }

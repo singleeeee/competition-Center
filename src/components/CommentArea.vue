@@ -249,7 +249,6 @@ const closeInput = () => {
 const clearImgList = () => {
   console.log('清空')
 }
-
 // 刷新评论区，回到顶部
 const refleshComment = () => {
   currentPageNum.value = 1

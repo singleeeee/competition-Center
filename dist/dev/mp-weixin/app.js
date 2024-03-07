@@ -23,6 +23,13 @@ if (!Math) {
   "./subpackage/subscribe/index.js";
   "./subpackage/postDetail/index.js";
   "./subpackage/myFollowers/index.js";
+  "./subpackage/myMedal/index.js";
+  "./subpackage/myTeam/index.js";
+  "./subpackage/myExperience/index.js";
+  "./subpackage/signUpCom/index.js";
+  "./subpackage/aboutUs/index.js";
+  "./subpackage/moreSetting/index.js";
+  "./subpackage/customerService/index.js";
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",

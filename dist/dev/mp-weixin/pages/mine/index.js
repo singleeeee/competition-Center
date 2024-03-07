@@ -73,46 +73,48 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: "/subpackage/personal_data/index"
       });
     };
-    const navigatetoPersonPage = () => {
-      common_vendor.index.navigateTo({
-        url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}`
-      });
-    };
     const configItems = [
       {
         id: 1,
         title: "我的奖项",
-        icon: "medal"
+        icon: "medal",
+        url: "myMedal"
       },
       {
         id: 2,
         title: "我的队伍",
-        icon: "flag"
+        icon: "flag",
+        url: "myTeam"
       },
       {
         id: 3,
         title: "参赛报名",
-        icon: "paperplane"
+        icon: "paperplane",
+        url: "myTeam"
       },
       {
         id: 4,
         title: "我的经历",
-        icon: "person"
+        icon: "person",
+        url: "myExperience"
       },
       {
         id: 5,
         title: "联系客服",
-        icon: "headphones"
+        icon: "headphones",
+        url: "customerService"
       },
       {
         id: 6,
         title: "更多设置",
-        icon: "gear"
+        icon: "gear",
+        url: "moreSetting"
       },
       {
         id: 7,
-        title: "关于",
-        icon: "redo"
+        title: "关于我们",
+        icon: "redo",
+        url: "aboutUs"
       }
     ];
     const changeIsLog = (val) => {
@@ -120,6 +122,13 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       isHeadShow.value = val;
     };
     const navigateTo = (target) => {
+      if (target === "customerService" || target === "moreSetting") {
+        common_vendor.index.showToast({
+          title: "暂未开放",
+          icon: "none"
+        });
+        return;
+      }
       common_vendor.index.navigateTo({
         url: `/subpackage/${target}/index`
       });
@@ -155,47 +164,46 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           size: "small"
         })
       }, {
-        g: common_vendor.o(navigatetoPersonPage),
+        g: common_vendor.o(navigatetoPerson),
         h: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "20"
-        }),
-        i: common_vendor.o(navigatetoPerson)
+        })
       }) : {
-        j: common_vendor.o(changeIsLog)
+        i: common_vendor.o(changeIsLog)
       }, {
-        k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
-        l: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
-        m: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
-        n: common_assets._imports_0,
-        o: common_vendor.o(($event) => navigateTo("myCollection")),
-        p: common_assets._imports_1,
-        q: common_vendor.o(($event) => navigateTo("subscribe")),
-        r: common_assets._imports_2,
-        s: common_vendor.o(($event) => navigateTo("myFollowers")),
-        t: common_assets._imports_3,
-        v: common_vendor.o(($event) => navigateTo("myFriends")),
-        w: common_assets._imports_4,
-        x: common_assets._imports_5,
-        y: common_vendor.o(($event) => navigateTo("PostWriting")),
-        z: common_assets._imports_6,
-        A: common_vendor.o(($event) => switchTab("personPage")),
-        B: common_assets._imports_7,
-        C: common_vendor.f(configItems, (item, k0, i0) => {
+        j: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
+        k: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
+        l: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
+        m: common_assets._imports_0,
+        n: common_vendor.o(($event) => navigateTo("myCollection")),
+        o: common_assets._imports_1,
+        p: common_vendor.o(($event) => navigateTo("subscribe")),
+        q: common_assets._imports_2,
+        r: common_vendor.o(($event) => navigateTo("myFollowers")),
+        s: common_assets._imports_3,
+        t: common_vendor.o(($event) => navigateTo("myFriends")),
+        v: common_assets._imports_4,
+        w: common_assets._imports_5,
+        x: common_vendor.o(($event) => navigateTo("PostWriting")),
+        y: common_assets._imports_6,
+        z: common_vendor.o(($event) => switchTab("personPage")),
+        A: common_assets._imports_7,
+        B: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
               type: item.icon,
-              color: "",
               size: "24"
             }),
             c: common_vendor.t(item.title),
             d: "9023ef44-5-" + i0,
-            e: item.id
+            e: item.id,
+            f: common_vendor.o(($event) => navigateTo(item.url), item.id)
           };
         }),
-        D: common_vendor.p({
+        C: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"
