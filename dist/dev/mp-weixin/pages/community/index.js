@@ -14,12 +14,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       isSkeletonShow.value = boolean;
     };
     let pulldownTriggered = common_vendor.ref(false);
-    const pulldownRefresh = () => {
+    const pulldownRefresh = async () => {
       pulldownTriggered.value = true;
-      setTimeout(() => {
-        console.log(topicRef.value.refresh());
-        pulldownTriggered.value = false;
-      }, 1e3);
+      await topicRef.value.refresh();
+      pulldownTriggered.value = false;
     };
     common_vendor.ref();
     const topicRef = common_vendor.ref();
@@ -51,11 +49,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         k: common_vendor.o(pulldownRefresh),
         l: common_vendor.unref(pulldownTriggered),
         m: !common_vendor.unref(isSkeletonShow),
-        n: common_vendor.unref(windowHeight) * 2 - 40 + "rpx",
-        o: common_vendor.o(swiperChange),
-        p: common_vendor.unref(currentPage),
-        q: common_vendor.unref(isSkeletonShow),
-        r: common_vendor.s(`height:${common_vendor.unref(windowHeight)}*2 + 'rpx'`)
+        n: common_vendor.o(swiperChange),
+        o: common_vendor.unref(currentPage),
+        p: common_vendor.unref(isSkeletonShow)
       };
     };
   }

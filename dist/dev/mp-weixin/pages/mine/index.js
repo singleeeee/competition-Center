@@ -175,22 +175,24 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       }, {
         j: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
         k: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
-        l: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
-        m: common_assets._imports_0,
-        n: common_vendor.o(($event) => navigateTo("myCollection")),
-        o: common_assets._imports_1,
-        p: common_vendor.o(($event) => navigateTo("subscribe")),
-        q: common_assets._imports_2,
-        r: common_vendor.o(($event) => navigateTo("myFollowers")),
-        s: common_assets._imports_3,
-        t: common_vendor.o(($event) => navigateTo("myFriends")),
-        v: common_assets._imports_4,
-        w: common_assets._imports_5,
-        x: common_vendor.o(($event) => navigateTo("PostWriting")),
-        y: common_assets._imports_6,
-        z: common_vendor.o(($event) => switchTab("personPage")),
-        A: common_assets._imports_7,
-        B: common_vendor.f(configItems, (item, k0, i0) => {
+        l: common_vendor.o(($event) => navigateTo("myFollowers")),
+        m: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
+        n: common_vendor.o(($event) => navigateTo("myFriends")),
+        o: common_assets._imports_0,
+        p: common_vendor.o(($event) => navigateTo("myCollection")),
+        q: common_assets._imports_1,
+        r: common_vendor.o(($event) => navigateTo("subscribe")),
+        s: common_assets._imports_2,
+        t: common_vendor.o(($event) => navigateTo("myFollowers")),
+        v: common_assets._imports_3,
+        w: common_vendor.o(($event) => navigateTo("myFriends")),
+        x: common_assets._imports_4,
+        y: common_assets._imports_5,
+        z: common_vendor.o(($event) => navigateTo("PostWriting")),
+        A: common_assets._imports_6,
+        B: common_vendor.o(($event) => switchTab("personPage")),
+        C: common_assets._imports_7,
+        D: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
@@ -203,7 +205,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             f: common_vendor.o(($event) => navigateTo(item.url), item.id)
           };
         }),
-        C: common_vendor.p({
+        E: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"

@@ -195,11 +195,11 @@ const switchTab = (target: string) => {
             <view class="Number">{{ userInfo.loveNumber || 0 }}</view>
             <view class="text">获赞</view>
           </view>
-          <view class="liked">
+          <view class="liked" @tap="navigateTo('myFollowers')">
             <view class="Number">{{ userInfo.followerNumber || 0 }}</view>
             <view class="text">关注</view>
           </view>
-          <view class="liked">
+          <view class="liked" @tap="navigateTo('myFriends')">
             <view class="Number">{{ userInfo.fansNumber || 0 }}</view>
             <view class="text">粉丝</view>
           </view>

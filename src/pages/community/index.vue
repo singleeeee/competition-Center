@@ -1,5 +1,5 @@
 <template>
-  <view class="container" :style="`height:${windowHeight}*2 + 'rpx'`">
+  <view class="container">
     <!-- tab栏切换 -->
     <view class="topTab">
       <view :class="{ item: true, active: currentPage === 0 }" @tap="currentPage = 0">大厅</view>
@@ -7,13 +7,7 @@
       <view :class="{ item: true, active: currentPage === 2 }" @tap="currentPage = 2">信息</view>
     </view>
     <!-- 滑动内容 -->
-    <swiper
-      v-show="!isSkeletonShow"
-      class="swiper"
-      :style="{ height: windowHeight * 2 - 40 + 'rpx' }"
-      @change="swiperChange"
-      :current="currentPage"
-    >
+    <swiper v-show="!isSkeletonShow" class="swiper" @change="swiperChange" :current="currentPage">
       <!-- 大厅 -->
       <swiper-item>
         <scroll-view
@@ -261,12 +255,10 @@ let handleSkeletonShow = (boolean: boolean) => {
 // 控制下拉刷新
 let pulldownTriggered = ref(false)
 // 监听刷新事件
-const pulldownRefresh = () => {
+const pulldownRefresh = async () => {
   pulldownTriggered.value = true
-  setTimeout(() => {
-    console.log(topicRef.value.refresh())
-    pulldownTriggered.value = false
-  }, 1000)
+  await topicRef.value.refresh()
+  pulldownTriggered.value = false
 }
 // 子组件ref
 const postRef = ref()
@@ -286,9 +278,11 @@ const swiperChange = (e) => {
 </script>
 <style scoped lang="scss">
 .container {
+  height: 100vh;
   background-color: #eee;
   .swiper {
     margin-top: 8vh;
+    height: 92vh;
   }
   .topTab {
     position: fixed;
