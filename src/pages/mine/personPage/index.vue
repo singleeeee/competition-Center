@@ -80,7 +80,17 @@
     </view>
     <swiper class="swiper" @change="swiperChange" :current="currentPage">
       <swiper-item class="">动态</swiper-item>
-      <swiper-item class="">收藏</swiper-item>
+      <swiper-item class="container">
+        <view v-for="(item, index) in collectionList" :key="index">
+          <view class="item" @tap="switchToPostDetail(item.disId)">
+            <view class="title">{{ item.disTitle }}</view>
+            <view class="author-type">
+              <view class="author">{{ item.disUserName }} | {{ item.disTopic }}</view>
+            </view>
+          </view>
+        </view>
+        <view class="text">没有更多内容了</view>
+      </swiper-item>
       <swiper-item class="">帖子</swiper-item>
     </swiper>
   </view>
@@ -94,6 +104,32 @@ import { http } from '@/utils/http'
 import { shortenNum } from '@/utils/shortenNum'
 import { myDebounce } from '@/utils/myDebounce'
 import skeleton from '../components/skeleton.vue'
+import type { CollectList } from '@/types/global'
+
+const collectionList = ref<CollectList>([])
+// 获取收藏列表
+const getCollectList = async () => {
+  const res = await http<CollectList[]>({
+    url: '/app/dis/userShowCollectDis',
+  })
+  collectionList.value = res.data
+  console.log(collectionList.value)
+}
+// 跳转到帖子详情页
+const switchToPostDetail = (disId: number) => {
+  if (disId) {
+    console.log('disId', disId)
+    uni.navigateTo({
+      url: `/subpackage/postDetail/index?disId=${disId}`,
+    })
+  } else {
+    console.log('disId不存在')
+    uni.showToast({
+      url: '帖子不存在!',
+      icon: 'none',
+    })
+  }
+}
 // 是否用户本人
 const isSelf = ref(false)
 // 用户信息
@@ -103,6 +139,8 @@ const userID = ref()
 onLoad(async (options) => {
   userID.value = options?.userID
   // 获取用户信息
+  await getCollectList()
+
   await gerUserinfo(options?.userID)
   // 转换标签
   await stringToTag()
@@ -192,6 +230,7 @@ const stringToTag = () => {
   box-sizing: border-box;
   height: 100vh;
   background-color: #eee;
+  overflow: scroll;
 }
 .container .header {
   height: 20vh;
@@ -307,6 +346,34 @@ const stringToTag = () => {
 .container .swiper {
   height: 42vh;
   margin-top: -38rpx;
+  overflow-y: scroll;
+  .container {
+    width: 100%;
+    .item {
+      height: 130rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20rpx;
+      margin: 20rpx 20rpx;
+      border-radius: 20rpx;
+      border-bottom: 1rpx solid #eee;
+      background-color: rgb(250, 217, 222);
+      .title {
+        font-size: 28rpx;
+      }
+      .author-type {
+        display: flex;
+        font-size: 22rpx;
+        color: #aaa;
+      }
+    }
+    .text {
+      font-size: 28rpx;
+      color: #000;
+      text-align: center;
+    }
+  }
 }
 .container .gender {
   margin-top: 10rpx;
