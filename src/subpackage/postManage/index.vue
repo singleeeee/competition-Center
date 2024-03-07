@@ -1,7 +1,12 @@
 <template>
   <div class="postManage">
     <scroll-view scroll-y class="scrollBox">
-      <view class="item" v-for="item in postList" :key="item.ID">
+      <view
+        class="item"
+        v-for="item in postList"
+        :key="item.ID"
+        @tap="navigateTo(item.disStatus, item.ID)"
+      >
         <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
         <view class="content">
           <span class="titleBox">
@@ -57,6 +62,21 @@ const getPostList = async () => {
 }
 // 帖子列表
 const postList = ref([])
+// 跳转到相应页面
+const navigateTo = (status: number, disId: number) => {
+  // 1-待审核 2-展示中 3-未通过
+  if (status === 1) {
+    return
+  } else if (status === 2) {
+    uni.navigateTo({
+      url: `/subpackage/postDetail/index?disId=${disId}`,
+    })
+  } else {
+    uni.navigateTo({
+      url: `/subpackage/PostWriting/index?disId=${disId}`,
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
