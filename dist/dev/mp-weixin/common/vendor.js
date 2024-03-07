@@ -9297,7 +9297,7 @@ const subPackages = [
       {
         path: "index",
         style: {
-          navigationBarTitleText: "草稿"
+          navigationBarTitleText: "文章编辑"
         }
       }
     ]
@@ -9410,6 +9410,17 @@ const subPackages = [
         path: "index",
         style: {
           navigationBarTitleText: "联系客服"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/postManage",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "内容管理"
         }
       }
     ]

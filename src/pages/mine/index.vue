@@ -237,7 +237,7 @@ const switchTab = (target: string) => {
             <image class="img" src="@/static/mine/person.png" mode="scaleToFill" />
             个人中心</view
           >
-          <view class="items">
+          <view class="items" @tap="navigateTo('postManage')">
             <image class="img" src="@/static/mine/manage.png" mode="scaleToFill" />
             内容管理</view
           >

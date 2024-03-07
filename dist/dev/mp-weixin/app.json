@@ -105,6 +105,12 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "subpackage/postManage",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {

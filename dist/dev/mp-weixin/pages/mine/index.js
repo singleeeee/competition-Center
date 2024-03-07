@@ -192,7 +192,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         A: common_assets._imports_6,
         B: common_vendor.o(($event) => switchTab("personPage")),
         C: common_assets._imports_7,
-        D: common_vendor.f(configItems, (item, k0, i0) => {
+        D: common_vendor.o(($event) => navigateTo("postManage")),
+        E: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
@@ -205,7 +206,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             f: common_vendor.o(($event) => navigateTo(item.url), item.id)
           };
         }),
-        E: common_vendor.p({
+        F: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"

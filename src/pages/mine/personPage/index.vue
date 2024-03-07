@@ -113,7 +113,6 @@ const getCollectList = async () => {
     url: '/app/dis/userShowCollectDis',
   })
   collectionList.value = res.data
-  console.log(collectionList.value)
 }
 // 跳转到帖子详情页
 const switchToPostDetail = (disId: number) => {
@@ -247,7 +246,7 @@ const stringToTag = () => {
   height: 38vh;
   border-radius: 30rpx 30rpx 0 0;
   padding: 20rpx 20rpx 0 20rpx;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 .container .body .avatarBox {
   flex: 1;
@@ -358,7 +357,7 @@ const stringToTag = () => {
       margin: 20rpx 20rpx;
       border-radius: 20rpx;
       border-bottom: 1rpx solid #eee;
-      background-color: rgb(250, 217, 222);
+      background-color: rgb(249, 210, 216);
       .title {
         font-size: 28rpx;
       }
