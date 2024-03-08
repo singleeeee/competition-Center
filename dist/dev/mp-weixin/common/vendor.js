@@ -9264,7 +9264,8 @@ const subPackages = [
         path: "index",
         style: {
           navigationBarTitleText: "更多帖子",
-          onReachBottomDistance: 150
+          onReachBottomDistance: 150,
+          enablePullDownRefresh: true
         }
       }
     ]

@@ -90,7 +90,6 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['likedChange', 'collectedChange', 'switchToDetail'])
-
 // 点击收藏
 const collectChange = () => {
   emit('collectedChange', !props.isCollected, props.id)

@@ -13,6 +13,10 @@
         </view>
       </view>
       <view class="share" v-if="candelete" @tap.stop="alertDialog.open()">
+        <span style="display: inline; font-size: 24rpx; color: #ccc">{{ rightText }}</span>
+        <uni-icons :type="props.icon" color="#ccc" size="18"></uni-icons>
+      </view>
+      <view class="share" v-else>
         <span style="font-size: 24rpx; color: #ccc">{{ rightText }}</span>
         <uni-icons :type="props.icon" color="#ccc" size="18"></uni-icons>
       </view>
@@ -144,7 +148,6 @@ const delComment = async () => {
       }
     }
     .share {
-      width: 100rpx;
       height: 100rpx;
       margin-top: 10rpx;
       display: flex;

@@ -5,8 +5,15 @@ import { http } from '@/utils/http'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import type { PostList } from '@/types/global'
-import { onReachBottom } from '@dcloudio/uni-app'
-
+import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app'
+onPullDownRefresh(() => {
+  postList.value = []
+  currentPage.value = 1
+  getPostList()
+  setTimeout(function () {
+    uni.stopPullDownRefresh()
+  }, 1000)
+})
 const userInfoStore = useUserInfoStore()
 let postList = ref<PostList[]>([])
 onMounted(() => {
@@ -17,10 +24,10 @@ const currentPage = ref(1)
 // 当前页面大小
 const pageSize = ref(5)
 // 最大帖子数量
-const total = ref(1000000)
+let total = ref(0)
 // 获取帖子列表
 const getPostList = async () => {
-  uni.showLoading()
+  if (currentPage.value === 1) postList.value = []
   // 返回的数据
   const dataList = ref<any>([])
   // 请求数据
@@ -33,39 +40,37 @@ const getPostList = async () => {
   })
   total.value = res.data.total
   dataList.value = (res.data as any).list
-  console.log(dataList.value)
-
   // 处理需要的数据 用map失效？
-  for (let i = 0; i < dataList.value.length; i++) {
-    // 处理时间
-    const data = new Date((dataList.value[i] as any).CreatedAt)
-    const year = data.getFullYear()
-    const month = data.getMonth() + 1
-    const day = data.getDate()
-    const time = `${year}/${month}/${day}`
-    // 最终格式
-    const obj = {
-      ID: dataList.value[i].ID, // 帖子ID
-      isLiked: dataList.value[i].isLiked, // 帖子是否被点赞
-      isCollected: dataList.value[i].isCollected, // 帖子是否被收藏
-      disComId: dataList.value[i].disComId, // 关联的比赛ID
-      title: dataList.value[i].disTitle, // 帖子标题
-      content: dataList.value[i].disContent, // 帖子内容
-      time, // 帖子发布时间
-      collectedNum: dataList.value[i].disCollectNumber, // 帖子被收藏数量
-      likedNum: dataList.value[i].disLoveNumber, // 帖子被点赞数量
-      userInfoID: dataList.value[i].userInfo.ID, // 帖子作者的ID
-      author: dataList.value[i].userInfo.userNickname, // 帖子作者昵称
-      avatarUrl: dataList.value[i].userInfo.userAvatarUrl, // 帖子作者头像
-      imageUrl: dataList.value[i].disPicture || [], // 帖子首页展示图片，只展示第一张
-      disCommentNum: dataList.value[i].disCommentNumber, // 帖子被评论数量
-      disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
+  setTimeout(() => {
+    for (let i = 0; i < dataList.value.length; i++) {
+      // 处理时间
+      const data = new Date((dataList.value[i] as any).CreatedAt)
+      const year = data.getFullYear()
+      const month = data.getMonth() + 1
+      const day = data.getDate()
+      const time = `${year}/${month}/${day}`
+      // 最终格式
+      const obj = {
+        ID: dataList.value[i].ID, // 帖子ID
+        isLiked: dataList.value[i].isLiked, // 帖子是否被点赞
+        isCollected: dataList.value[i].isCollected, // 帖子是否被收藏
+        disComId: dataList.value[i].disComId, // 关联的比赛ID
+        title: dataList.value[i].disTitle, // 帖子标题
+        content: dataList.value[i].disContent, // 帖子内容
+        time, // 帖子发布时间
+        collectedNum: dataList.value[i].disCollectNumber, // 帖子被收藏数量
+        likedNum: dataList.value[i].disLoveNumber, // 帖子被点赞数量
+        userInfoID: dataList.value[i].userInfo.ID, // 帖子作者的ID
+        author: dataList.value[i].userInfo.userNickname, // 帖子作者昵称
+        avatarUrl: dataList.value[i].userInfo.userAvatarUrl, // 帖子作者头像
+        imageUrl: dataList.value[i].disPicture || [], // 帖子首页展示图片，只展示第一张
+        disCommentNum: dataList.value[i].disCommentNumber, // 帖子被评论数量
+        disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
+      }
+      // 存入数组
+      postList.value.push(obj)
     }
-    // 存入数组
-    postList.value.push(obj)
-    uni.hideLoading()
-  }
-  console.log('修改后的帖子列表信息', postList.value)
+  }, 1000)
 }
 // 点赞和取消点赞
 const likedChange = async (val: boolean, index: number) => {
@@ -113,15 +118,13 @@ const collectedChange = async (val: boolean, index: number) => {
   }
 }
 
-// 当前页码
-const pagenum = ref(0)
-
 // 上滑触底效果
 onReachBottom(() => {
-  console.log('触底了')
+  loadingStatus.value = 'loading'
   if (currentPage.value * pageSize.value >= total.value) {
+    loadingStatus.value = 'nomore'
     uni.showToast({
-      title: '页面到底啦！',
+      title: '没有更多内容了!',
       icon: 'none',
       mask: true,
     })
@@ -136,35 +139,48 @@ const switchToDetail = (index: number) => {
     url: `/subpackage/postDetail/index?disId=${postList.value[index].ID}`,
   })
 }
+// 下拉刷新的loading状态
+let loadingStatus = ref('more')
 </script>
 
 <template>
   <view class="container">
-    <card
-      v-for="(item, index) in postList"
-      :key="index"
-      :author="item.author"
-      :title="item.title"
-      :content="item.content"
-      :time="item.time"
-      :avatar-url="item.avatarUrl"
-      :imageUrl="item.imageUrl[0]"
-      :collected-num="item.collectedNum"
-      :comment-num="item.disCommentNum"
-      :liked-num="item.likedNum"
-      :isLiked="item.isLiked"
-      :isCollected="item.isCollected"
-      :id="index"
-      @liked-change="likedChange"
-      ;
-      @collected-change="collectedChange"
-      @switchToDetail="switchToDetail"
-    ></card>
+    <template v-if="postList.length > 0">
+      <card
+        v-for="(item, index) in postList"
+        :key="index"
+        :author="item.author"
+        :title="item.title"
+        :content="item.content"
+        :time="item.time"
+        :avatar-url="item.avatarUrl"
+        :imageUrl="item.imageUrl[0]"
+        :collected-num="item.collectedNum"
+        :comment-num="item.disCommentNum"
+        :liked-num="item.likedNum"
+        :isLiked="item.isLiked"
+        :isCollected="item.isCollected"
+        :id="index"
+        @liked-change="likedChange"
+        ;
+        @collected-change="collectedChange"
+        @switchToDetail="switchToDetail"
+      ></card>
+      <view style="background-color: #f1f1f3">
+        <uni-load-more :status="loadingStatus" iconType="circle" />
+      </view>
+    </template>
+    <template v-else>
+      <view style="text-align: center">
+        <uni-load-more status="loading" iconType="circle" />
+      </view>
+    </template>
   </view>
 </template>
 
 <style lang="scss" scoped>
 .container {
+  height: 100vh;
   background-color: #f1f1f3;
 }
 </style>
