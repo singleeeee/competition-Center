@@ -19,9 +19,14 @@
       </view>
     </view>
     <view class="content">
-      <view v-for="(items, index) in recordList" :key="index" class="tagBox">
-        <view class="tag">{{ items }}</view>
-      </view>
+      <template v-if="recordList.length > 0">
+        <view v-for="(items, index) in recordList" :key="index" class="tagBox">
+          <view class="tag">{{ items }}</view>
+        </view>
+      </template>
+      <template v-else>
+        <view class="tag">暂无记录</view>
+      </template>
     </view>
     <view class="hotSearch">
       <view class="title"
@@ -253,12 +258,14 @@ const getData = myDebounce(async () => {
 
 // 跳转到搜索结果
 const toResult = (id: number) => {
+  searchRecord.addRecord(inputValue.value)
   uni.navigateTo({
     url: '/subpackage/postDetail/index?disId=' + id,
   })
 }
 // 跳转到用户主页
 const toPersonPage = (id: number) => {
+  searchRecord.addRecord(inputValue.value)
   uni.navigateTo({
     url: '/pages/mine/personPage/index?userID=' + id,
   })
@@ -297,7 +304,6 @@ const confirm = () => {
 }
 // 获取搜索历史仓库
 const searchRecord = useSearchRecordStore()
-
 const { searchList } = storeToRefs(searchRecord)
 const recordList = searchList
 
@@ -305,7 +311,6 @@ const recordList = searchList
 const deleteRecord = () => {
   searchRecord.clearRecord()
 }
-
 // 排行榜
 const rankingList = ref([
   {

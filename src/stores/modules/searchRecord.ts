@@ -5,7 +5,7 @@ export const useSearchRecordStore = defineStore(
   'SerachRecord',
   () => {
     // 历史记录
-    const searchList = ref(['暂无记录'])
+    const searchList = ref([])
     // 添加历史记录
     const addRecord = (val: string) => {
       searchList.value.push(val)
