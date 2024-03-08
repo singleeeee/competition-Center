@@ -9,7 +9,7 @@ const message = () => "./components/message.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
-    let isSkeletonShow = common_vendor.ref(false);
+    let isSkeletonShow = common_vendor.ref(true);
     let handleSkeletonShow = (boolean) => {
       isSkeletonShow.value = boolean;
     };

@@ -145,7 +145,7 @@ onUnload(() => {
   chatHistoryStore.delLatestInfo(targetID.value)
 })
 // 查找历史记录
-let currentPageNum = 2
+let currentPageNum = 1
 let pageSize = 10
 // 获取历史记录
 const getHistoryInfo = myDebounce(async (targetID: number) => {
@@ -162,7 +162,6 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
   // 提取历史记录数据
   const insertData = res.data.list.map((item) => {
     // 动态维护最久以前的信息时间
-    earliestTime.value = item.messageTime
     let userAvatarUrl = ''
     // 换成我的头像
     if (item.formUserId === userInfo.value.ID) {

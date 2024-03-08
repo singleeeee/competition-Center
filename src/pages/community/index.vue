@@ -247,7 +247,7 @@ import friends from './components/friends.vue'
 import { ref } from 'vue'
 import message from './components/message.vue'
 // 控制骨架屏显示
-let isSkeletonShow = ref(false)
+let isSkeletonShow = ref(true)
 // 显示
 let handleSkeletonShow = (boolean: boolean) => {
   isSkeletonShow.value = boolean

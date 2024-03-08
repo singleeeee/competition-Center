@@ -9,20 +9,26 @@
         /></view>
       </view>
       <!-- 比赛列表 -->
-      <view
-        class="topicBox"
-        v-for="(item, index) in competitionList"
-        :key="index"
-        @click="navigatetoPosts"
-      >
-        <view>
-          <image class="img" :src="item.comPicture" mode="scaleToFill" />
+      <template v-if="competitionList.length > 0">
+        <view
+          class="topicBox"
+          v-for="(item, index) in competitionList"
+          :key="index"
+          @click="navigatetoPosts"
+        >
+          <view>
+            <image class="img" :src="item.comPicture" mode="scaleToFill" />
+          </view>
+          <view class="content">
+            <view class="topicTitle comTitle">{{ item.comTitle }}</view>
+            <view class="introduce">{{ item.comSubTitle }}</view>
+          </view>
         </view>
-        <view class="content">
-          <view class="topicTitle comTitle"> {{ item.comTitle }}</view>
-          <view class="introduce">{{ item.comSubTitle }}</view>
-        </view>
-      </view>
+      </template>
+      <template v-else>
+        <uni-load-more status="loading" iconType="circle" />
+      </template>
+
       <view class="title">
         <view class="topic">热门帖子</view>
         <view class="rightTitle" @tap="navigatetoPosts"
@@ -30,20 +36,25 @@
         /></view>
       </view>
       <!-- 帖子列表 -->
-      <view
-        class="topicBox"
-        v-for="(item, index) in postList"
-        :key="index"
-        @click="navigatetoPostDetail(item.ID)"
-      >
-        <view>
-          <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
+      <template v-if="postList.length > 0">
+        <view
+          class="topicBox"
+          v-for="(item, index) in postList"
+          :key="index"
+          @click="navigatetoPostDetail(item.ID)"
+        >
+          <view>
+            <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
+          </view>
+          <view class="content">
+            <view class="topicTitle"> #{{ item.disTitle }}</view>
+            <view class="introduce">{{ item.disContent }}</view>
+          </view>
         </view>
-        <view class="content">
-          <view class="topicTitle"> #{{ item.disTitle }}</view>
-          <view class="introduce">{{ item.disContent }}</view>
-        </view>
-      </view>
+      </template>
+      <template v-else>
+        <uni-load-more status="loading" iconType="circle" />
+      </template>
     </view>
   </view>
 </template>
@@ -65,6 +76,7 @@ defineProps({
     type: String,
   },
 })
+
 // 跳转到具体页面
 const navigatetoPostDetail = (disId: number) => {
   uni.navigateTo({ url: `/subpackage/postDetail/index?disId=${disId}` })
@@ -77,8 +89,10 @@ const navigatetoPosts = () => {
 const postList = ref([])
 // 比赛列表数组
 const competitionList = ref([])
+
 // 获取帖子列表
 const getPostList = async () => {
+  postList.value = []
   const res = await http({
     url: '/app/dis/getDisInfoList',
     data: {
@@ -90,13 +104,16 @@ const getPostList = async () => {
       order: 'descending',
     },
   })
-  postList.value = []
-  for (let i = 0; i < res.data.list.length; i++) {
-    postList.value.push(res.data.list[i])
-  }
+  setTimeout(() => {
+    for (let i = 0; i < res.data.list.length; i++) {
+      postList.value.push(res.data.list[i])
+    }
+  }, 500)
 }
+// 比赛加载状态
 // 获取比赛列表
 const getComList = async () => {
+  competitionList.value = []
   const res = await http({
     url: '/app/com/getComInfoList',
     data: {
@@ -108,19 +125,17 @@ const getComList = async () => {
       order: 'descending',
     },
   })
-  competitionList.value = []
-  for (let i = 0; i < res.data.list.length; i++) {
-    competitionList.value.push(res.data.list[i])
-  }
+  setTimeout(() => {
+    for (let i = 0; i < res.data.list.length; i++) {
+      competitionList.value.push(res.data.list[i])
+    }
+  }, 500)
 }
 // 刷新页面
 const refresh = async () => {
-  emit('handleSkeletonShow', true)
   await getPostList()
   await getComList()
-  setTimeout(() => {
-    emit('handleSkeletonShow', false)
-  }, 500)
+  emit('handleSkeletonShow', false)
 }
 defineExpose({
   refresh,
