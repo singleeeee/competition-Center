@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "我的经历",
+                    "pathName": "subpackage/myExperience/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "内容管理",
                     "pathName": "subpackage/postManage/index",
                     "query": "",
