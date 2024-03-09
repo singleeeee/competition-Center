@@ -75,6 +75,9 @@
           <view :class="{ item: true, active: 2 === activeBar }" data-id="2" @tap="changeBar"
             >帖子</view
           >
+          <view :class="{ item: true, active: 3 === activeBar }" data-id="3" @tap="changeBar"
+            >经历</view
+          >
         </view>
       </view>
     </view>
@@ -117,6 +120,18 @@
           </view>
         </view>
       </swiper-item>
+      <!-- 个人经历 -->
+      <swiper-item class="steps">
+        <view style="background-color: #fff; width: 90vw; padding: 2vh 5vw">
+          <uni-steps
+            :options="expList"
+            active-color="#007AFF"
+            :active="active"
+            active-icon="medal"
+            direction="column"
+          />
+        </view>
+      </swiper-item>
     </swiper>
   </view>
   <view v-else> <skeleton></skeleton> </view>
@@ -131,6 +146,26 @@ import { myDebounce } from '@/utils/myDebounce'
 import { toLocalTime } from '@/utils/toLocalTime'
 import skeleton from '../components/skeleton.vue'
 import type { CollectList } from '@/types/global'
+// 是否用户本人
+const isSelf = ref(false)
+// 用户信息
+const userInfo = ref()
+// 页面的ID
+const userID = ref()
+onLoad(async (options) => {
+  userID.value = options?.userID
+  // 获取用户信息
+  await getCollectList()
+  await gerUserinfo(options?.userID)
+  // 获取帖子列表
+  await getPostList()
+  // 转换标签
+  await stringToTag()
+  // 判断是否用户本人
+  if (+options?.userID === JSON.parse(uni.getStorageSync('UserInfo')).userInfo.ID) {
+    isSelf.value = true
+  }
+})
 
 const collectionList = ref<CollectList>([])
 // 获取收藏列表
@@ -154,26 +189,7 @@ const switchToPostDetail = (disId: number) => {
     })
   }
 }
-// 是否用户本人
-const isSelf = ref(false)
-// 用户信息
-const userInfo = ref()
-// 页面的ID
-const userID = ref()
-onLoad(async (options) => {
-  userID.value = options?.userID
-  // 获取用户信息
-  await getCollectList()
-  await gerUserinfo(options?.userID)
-  // 获取帖子列表
-  await getPostList()
-  // 转换标签
-  await stringToTag()
-  // 判断是否用户本人
-  if (+options?.userID === JSON.parse(uni.getStorageSync('UserInfo')).userInfo.ID) {
-    isSelf.value = true
-  }
-})
+
 // 帖子列表
 const postList = ref([])
 // 获取帖子列表
@@ -189,6 +205,7 @@ const getPostList = async () => {
     postList.value.push(element)
   })
 }
+
 // 私聊
 const navigateToChat = (targetID) => {
   uni.navigateTo({
@@ -263,6 +280,36 @@ const stringToTag = () => {
     tagList.value = userInfo.value.userLabel.split('-')
   } else if (userInfo.value.userLabel !== '') tagList.value.push(userInfo.value.userLabel)
 }
+
+// 经历数组
+let expList = ref([
+  {
+    desc: '2012-11-13 至 2018-12',
+    title: '就读马庄小学，跟马庄小学校长是好哥儿们',
+  },
+  {
+    desc: '2012-11-13 至 2018-12',
+    title: '高考740分,满昏状元，进入东莞理工学院',
+  },
+  {
+    desc: '2012-11-13 至 2018-12',
+    title: '拿下黑丝校花学姐',
+  },
+  {
+    desc: '2012-11-13 至 2018-12',
+    title: '蓝桥杯国一',
+  },
+  {
+    desc: '2012-11-13 至 2018-12',
+    title: '入职腾讯，升职CEO',
+  },
+  {
+    desc: '2012-11-13 至 2018-12',
+    title: '梦醒了，欠债百万',
+  },
+])
+// 当前经历步骤
+let active = ref(expList.value.length - 1)
 </script>
 
 <style lang="scss" scoped>
@@ -340,7 +387,7 @@ const stringToTag = () => {
   margin: 10rpx 0;
 }
 .container .body .infoBox .itemsBox .item {
-  margin-right: 100rpx;
+  margin-right: 60rpx;
 }
 .container .body .infoBox .itemsBox .item .num {
   text-align: center;
@@ -373,7 +420,6 @@ const stringToTag = () => {
   padding: 10rpx 0;
 }
 .container .body .trends .topTap .item {
-  width: 80rpx;
   height: 60rpx;
   line-height: 60rpx;
   text-align: center;
@@ -493,6 +539,10 @@ const stringToTag = () => {
         }
       }
     }
+  }
+  .steps {
+    background-color: #fff;
+    overflow-y: scroll;
   }
 }
 .container .gender {
