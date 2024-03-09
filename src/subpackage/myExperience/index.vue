@@ -37,6 +37,7 @@
       direction="column"
     />
   </view>
+  <!-- 选择某段经历 -->
   <uni-popup ref="experiencePopup" background-color="#fff">
     <picker-view :value="currentChosseExp" immediate-change @change="expChoose" class="picker-view">
       <picker-view-column>
@@ -46,10 +47,28 @@
       </picker-view-column>
     </picker-view>
   </uni-popup>
+  <!-- 顶部提示信息 -->
+  <uni-popup ref="messageRef" type="message">
+    <uni-popup-message :type="msgType" :message="messageText" :duration="1000"></uni-popup-message>
+  </uni-popup>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+
+// 提示信息ref
+const messageRef = ref()
+// 提示信息内容
+let messageText = ref('')
+// 提示信息类型
+let msgType = ref('success')
+// 控制提示信息出现
+const showMessage = (type: string, text: string) => {
+  messageText.value = text
+  msgType.value = type
+  messageRef.value.open()
+}
+
 // 当前选中的经历下标
 let currentExpIndex = ref(-1)
 // picker回显选中
@@ -122,7 +141,7 @@ let expValue = ref()
 let datetimerange = ref('')
 // 是否显示输入
 let isControl = ref(false)
-// 添加经历
+// 打开新增模式
 const add = () => {
   isControl.value = true
   expValue.value = ''
@@ -131,7 +150,7 @@ const add = () => {
 }
 // 确认按钮
 const confirm = () => {
-  // 新增
+  // 新增模式
   if (currentExpIndex.value === -1) {
     if (!isControl.value) {
       uni.showToast({
@@ -140,46 +159,40 @@ const confirm = () => {
       })
       return
     }
-    if (expList.value === '' || datetimerange.value === []) {
+    // 经历和时间是否为空
+    if (!expValue.value || datetimerange.value == false) {
       return uni.showToast({
-        title: '经历或者时间不能为空！',
+        title: '经历和时间不能为空！',
         icon: 'none',
       })
-    }
-    expList.value.push({
-      desc: datetimerange.value[0] + '至' + datetimerange.value[1],
-      title: expValue.value,
-    })
-    active.value = expList.value.length - 1
-  } else {
-    console.log(expList.value, 'title')
-    if (expList.value === '') {
-      return uni.showToast({
-        title: '经历不能为空！',
-        icon: 'none',
-      })
-    }
-    // 允许不加时间
-    if (!datetimerange.value) {
-      // 修改
-      expList.value[currentExpIndex.value] = {
-        desc: '',
-        title: expValue.value,
-      }
     } else {
-      // 修改
-      expList.value[currentExpIndex.value] = {
+      expList.value.push({
         desc: datetimerange.value[0] + '至' + datetimerange.value[1],
         title: expValue.value,
-      }
+      })
+      active.value = expList.value.length - 1
+      expValue.value = ''
+      datetimerange.value = []
+      showMessage('success', '新增成功')
     }
-
+  } else {
+    // 编辑模式
+    if (!expValue.value || datetimerange.value == false) {
+      return uni.showToast({
+        title: '经历和时间不能为空！',
+        icon: 'none',
+      })
+    }
+    expList.value[currentExpIndex.value] = {
+      desc: datetimerange.value[0] + '至' + datetimerange.value[1],
+      title: expValue.value,
+    }
+    showMessage('success', '修改成功')
     isControl.value = false
     expValue.value = ''
     datetimerange.value = []
     canDelete.value = false
     currentExpIndex.value = -1
-    console.log(expList.value)
   }
 }
 </script>
