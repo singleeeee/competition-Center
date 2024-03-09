@@ -80,6 +80,7 @@
     </view>
     <swiper class="swiper" @change="swiperChange" :current="currentPage">
       <swiper-item class="">动态</swiper-item>
+      <!-- 收藏 -->
       <swiper-item class="container">
         <view v-for="(item, index) in collectionList" :key="index">
           <view class="item" @tap="switchToPostDetail(item.disId)">
@@ -91,7 +92,31 @@
         </view>
         <view class="text">没有更多内容了</view>
       </swiper-item>
-      <swiper-item class="">帖子</swiper-item>
+      <!-- 发表过的帖子 -->
+      <swiper-item class="postList">
+        <view
+          class="item"
+          v-for="item in postList"
+          :key="item.ID"
+          @tap="switchToPostDetail(item.ID)"
+        >
+          <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
+          <view class="content">
+            <span class="titleBox">
+              <h1 class="title">{{ item.disTitle }}</h1>
+              <p class="subTitle">{{ item.disContent }}</p>
+            </span>
+            <span class="extraBox">
+              <span class="Tag">原创</span>
+              <span class="date">{{ toLocalTime(item.CreatedAt).split(' ')[0] }}</span>
+              <span class="readedNum">{{ item.disHot }}阅读</span>
+              <span class="liked">{{ item.disLoveNumber }}点赞</span>
+              <span class="followed">{{ item.disCollectNumber }}收藏</span>
+              <span class="commentNum">{{ item.disCommentNumber }}评论</span>
+            </span>
+          </view>
+        </view>
+      </swiper-item>
     </swiper>
   </view>
   <view v-else> <skeleton></skeleton> </view>
@@ -103,6 +128,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { shortenNum } from '@/utils/shortenNum'
 import { myDebounce } from '@/utils/myDebounce'
+import { toLocalTime } from '@/utils/toLocalTime'
 import skeleton from '../components/skeleton.vue'
 import type { CollectList } from '@/types/global'
 
@@ -122,7 +148,6 @@ const switchToPostDetail = (disId: number) => {
       url: `/subpackage/postDetail/index?disId=${disId}`,
     })
   } else {
-    console.log('disId不存在')
     uni.showToast({
       url: '帖子不存在!',
       icon: 'none',
@@ -139,8 +164,9 @@ onLoad(async (options) => {
   userID.value = options?.userID
   // 获取用户信息
   await getCollectList()
-
   await gerUserinfo(options?.userID)
+  // 获取帖子列表
+  await getPostList()
   // 转换标签
   await stringToTag()
   // 判断是否用户本人
@@ -148,6 +174,21 @@ onLoad(async (options) => {
     isSelf.value = true
   }
 })
+// 帖子列表
+const postList = ref([])
+// 获取帖子列表
+const getPostList = async () => {
+  const res = await http({
+    url: '/app/dis/getDisInfoList',
+    data: {
+      disStatus: 2,
+      disUserId: userInfo.value.ID,
+    },
+  })
+  res.data.list.forEach((element) => {
+    postList.value.push(element)
+  })
+}
 // 私聊
 const navigateToChat = (targetID) => {
   uni.navigateTo({
@@ -357,7 +398,7 @@ const stringToTag = () => {
       margin: 20rpx 20rpx;
       border-radius: 20rpx;
       border-bottom: 1rpx solid #eee;
-      background-color: rgb(249, 210, 216);
+      background-color: #fff;
       .title {
         font-size: 28rpx;
       }
@@ -371,6 +412,86 @@ const stringToTag = () => {
       font-size: 28rpx;
       color: #000;
       text-align: center;
+    }
+  }
+  .postList {
+    .item {
+      position: relative;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      margin: 0 10rpx;
+      height: 180rpx;
+      background-color: #fff;
+      margin-top: 10rpx;
+      margin-bottom: 20rpx;
+      border-radius: 10rpx;
+      padding: 20rpx;
+      overflow: hidden;
+      .img {
+        height: 150rpx;
+        width: 150rpx;
+        background-color: skyblue;
+        border-radius: 10rpx;
+      }
+      .content {
+        height: 180rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 0 20rpx;
+        .titleBox {
+          width: 55vw;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          .title {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-size: 28rpx;
+          }
+          .subTitle {
+            color: #aaa;
+            font-size: 24rpx;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+      }
+      .extraBox {
+        display: flex;
+        width: 100%;
+        font-size: 22rpx;
+        .Tag {
+          display: inline;
+          background-color: rgb(248, 206, 213);
+          padding: 4rpx 8rpx;
+          border-radius: 2rpx;
+          color: rgb(202, 7, 7);
+        }
+        .date {
+          padding: 4rpx 8rpx;
+          color: #aaa;
+        }
+        .readedNum {
+          padding: 4rpx 8rpx;
+          color: #aaa;
+        }
+        .liked {
+          padding: 4rpx 8rpx;
+          color: #aaa;
+        }
+        .followed {
+          padding: 4rpx 8rpx;
+          color: #aaa;
+        }
+        .commentNum {
+          padding: 4rpx 8rpx;
+          color: #aaa;
+        }
+      }
     }
   }
 }
