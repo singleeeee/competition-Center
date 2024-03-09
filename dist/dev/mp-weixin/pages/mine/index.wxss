@@ -44,7 +44,6 @@
   width: 140rpx;
   height: 140rpx;
   border-radius: 50%;
-  background-color: skyblue;
 }
 .container .header .avatarBox .bodyBox.data-v-9023ef44 {
   flex: 1;

@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "pages/find/index",
+                    "pathName": "pages/find/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "我的经历",
                     "pathName": "subpackage/myExperience/index",
                     "query": "",

@@ -190,7 +190,6 @@ const userList = ref([])
               text-align: center;
               font-size: 24rpx;
               height: 30px;
-              width: 150rpx;
               border-radius: 0;
               border: 1rpx solid #222;
               background-color: #fff;

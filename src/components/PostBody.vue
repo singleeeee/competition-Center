@@ -5,7 +5,7 @@
     <view class="imgBox" v-if="imgList.length > 0">
       <ul class="imgBox">
         <li v-for="(item, index) in imgList" :key="index">
-          <image class="img" :src="item" mode="heightFix" />
+          <image @tap="onClickImg(item)" class="img" :src="item" mode="heightFix" />
         </li>
       </ul>
     </view>
@@ -44,6 +44,17 @@
 import { http } from '@/utils/http'
 import { ref } from 'vue'
 import { myDebounce } from '@/utils/myDebounce'
+// 点击图片预览
+const onClickImg = (tempFilePaths) => {
+  let fileUrlArray = [tempFilePaths]
+  uni.previewImage({
+    urls: fileUrlArray,
+    success: (result) => {},
+    fail: (error) => {
+      console.log(error)
+    },
+  })
+}
 
 const props = defineProps({
   disId: {

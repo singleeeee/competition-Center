@@ -136,15 +136,27 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const switchTab = (target) => {
       common_vendor.index.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` });
     };
+    const onClickImg = (tempFilePaths) => {
+      let fileUrlArray = [tempFilePaths];
+      common_vendor.index.previewImage({
+        urls: fileUrlArray,
+        success: (result) => {
+        },
+        fail: (error) => {
+          console.log(error);
+        }
+      });
+    };
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.unref(isHeadShow)
       }, common_vendor.unref(isHeadShow) ? common_vendor.e({
-        b: common_vendor.unref(userInfo).userAvatarUrl,
-        c: common_vendor.t(common_vendor.unref(userInfo).userNickname),
-        d: common_vendor.unref(tagList).length > 0
+        b: common_vendor.o(($event) => onClickImg(common_vendor.unref(userInfo).userAvatarUrl)),
+        c: common_vendor.unref(userInfo).userAvatarUrl,
+        d: common_vendor.t(common_vendor.unref(userInfo).userNickname),
+        e: common_vendor.unref(tagList).length > 0
       }, common_vendor.unref(tagList).length > 0 ? {
-        e: common_vendor.f(common_vendor.unref(tagList), (item, index, i0) => {
+        f: common_vendor.f(common_vendor.unref(tagList), (item, index, i0) => {
           return {
             a: index,
             b: "9023ef44-0-" + i0,
@@ -157,43 +169,43 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           };
         })
       } : {
-        f: common_vendor.p({
+        g: common_vendor.p({
           text: "暂无标签",
           circle: true,
           type: "primary",
           size: "small"
         })
       }, {
-        g: common_vendor.o(navigatetoPerson),
-        h: common_vendor.p({
+        h: common_vendor.o(navigatetoPerson),
+        i: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "20"
         })
       }) : {
-        i: common_vendor.o(changeIsLog)
+        j: common_vendor.o(changeIsLog)
       }, {
-        j: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
-        k: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
-        l: common_vendor.o(($event) => navigateTo("myFollowers")),
-        m: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
-        n: common_vendor.o(($event) => navigateTo("myFriends")),
-        o: common_assets._imports_0,
-        p: common_vendor.o(($event) => navigateTo("myCollection")),
-        q: common_assets._imports_1,
-        r: common_vendor.o(($event) => navigateTo("subscribe")),
-        s: common_assets._imports_2,
-        t: common_vendor.o(($event) => navigateTo("myFollowers")),
-        v: common_assets._imports_3,
-        w: common_vendor.o(($event) => navigateTo("myFriends")),
-        x: common_assets._imports_4,
-        y: common_assets._imports_5,
-        z: common_vendor.o(($event) => navigateTo("PostWriting")),
-        A: common_assets._imports_6,
-        B: common_vendor.o(($event) => switchTab("personPage")),
-        C: common_assets._imports_7,
-        D: common_vendor.o(($event) => navigateTo("postManage")),
-        E: common_vendor.f(configItems, (item, k0, i0) => {
+        k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
+        l: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
+        m: common_vendor.o(($event) => navigateTo("myFollowers")),
+        n: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
+        o: common_vendor.o(($event) => navigateTo("myFriends")),
+        p: common_assets._imports_0,
+        q: common_vendor.o(($event) => navigateTo("myCollection")),
+        r: common_assets._imports_1,
+        s: common_vendor.o(($event) => navigateTo("subscribe")),
+        t: common_assets._imports_2,
+        v: common_vendor.o(($event) => navigateTo("myFollowers")),
+        w: common_assets._imports_3,
+        x: common_vendor.o(($event) => navigateTo("myFriends")),
+        y: common_assets._imports_4,
+        z: common_assets._imports_5,
+        A: common_vendor.o(($event) => navigateTo("PostWriting")),
+        B: common_assets._imports_6,
+        C: common_vendor.o(($event) => switchTab("personPage")),
+        D: common_assets._imports_7,
+        E: common_vendor.o(($event) => navigateTo("postManage")),
+        F: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
@@ -206,7 +218,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             f: common_vendor.o(($event) => navigateTo(item.url), item.id)
           };
         }),
-        F: common_vendor.p({
+        G: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"

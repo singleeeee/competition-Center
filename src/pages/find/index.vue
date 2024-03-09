@@ -30,7 +30,7 @@
           :key="index"
           @tap="handleSwiperTap(item.disId)"
         >
-          <image class="image" :src="item.url" mode="scaleToFill" />
+          <image  class="image" :src="item.url" mode="scaleToFill" />
         </swiper-item>
       </swiper>
     </uni-swiper-dot>
@@ -120,7 +120,7 @@ const closeNoticebar = () => {
   }
 }
 .swiper {
-  height: 300rpx;
+  height: 320rpx;
   border-radius: 10rpx;
   .image {
     width: 100%;

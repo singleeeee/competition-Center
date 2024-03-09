@@ -5,7 +5,12 @@
     </view>
     <view class="body">
       <view class="avatarBox">
-        <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
+        <image
+          class="avatar"
+          @tap="onClickImg(userInfo.userAvatarUrl)"
+          :src="userInfo.userAvatarUrl"
+          mode="scaleToFill"
+        />
         <view class="function">
           <view v-if="isSelf" class="edit" @tap="navigateToEdit">编辑资料</view>
           <view v-else style="display: flex">
@@ -166,6 +171,17 @@ onLoad(async (options) => {
     isSelf.value = true
   }
 })
+// 点击图片预览
+const onClickImg = (tempFilePaths) => {
+  let fileUrlArray = [tempFilePaths]
+  uni.previewImage({
+    urls: fileUrlArray,
+    success: (result) => {},
+    fail: (error) => {
+      console.log(error)
+    },
+  })
+}
 
 const collectionList = ref<CollectList>([])
 // 获取收藏列表
@@ -350,7 +366,6 @@ let active = ref(expList.value.length - 1)
   height: 140rpx;
   background-color: orange;
   border-radius: 50%;
-  border: 8rpx solid #ccc;
 }
 .container .body .avatarBox .function {
   position: absolute;
@@ -387,11 +402,11 @@ let active = ref(expList.value.length - 1)
   margin: 10rpx 0;
 }
 .container .body .infoBox .itemsBox .item {
-  margin-right: 60rpx;
+  margin-right: 80rpx;
 }
 .container .body .infoBox .itemsBox .item .num {
   text-align: center;
-  font-size: 34rpx;
+  font-size: 40rpx;
   font-weight: 700;
 }
 .container .body .infoBox .itemsBox .item .text {

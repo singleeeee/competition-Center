@@ -146,15 +146,29 @@ const navigateTo = (target: string) => {
 const switchTab = (target: string) => {
   uni.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` })
 }
+// 点击图片预览
+const onClickImg = (tempFilePaths) => {
+  let fileUrlArray = [tempFilePaths]
+  uni.previewImage({
+    urls: fileUrlArray,
+    success: (result) => {},
+    fail: (error) => {
+      console.log(error)
+    },
+  })
+}
 </script>
 
 <template>
   <view class="container">
     <view class="header">
       <view class="avatarBox" v-if="isHeadShow">
-        <view class="avatar">
-          <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
-        </view>
+        <image
+          class="avatar"
+          @tap="onClickImg(userInfo.userAvatarUrl)"
+          :src="userInfo.userAvatarUrl"
+          mode="scaleToFill"
+        />
         <view class="bodyBox" @click="navigatetoPerson">
           <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
@@ -278,7 +292,6 @@ const switchTab = (target: string) => {
         width: 140rpx;
         height: 140rpx;
         border-radius: 50%;
-        background-color: skyblue;
       }
       .bodyBox {
         flex: 1;

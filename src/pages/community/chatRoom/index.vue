@@ -28,7 +28,12 @@
               </view>
               <view v-if="!item.isImg" class="content">{{ item.content }}</view>
               <view v-else class="imgBox">
-                <image class="img" :src="item.imgUrl" mode="widthFix" />
+                <image
+                  @tap="onClickImg(item.imgUrl)"
+                  class="img"
+                  :src="item.imgUrl"
+                  mode="widthFix"
+                />
               </view>
             </view>
             <!-- 自己发的 -->
@@ -39,14 +44,19 @@
               <!-- 内容 -->
               <view v-if="!item.isImg" class="content">{{ item.content }}</view>
               <view v-else class="imgBox">
-                <image class="img" :src="item.imgUrl" mode="widthFix" />
+                <image
+                  @tap="onClickImg(item.imgUrl)"
+                  class="img"
+                  :src="item.imgUrl"
+                  mode="widthFix"
+                />
               </view>
             </view>
           </view>
         </view>
       </scroll-view>
     </view>
-    <view v-else>查无此人</view>
+    <view v-else>出错了</view>
     <!-- 底部输入提示框 -->
     <view class="inputArea">
       <view class="input" @tap="openInput">
@@ -69,6 +79,18 @@ import { http } from '@/utils/http'
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { myDebounce } from '@/utils/myDebounce'
+// 点击图片预览
+const onClickImg = (tempFilePaths) => {
+  let fileUrlArray = [tempFilePaths]
+  console.log('点击了图片')
+  uni.previewImage({
+    urls: fileUrlArray,
+    success: (result) => {},
+    fail: (error) => {
+      console.log(error)
+    },
+  })
+}
 
 // 还有个问题我看完未读信息之后，外面的消息列表不会更新(todo)
 
