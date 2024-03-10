@@ -23,7 +23,10 @@
       </uni-collapse-item>
     </uni-collapse>
   </template>
-  <view v-else class="login">请先登录!</view>
+  <view v-else class="login">
+    请先登录!
+    <image class="img" src="../../../static/empty/unLog.png" mode="scaleToFill" />
+  </view>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
@@ -126,8 +129,15 @@ const groupList = ref([
   }
 }
 .login {
+  height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 0;
+  background-color: #f2f2fa;
   text-align: center;
-  margin-top: 10vh;
   font-size: 40rpx;
+  font-weight: 700;
 }
 </style>

@@ -278,7 +278,6 @@ const swiperChange = (e) => {
 </script>
 <style scoped lang="scss">
 .container {
-  height: 100vh;
   background-color: #eee;
   .swiper {
     margin-top: 8vh;

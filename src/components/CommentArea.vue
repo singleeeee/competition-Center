@@ -1,56 +1,61 @@
 <template>
   <view class="container">
     <view class="title">评论({{ commentTotal }})</view>
-    <nameTitle
-      v-for="(item, index) in commentList"
-      :key="index"
-      icon="closeempty"
-      :is-comment="true"
-      :border="true"
-      :author="item.nickname"
-      :avatar-url="item.avatarUrl"
-      :date="toLocalTime(item.date)"
-      :commentID="item.commentDisId"
-      :candelete="item.userId === userInfo.ID"
-      @tap-avatar="toUserHome(item.userId)"
-      @refleshComment="refleshComment"
-      @open-input="openInput(item.commentDisId, true)"
-    >
-      <template #comment>
-        <slot>
-          <view>
-            <view class="commentText">
-              {{ item.content }}
-              <!-- 二级评论 -->
-              <view v-if="item.commentSons.length > 0">
+    <template v-if="commentList.length > 0">
+      <nameTitle
+        v-for="(item, index) in commentList"
+        :key="index"
+        :is-comment="true"
+        :border="true"
+        :author="item.nickname"
+        :avatar-url="item.avatarUrl"
+        :date="toLocalTime(item.date)"
+        :commentID="item.commentDisId"
+        :extra="item.city.split('/')[0]"
+        :candelete="item.userId === userInfo.ID"
+        @tap-avatar="toUserHome(item.userId)"
+        @refleshComment="refleshComment"
+        @open-input="openInput(item.commentDisId, true)"
+      >
+        <template #comment>
+          <slot>
+            <view>
+              <view class="commentText">
+                {{ item.content }}
                 <!-- 二级评论 -->
-                <view
-                  class="secondCommentList"
-                  v-for="(items, index) in item.commentSons"
-                  :key="index"
-                >
-                  <view class="left">
-                    <view class="userInfo">{{ items.userInfo.userNickname }}</view>
-                    <view class="content">{{ items.commentText }}</view>
-                    <view class="replyTime"
-                      >{{ toLocalTime(items.CreatedAt) }}
-                      {{
-                        items.userInfo.userCity.slice(0, items.userInfo.userCity.indexOf('/'))
-                      }}</view
-                    >
-                  </view>
-                  <view class="right" @tap.stop="showTips(items.ID)">
-                    <view v-if="items.userInfo.ID === userInfo.ID">
-                      <uni-icons type="closeempty" color="#ccc" size="18" />
+                <view v-if="item.commentSons.length > 0">
+                  <!-- 二级评论 -->
+                  <view
+                    class="secondCommentList"
+                    v-for="(items, index) in item.commentSons"
+                    :key="index"
+                  >
+                    <view class="left">
+                      <view class="userInfo">{{ items.userInfo.userNickname }}</view>
+                      <view class="content">{{ items.commentText }}</view>
+                      <view class="replyTime"
+                        >{{ toLocalTime(items.CreatedAt) }}
+                        {{
+                          items.userInfo.userCity.slice(0, items.userInfo.userCity.indexOf('/'))
+                        }}</view
+                      >
+                    </view>
+                    <view class="right" @tap.stop="showTips(items.ID)">
+                      <view v-if="items.userInfo.ID === userInfo.ID">
+                        <uni-icons type="closeempty" color="#ccc" size="18" />
+                      </view>
                     </view>
                   </view>
                 </view>
               </view>
             </view>
-          </view>
-        </slot>
-      </template>
-    </nameTitle>
+          </slot>
+        </template>
+      </nameTitle>
+    </template>
+    <template v-else>
+      <image src="../static/empty/emptyComment.png" mode="scaleToFill" />
+    </template>
   </view>
   <!-- 评论框 -->
   <view class="inputArea">
@@ -173,6 +178,7 @@ const getCommentList = async (disId: number) => {
       commentSons: data.list[i].commentSons, // 二级评论数组
       date: data.list[i].CreatedAt,
       userId: data.list[i].userInfo.ID, // 用户ID
+      city: data.list[i].userInfo.userCity, // 用户城市
     }
     commentList.value.push(obj)
   }

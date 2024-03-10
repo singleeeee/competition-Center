@@ -8,8 +8,6 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
   const socketTask = ref()
   // 当前连接状态
   const socketOpen = ref(false)
-  // 未读信息数组
-  const unReadInfoList = ref<any>([])
   // 与各用户的信息记录
   const chatInfoMap = ref<any>([
     // {
@@ -64,8 +62,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     })
     // 监听服务器返回信息
     socketTask.value.onMessage(async (data) => {
-      // console.log('原始返回数据', data)
-      // 转为json格式
+      // 首次加载的有效信息
       if (data.data[0] === '{') {
         const returnMsg = JSON.parse(data.data)
         console.log('转化后的数据', returnMsg)
@@ -77,15 +74,13 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               userID: +key,
               userName: returnMsg.userList[key].userName,
               userAvatarUrl: returnMsg.userList[key].userAvatarUrl,
-              lastMessage: '没有最新消息', // 默认没有最新消息，有再加
-              lastMessageTime: Math.floor(new Date().getTime() / 1000), // 默认值，后面再改
+              lastMessage: '暂无未读信息', // 默认没有消息
+              lastMessageTime: Math.floor(new Date().getTime()), // 默认值，后面再改
               unReadCount: 0,
               chatList: [],
             }
             // 消息队列
             chatInfoMap.value.push(user)
-            // 未读信息队列
-            unReadInfoList.value.push(user)
           }
           // 更新消息记录
           for (const key in returnMsg.unReadMessageList) {
@@ -93,17 +88,18 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
             if (returnMsg.unReadMessageList[key].length > 0) {
               // 查找该用户所在数组下标
               const userIndex = chatInfoMap.value.findIndex((item) => item.userID === +key)
-              // 最后一条未读信息的时间
+              // 处理最后一条未读信息的时间
+              const lastMessageLengh = returnMsg.unReadMessageList[key].length - 1
               chatInfoMap.value[userIndex].lastMessageTime =
-                returnMsg.unReadMessageList[key][returnMsg.unReadMessageList[key].length - 1]
-                  .messageTime || '1807839100'
+                returnMsg.unReadMessageList[key][lastMessageLengh].messageTime * 1000
+
               // 未读信息的数量
-              chatInfoMap.value[userIndex].unReadCount = returnMsg.unReadMessageList[key].length
+              chatInfoMap.value[userIndex].unReadCount = lastMessageLengh + 1
+
               // 最后一条未读信息
               chatInfoMap.value[userIndex].lastMessage =
-                returnMsg.unReadMessageList[key][
-                  returnMsg.unReadMessageList[key].length - 1
-                ].messageContent
+                returnMsg.unReadMessageList[key][lastMessageLengh].messageContent
+
               // 遍历每一条未读信息并插入消息队列
               for (let i = 0; i < returnMsg.unReadMessageList[key].length; i++) {
                 // 提取所需数据
@@ -120,12 +116,9 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
                 }
                 // 推送到消息队列
                 chatInfoMap.value[userIndex].chatList.push(messageNeed)
-                // 推送到未读信息队列
-                unReadInfoList.value[userIndex].chatList.push(messageNeed)
               }
             }
           }
-          console.log('消息记录更新完毕', unReadInfoList.value)
         }
         // 返回的是普通聊天信息
         else if (returnMsg.type === 2) {
@@ -138,7 +131,6 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               (item) => item.userID === returnMsg.formUserId,
             )
           }
-          // console.log('目标用户的index', targetIndex)
 
           // 修改头像
           let avatarUrl
@@ -156,9 +148,16 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
             content: returnMsg.messageContent,
             avatarUrl,
             imgUrl: returnMsg.messageContent,
+            messageTime: returnMsg.messageTime, //漏了这个导致消息列表NAN，
           }
           // 本地回显
           chatInfoMap.value[targetIndex].chatList.push(message)
+          if (!message.myWord) {
+            // 更新未读记录
+            chatInfoMap.value[targetIndex].unReadCount++
+          }
+          chatInfoMap.value[targetIndex].lastMessage = message.isImg ? '[图片]' : message.content
+          chatInfoMap.value[targetIndex].lastMessageTime = returnMsg.messageTime * 1000
         } else {
           // console.log('未知返回信息')
         }
@@ -248,45 +247,47 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     }
   }
   // 第二次进入聊天室时重置聊天记录
-  const delLatestInfo = (targetID: number) => {
+  const clearChatList = (targetID: number) => {
     for (let i = 0; i < chatInfoMap.value.length; i++) {
       if (chatInfoMap.value[i].userID === +targetID) {
         chatInfoMap.value[i].chatList = []
       }
     }
   }
-  // 清空未读信息
-  const delUnreadList = (targetID: number) => {
-    unReadInfoList.value = [
-      {
-        //   userID: 4,
-        //   userAvatarUrl:
-        //     'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-        //   userName: 'yjddb',
-        //   lastMessage: '你好',
-        //   lastMessageTime: '',
-        //   unReadCount: 0,
-        //   chatList: [
-        //     {
-        //       messageTime: '2024',
-        //       isImg: false,
-        //       myWord: false,
-        //       content: '你好',
-        //       avatarUrl:
-        //         'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/yourBasePath/uploads/2024-01-24/yjddb.jpg',
-        //       imgUrl: '',
-        //     },
-        //   ],
-      },
-    ]
+  // 重置未读信息
+  const resetUnreadList = (targetID: number) => {
+    for (let i = 0; i < chatInfoMap.value.length; i++) {
+      if (chatInfoMap.value[i].userID === +targetID) {
+        // 未读信息数据
+        chatInfoMap.value[i].unReadCount = 0
+        const chatListLength = chatInfoMap.value[i].chatList.length
+        console.log('信息列表的长度', chatListLength)
+        // 上条信息
+        chatInfoMap.value[i].lastMessage =
+          chatListLength > 0
+            ? chatInfoMap.value[i].chatList[chatListLength - 1].isImg
+              ? '[图片]'
+              : chatInfoMap.value[i].chatList[chatListLength - 1].content
+            : '暂无未读信息'
+        // 上条时间
+        console.log(
+          '调用resetUnreadList时显示的上条时间',
+          chatInfoMap.value[i].chatList[chatListLength - 1],
+        )
+        chatInfoMap.value[i].lastMessageTime =
+          chatListLength > 0
+            ? chatInfoMap.value[i].chatList[chatListLength - 1].messageTime * 1000
+            : new Date().getTime()
+      }
+    }
   }
   return {
     socketTask,
-    unReadInfoList,
     chatInfoMap,
     websocketInit,
     sendMessage,
     insertMessage,
-    delLatestInfo,
+    clearChatList,
+    resetUnreadList,
   }
 })

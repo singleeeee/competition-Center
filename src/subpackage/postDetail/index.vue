@@ -22,7 +22,10 @@
       <CommentArea :disId="postDetail.ID"></CommentArea>
     </view>
   </view>
-  <view v-else> 加载中</view>
+  <view v-else class="empty">
+    <img src="../../static/empty/emptyPost.png" />
+    <span style="font-size: 36rpx; color: #999">帖子被外星人偷走了!</span>
+  </view>
 </template>
 <script lang="ts" setup>
 import nameTitle from '@/components/nameTitle.vue'
@@ -70,5 +73,11 @@ const toUserPage = () => {
 <style lang="scss" scoped>
 .header {
   margin: 0 20rpx;
+}
+.empty {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

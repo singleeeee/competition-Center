@@ -2,7 +2,6 @@
   <view class="container">
     <scroll-view
       scroll-y
-      :style="{ height: windowHeight * 2 - 100 + 'rpx' }"
       @refresherrefresh="pulldownRefresh"
       :refresher-triggered="pulldownTriggered"
       :refresher-threshold="50"
@@ -24,14 +23,17 @@
             <view class="message">{{ item.lastMessage }}</view>
           </view>
           <view class="timeBox">
-            <view class="time">{{ toLocalTime(item.lastMessageTime * 1000, false) }}</view>
+            <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
             <view class="num">
               <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
             </view>
           </view>
         </view>
       </view>
-      <view v-else-if="!userInfoStore.userInfo.token" class="login"> 请先登录!</view>
+      <view v-else-if="!userInfoStore.userInfo.token" class="login">
+        请先登录!
+        <image class="img" src="../../../static/empty/unLog.png" mode="scaleToFill" />
+      </view>
       <view v-else>
         <uni-load-more iconType="circle" :status="messageStatus" :contentText="loadingText" />
       </view>
@@ -45,7 +47,11 @@ import { toLocalTime } from '@/utils/toLocalTime'
 import { onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores/modules/userInfoStore'
 const userInfoStore = useUserInfoStore()
-onShow(() => {})
+onShow(() => {
+  undateUnreadInfo()
+})
+const chatHistoryStore = useChatHistoryStore()
+let messageList = ref(chatHistoryStore.chatInfoMap)
 // 信息状态
 let messageStatus = ref('noMore')
 // 状态文字
@@ -54,12 +60,6 @@ const loadingText = {
   contentrefresh: '正在加载...',
   contentnomore: '没有更多信息了',
 }
-// 获取可用屏幕高度
-let windowHeight = 0
-;(() => {
-  const deviceInfo = uni.getWindowInfo()
-  windowHeight = deviceInfo?.windowHeight - 40
-})()
 // 控制下拉刷新
 let pulldownTriggered = ref(false)
 // 监听刷新事件
@@ -68,13 +68,16 @@ const pulldownRefresh = () => {
   messageStatus.value = 'loading'
   messageList.value = []
   setTimeout(() => {
-    messageList.value = chatHistoryStore.unReadInfoList
+    undateUnreadInfo()
     pulldownTriggered.value = false
     messageStatus.value = 'noMore'
   }, 1000)
 }
-const chatHistoryStore = useChatHistoryStore()
-let messageList = ref(chatHistoryStore.unReadInfoList)
+// 更新未读信息
+const undateUnreadInfo = () => {
+  // chatHistoryStore.resetUnreadList()
+  messageList.value = chatHistoryStore.chatInfoMap
+}
 
 // 跳转到聊天页面
 const navigateToChat = (userID) => {
@@ -86,7 +89,7 @@ const navigateToChat = (userID) => {
 <style scoped lang="scss">
 .container {
   .messageBox {
-    height: 130rpx;
+    height: 150rpx;
     display: flex;
     align-items: center;
     background-color: #fff;
@@ -95,8 +98,8 @@ const navigateToChat = (userID) => {
     box-sizing: border-box;
     border-bottom: 1px solid #ebeef5;
     .avatar {
-      width: 100rpx;
-      height: 100rpx;
+      width: 110rpx;
+      height: 110rpx;
       border-radius: 10%;
       background-color: skyblue;
     }
@@ -116,16 +119,16 @@ const navigateToChat = (userID) => {
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: space-between;
       height: 100rpx;
-      padding: 0 20rpx;
+      padding: 0 25rpx;
       box-sizing: border-box;
+      margin-bottom: 10rpx;
       .nickname {
-        font-size: 28rpx;
-        padding-bottom: 10rpx;
+        font-size: 32rpx;
       }
       .message {
-        font-size: 20rpx;
+        font-size: 24rpx;
         color: #888;
         overflow: hidden;
         -webkit-line-clamp: 1;
@@ -141,7 +144,7 @@ const navigateToChat = (userID) => {
       align-items: center;
       justify-content: space-around;
       width: 200rpx;
-      font-size: 20rpx;
+      font-size: 22rpx;
       color: #666;
       .num {
         padding-top: 10rpx;
@@ -153,8 +156,15 @@ const navigateToChat = (userID) => {
   }
 }
 .login {
+  height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 0;
+  background-color: #f2f2fa;
   text-align: center;
-  margin-top: 10vh;
   font-size: 40rpx;
+  font-weight: 700;
 }
 </style>

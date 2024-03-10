@@ -92,8 +92,6 @@ const onClickImg = (tempFilePaths) => {
   })
 }
 
-// 还有个问题我看完未读信息之后，外面的消息列表不会更新(todo)
-
 // 下拉加载状态
 let loadingStatus = ref(false)
 // 下拉刷新
@@ -113,16 +111,27 @@ const { userInfo } = storeToRefs(userInfoStore)
 const chatHistoryStore = useChatHistoryStore()
 // 消息记录数组
 const { chatInfoMap } = storeToRefs(chatHistoryStore)
-
-onLoad((options) => {
+//滚动到最新位置
+onMounted(() => {
+  scrollToBottom()
+})
+onLoad(async (options) => {
   targetID.value = +options?.targetID
   // 提取出于当前用户有关的消息记录
   // 直接使用小程序打开是没有chatInfoMap的，因为还没加载好
   historyIndex.value = chatInfoMap.value.findIndex((user) => {
     return user.userID === targetID.value
   })
+  // 重置历史记录
+  await chatHistoryStore.clearChatList(targetID.value)
   // 获取用户历史信息
-  getFirstLoadInfo()
+  await getFirstLoadInfo()
+  // 重置未读信息
+  chatHistoryStore.resetUnreadList(targetID.value)
+})
+onUnload(() => {
+  // // 重置历史记录
+  chatHistoryStore.resetUnreadList(targetID.value)
 })
 // 动态维护获取历史记录时需要的时间
 let earliestTime = ref(0)
@@ -142,7 +151,7 @@ const getFirstLoadInfo = async () => {
   // 提取数据
   for (let i = 0; i < res.data.list.length; i++) {
     const item = res.data.list[i]
-    // 动态维护最久以前的信息时间
+    // 动态维护目前消息列表最久以前的信息时间，用于获取历史记录
     if (i === res.data.list.length - 1) earliestTime.value = item.messageTime
     // 换成我的头像
     if (item.formUserId === userInfo.value.ID) {
@@ -162,10 +171,7 @@ const getFirstLoadInfo = async () => {
   }
   scrollToBottom()
 }
-onUnload(() => {
-  console.log('卸载')
-  chatHistoryStore.delLatestInfo(targetID.value)
-})
+
 // 查找历史记录
 let currentPageNum = 1
 let pageSize = 10
@@ -217,10 +223,7 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
   loadingStatus.value = false
   scrollTop = bottomPx
 })
-//滚动到最新位置
-onMounted(() => {
-  scrollToBottom()
-})
+
 // 距离顶部位置
 let bottomPx = 0
 // 获取当前组件实例

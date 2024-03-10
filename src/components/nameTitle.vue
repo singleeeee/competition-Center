@@ -12,9 +12,15 @@
           <view class="add"> {{ extra }}</view>
         </view>
       </view>
-      <view class="share" v-if="candelete" @tap.stop="alertDialog.open()">
+      <view class="share" v-if="candelete">
         <span style="display: inline; font-size: 24rpx; color: #ccc">{{ rightText }}</span>
-        <uni-icons :type="props.icon" color="#ccc" size="18"></uni-icons>
+        <uni-icons
+          @tap.stop="alertDialog.open()"
+          type="closeempty"
+          color="#ccc"
+          size="18"
+          style="margin-right: 10rpx"
+        ></uni-icons>
       </view>
       <view class="share" v-else>
         <span style="font-size: 24rpx; color: #ccc">{{ rightText }}</span>

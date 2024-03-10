@@ -30,7 +30,7 @@
           :key="index"
           @tap="handleSwiperTap(item.disId)"
         >
-          <image  class="image" :src="item.url" mode="scaleToFill" />
+          <image class="image" :src="item.url" mode="scaleToFill" />
         </swiper-item>
       </swiper>
     </uni-swiper-dot>
