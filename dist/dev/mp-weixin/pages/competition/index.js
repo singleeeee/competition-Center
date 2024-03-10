@@ -26,6 +26,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       await getComStatus();
       await getCompetitionList();
     });
+    const navigateToComDetail = (comID) => {
+      console.log(comID);
+      common_vendor.index.navigateTo({
+        url: "/subpackage/comDetail/index?comID=" + comID
+      });
+    };
     const navigateToSearch = () => {
       common_vendor.index.navigateTo({
         url: "/pages/competition/searchPage/index"
@@ -197,7 +203,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
               ["sub-title"]: item.comSubTitle,
               thumbnail: item.comPicture
             }),
-            d: index
+            d: index,
+            e: common_vendor.o(($event) => navigateToComDetail(item.ID), index)
           };
         }),
         j: common_vendor.p({

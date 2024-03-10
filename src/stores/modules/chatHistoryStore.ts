@@ -176,7 +176,6 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       // console.log('WebSocket连接关闭')
       // 修改连接状态
       chatInfoMap.value = []
-      unReadInfoList.value = []
       socketOpen.value = false
       reconnect()
     })

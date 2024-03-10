@@ -223,9 +223,9 @@ const getPostList = async () => {
 }
 
 // 私聊
-const navigateToChat = (targetID) => {
+const navigateToChat = () => {
   uni.navigateTo({
-    url: `/pages/community/chatRoom/index?targetID=${targetID}`,
+    url: `/pages/community/chatRoom/index?targetID=${userID.value}`,
   })
 }
 // 关注
@@ -527,7 +527,7 @@ let active = ref(expList.value.length - 1)
         font-size: 22rpx;
         .Tag {
           display: inline;
-          background-color: rgb(248, 206, 213);
+          background-color: rgb(252, 235, 238);
           padding: 4rpx 8rpx;
           border-radius: 2rpx;
           color: rgb(202, 7, 7);

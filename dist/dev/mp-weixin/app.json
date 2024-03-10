@@ -111,6 +111,12 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "subpackage/comDetail",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {

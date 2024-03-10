@@ -94,7 +94,7 @@
 					"style": {
 						"navigationBarTitleText": "更多帖子",
 						"onReachBottomDistance": 150,
-						"enablePullDownRefresh":true
+						"enablePullDownRefresh": true
 					}
 				}
 			]
@@ -116,7 +116,8 @@
 				{
 					"path": "index",
 					"style": {
-						"navigationBarTitleText": "我的收藏"
+						"navigationBarTitleText": "我的收藏",
+						"enablePullDownRefresh": true
 					}
 				}
 			]
@@ -251,6 +252,17 @@
 					"path": "index",
 					"style": {
 						"navigationBarTitleText": "内容管理"
+					}
+				}
+			]
+		},
+		{
+			"root": "subpackage/comDetail",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "比赛详情"
 					}
 				}
 			]

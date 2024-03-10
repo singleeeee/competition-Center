@@ -158,7 +158,7 @@ const onClickImg = (tempFilePaths) => {
   })
 }
 </script>
-
+ 
 <template>
   <view class="container">
     <view class="header">

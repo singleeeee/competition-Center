@@ -1,23 +1,35 @@
 <template>
-  <view class="container">
-    <uni-swipe-action>
-      <uni-swipe-action-item
-        v-for="(item, index) in collectionList"
-        :key="index"
-        :threshold="0"
-        :right-options="Del"
-        @click="bindClick($event, index)"
-      >
-        <view class="item" @tap="switchToPostDetail(item.disId)">
-          <view class="title">{{ item.disTitle }}</view>
-          <view class="author-type">
-            <view class="author">{{ item.disUserName }}| {{ item.disTopic }}</view>
+  <scroll-view
+    scroll-y
+    class="container"
+    @scrolltolower="onReachBottom"
+    refresher-enabled
+    @refresherrefresh="pullDownRefresh"
+    :refresher-triggered="isPullingDown"
+  >
+    <view v-if="collectionList.length > 0">
+      <uni-swipe-action>
+        <uni-swipe-action-item
+          v-for="(item, index) in collectionList"
+          :key="index"
+          :threshold="0"
+          :right-options="Del"
+          @click="bindClick($event, index)"
+        >
+          <view class="item" @tap="switchToPostDetail(item.disId)">
+            <view class="title">{{ item.disTitle }}</view>
+            <view class="author-type">
+              <view class="author">{{ item.disUserName }} | {{ item.disTopic }}</view>
+            </view>
           </view>
-        </view>
-      </uni-swipe-action-item>
-    </uni-swipe-action>
-  </view>
-  <view class="text">没有更多内容</view>
+        </uni-swipe-action-item>
+      </uni-swipe-action>
+      <uni-load-more :status="loadStatus" iconType="circle" />
+    </view>
+    <view v-else>
+      <uni-load-more status="loading" iconType="circle" />
+    </view>
+  </scroll-view>
 </template>
 
 <script lang="ts" setup>
@@ -25,20 +37,51 @@ import type { CollectList } from '@/types/global'
 import { http } from '@/utils/http'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-
-const collectionList = ref<CollectList>([])
 onLoad(async () => {
   getCollectList()
 })
+// 下滑加载状态
+let loadStatus = ref('more')
+// 触底事件
+const onReachBottom = () => {
+  loadStatus.value = 'loading'
+  getCollectList()
+}
+// 下拉刷新状态
+const isPullingDown = ref(false)
+// 刷新事件
+const pullDownRefresh = () => {
+  isPullingDown.value = true
+  currentPage = 1
+  getCollectList()
+  setTimeout(() => {}, 1000)
+}
+
+const collectionList = ref<CollectList>([])
+
+let currentPage = 1
+let pageSize = 5
 // 获取收藏列表
 const getCollectList = async () => {
   const res = await http<CollectList[]>({
     url: '/app/dis/userShowCollectDis',
+    data: {
+      page: currentPage,
+      pageSize: pageSize,
+    },
   })
-  collectionList.value = res.data
-  console.log(collectionList.value)
+  if (!res.data?.length) {
+    loadStatus.value = 'noMore'
+    return
+  } else {
+    loadStatus.value = 'more'
+    for (let i = 0; i < res.data.length; i++) {
+      collectionList.value.push(res.data[i])
+    }
+    currentPage++
+  }
+  isPullingDown.value = false
 }
-// 更新收藏列表（分页器）
 
 // 跳转到帖子详情页
 const switchToPostDetail = (disId: number) => {
@@ -76,7 +119,7 @@ const bindClick = async (e, index) => {
 
 <style lang="scss" scoped>
 .container {
-  width: 100%;
+  height: 100vh;
   .item {
     height: 100rpx;
     display: flex;

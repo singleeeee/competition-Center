@@ -133,10 +133,10 @@ const navigateTo = (status: number, disId: number) => {
       font-size: 22rpx;
       .Tag {
         display: inline;
-        background-color: rgb(248, 206, 213);
+        background-color: rgb(255, 238, 241);
         padding: 4rpx 8rpx;
         border-radius: 2rpx;
-        color: rgb(202, 7, 7);
+        color: rgb(203, 7, 7);
       }
       .date {
         padding: 4rpx 8rpx;

@@ -9048,42 +9048,42 @@ const icons = {
     }
   ]
 };
-const en$3 = {
+const en$4 = {
   "uni-load-more.contentdown": "Pull up to show more",
   "uni-load-more.contentrefresh": "loading...",
   "uni-load-more.contentnomore": "No more data"
 };
-const zhHans$3 = {
+const zhHans$4 = {
   "uni-load-more.contentdown": "上拉显示更多",
   "uni-load-more.contentrefresh": "正在加载...",
   "uni-load-more.contentnomore": "没有更多数据了"
 };
-const zhHant$3 = {
+const zhHant$4 = {
   "uni-load-more.contentdown": "上拉顯示更多",
   "uni-load-more.contentrefresh": "正在加載...",
   "uni-load-more.contentnomore": "沒有更多數據了"
+};
+const messages$3 = {
+  en: en$4,
+  "zh-Hans": zhHans$4,
+  "zh-Hant": zhHant$4
+};
+const en$3 = {
+  "uni-search-bar.cancel": "cancel",
+  "uni-search-bar.placeholder": "Search enter content"
+};
+const zhHans$3 = {
+  "uni-search-bar.cancel": "取消",
+  "uni-search-bar.placeholder": "请输入搜索内容"
+};
+const zhHant$3 = {
+  "uni-search-bar.cancel": "取消",
+  "uni-search-bar.placeholder": "請輸入搜索內容"
 };
 const messages$2 = {
   en: en$3,
   "zh-Hans": zhHans$3,
   "zh-Hant": zhHant$3
-};
-const en$2 = {
-  "uni-search-bar.cancel": "cancel",
-  "uni-search-bar.placeholder": "Search enter content"
-};
-const zhHans$2 = {
-  "uni-search-bar.cancel": "取消",
-  "uni-search-bar.placeholder": "请输入搜索内容"
-};
-const zhHant$2 = {
-  "uni-search-bar.cancel": "取消",
-  "uni-search-bar.placeholder": "請輸入搜索內容"
-};
-const messages$1 = {
-  en: en$2,
-  "zh-Hans": zhHans$2,
-  "zh-Hant": zhHant$2
 };
 const popup = {
   data() {
@@ -9287,7 +9287,8 @@ const subPackages = [
       {
         path: "index",
         style: {
-          navigationBarTitleText: "我的收藏"
+          navigationBarTitleText: "我的收藏",
+          enablePullDownRefresh: true
         }
       }
     ]
@@ -9422,6 +9423,17 @@ const subPackages = [
         path: "index",
         style: {
           navigationBarTitleText: "内容管理"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/comDetail",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "比赛详情"
         }
       }
     ]
@@ -11985,7 +11997,7 @@ let Ns = new class {
   } }), gs(Ns), Ns.addInterceptor = D, Ns.removeInterceptor = F, Ns.interceptObject = K;
 })();
 var Ds = Ns;
-const en$1 = {
+const en$2 = {
   "uni-datetime-picker.selectDate": "select date",
   "uni-datetime-picker.selectTime": "select time",
   "uni-datetime-picker.selectDateTime": "select date and time",
@@ -12007,7 +12019,7 @@ const en$1 = {
   "uni-calender.SUN": "SUN",
   "uni-calender.confirm": "confirm"
 };
-const zhHans$1 = {
+const zhHans$2 = {
   "uni-datetime-picker.selectDate": "选择日期",
   "uni-datetime-picker.selectTime": "选择时间",
   "uni-datetime-picker.selectDateTime": "选择日期时间",
@@ -12029,7 +12041,7 @@ const zhHans$1 = {
   "uni-calender.SAT": "六",
   "uni-calender.confirm": "确认"
 };
-const zhHant$1 = {
+const zhHant$2 = {
   "uni-datetime-picker.selectDate": "選擇日期",
   "uni-datetime-picker.selectTime": "選擇時間",
   "uni-datetime-picker.selectDateTime": "選擇日期時間",
@@ -12052,9 +12064,9 @@ const zhHant$1 = {
   "uni-calender.confirm": "確認"
 };
 const i18nMessages = {
-  en: en$1,
-  "zh-Hans": zhHans$1,
-  "zh-Hant": zhHant$1
+  en: en$2,
+  "zh-Hans": zhHans$2,
+  "zh-Hant": zhHant$2
 };
 class Calendar {
   constructor({
@@ -12405,6 +12417,29 @@ function fixIosDateFormat(value) {
   }
   return value;
 }
+const en$1 = {
+  "uni-countdown.day": "day",
+  "uni-countdown.h": "h",
+  "uni-countdown.m": "m",
+  "uni-countdown.s": "s"
+};
+const zhHans$1 = {
+  "uni-countdown.day": "天",
+  "uni-countdown.h": "时",
+  "uni-countdown.m": "分",
+  "uni-countdown.s": "秒"
+};
+const zhHant$1 = {
+  "uni-countdown.day": "天",
+  "uni-countdown.h": "時",
+  "uni-countdown.m": "分",
+  "uni-countdown.s": "秒"
+};
+const messages$1 = {
+  en: en$1,
+  "zh-Hans": zhHans$1,
+  "zh-Hant": zhHant$1
+};
 class MPAnimation {
   constructor(options, _this) {
     this.options = options;
@@ -13111,9 +13146,10 @@ exports.icons = icons;
 exports.index = index;
 exports.initVueI18n = initVueI18n;
 exports.isRef = isRef;
-exports.messages = messages$2;
-exports.messages$1 = messages$1;
-exports.messages$2 = messages;
+exports.messages = messages$3;
+exports.messages$1 = messages$2;
+exports.messages$2 = messages$1;
+exports.messages$3 = messages;
 exports.mpwxs = mpwxs;
 exports.n = n$1;
 exports.nextTick$1 = nextTick$1;

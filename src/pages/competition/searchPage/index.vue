@@ -57,32 +57,19 @@
       <view :class="{ item: true, active: currentPage === 1 }" @tap="handleTabChange(1)">比赛</view>
       <view :class="{ item: true, active: currentPage === 2 }" @tap="handleTabChange(2)">帖子</view>
       <view :class="{ item: true, active: currentPage === 3 }" @tap="handleTabChange(3)">通告</view>
-      <view :class="{ item: true, active: currentPage === 4 }" @tap="handleTabChange(4)">用户</view>
     </view>
     <swiper class="swiper" @change="swiperChange" :current="currentPage">
       <swiper-item v-for="(item, index) in classList" :key="index">
         <view v-if="resultList.length > 0">
-          <template v-if="index < 4">
-            <view
-              class="resultItem"
-              v-for="(item, index) in resultList"
-              :key="index"
-              @tap="toResult(item.disID)"
-            >
-              <uni-icons type="color" color="" size="12" />
-              <view class="text">{{ item.disTitle }}</view>
-            </view>
-          </template>
-          <template v-else>
-            <view
-              class="resultItem"
-              v-for="(item, index) in resultList"
-              :key="index"
-              @tap="toPersonPage(item.disID)"
-            >
-              <view class="text">{{ item.disTitle }}</view>
-            </view>
-          </template>
+          <view
+            class="resultItem"
+            v-for="(item, index) in resultList"
+            :key="index"
+            @tap="toResult(item.disID)"
+          >
+            <uni-icons type="color" color="" size="12" />
+            <view class="text">{{ item.disTitle }}</view>
+          </view>
         </view>
         <!-- 环形加载 -->
         <uni-load-more

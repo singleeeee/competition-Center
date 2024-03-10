@@ -42,7 +42,7 @@
     <view class="itemList">
       <view v-if="comList.length > 0">
         <!-- 比赛列表 -->
-        <view v-for="(item, index) in comList" :key="index">
+        <view v-for="(item, index) in comList" :key="index" @tap="navigateToComDetail(item.ID)">
           <!-- 卡片 -->
           <uni-card
             :title="item.comTitle"
@@ -91,6 +91,13 @@ onLoad(async () => {
   await getComStatus()
   await getCompetitionList()
 })
+// 跳转到比赛详情页
+const navigateToComDetail = (comID: string) => {
+  console.log(comID)
+  uni.navigateTo({
+    url: '/subpackage/comDetail/index?comID=' + comID,
+  })
+}
 // 跳转到搜索页面
 const navigateToSearch = () => {
   uni.navigateTo({

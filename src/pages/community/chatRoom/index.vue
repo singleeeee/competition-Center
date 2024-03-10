@@ -56,7 +56,6 @@
         </view>
       </scroll-view>
     </view>
-    <view v-else>出错了</view>
     <!-- 底部输入提示框 -->
     <view class="inputArea">
       <view class="input" @tap="openInput">
