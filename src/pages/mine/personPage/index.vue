@@ -172,7 +172,7 @@ onLoad(async (options) => {
   }
 })
 // 点击图片预览
-const onClickImg = (tempFilePaths) => {
+const onClickImg = (tempFilePaths: string) => {
   let fileUrlArray = [tempFilePaths]
   uni.previewImage({
     urls: fileUrlArray,
@@ -188,8 +188,11 @@ const collectionList = ref<CollectList>([])
 const getCollectList = async () => {
   const res = await http<CollectList[]>({
     url: '/app/dis/userShowCollectDis',
+    data: {
+      userid: userID.value,
+    },
   })
-  collectionList.value = res.data
+  collectionList.value = res.data.disList
 }
 // 跳转到帖子详情页
 const switchToPostDetail = (disId: number) => {

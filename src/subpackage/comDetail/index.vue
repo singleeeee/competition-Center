@@ -65,7 +65,7 @@
     <!-- 相关帖子 -->
     <view class="grade">
       <view class="line">相关帖子</view>
-      <view class="postBox">
+      <view class="postBox" v-if="postList.length > 0">
         <view class="item" v-for="item in postList" :key="item.ID" @tap="navigateTo(item.ID)">
           <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
           <view class="content">
@@ -85,6 +85,9 @@
             <span class="statusTag error">热门</span>
           </view>
         </view>
+      </view>
+      <view v-else>
+        <image src="../../static/empty/emptyPost.png" mode="scaleToFill" />
       </view>
     </view>
   </view>

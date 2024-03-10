@@ -37,6 +37,7 @@ import type { CollectList } from '@/types/global'
 import { http } from '@/utils/http'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import { useUserInfoStore } from '@/stores/index'
 onLoad(async () => {
   getCollectList()
 })
@@ -53,12 +54,16 @@ const isPullingDown = ref(false)
 const pullDownRefresh = () => {
   isPullingDown.value = true
   currentPage = 1
-  getCollectList()
-  setTimeout(() => {}, 1000)
+  collectionList.value = []
+  setTimeout(() => {
+    getCollectList()
+  }, 1000)
 }
-
+// 收藏列表
 const collectionList = ref<CollectList>([])
 
+const userInfoStore = useUserInfoStore()
+const { userInfo } = userInfoStore
 let currentPage = 1
 let pageSize = 5
 // 获取收藏列表
@@ -66,19 +71,23 @@ const getCollectList = async () => {
   const res = await http<CollectList[]>({
     url: '/app/dis/userShowCollectDis',
     data: {
+      userid: userInfo.ID,
       page: currentPage,
       pageSize: pageSize,
     },
   })
-  if (!res.data?.length) {
+  if (!res.data.disList?.length) {
     loadStatus.value = 'noMore'
     return
   } else {
     loadStatus.value = 'more'
-    for (let i = 0; i < res.data.length; i++) {
-      collectionList.value.push(res.data[i])
+    for (let i = 0; i < res.data.disList.length; i++) {
+      collectionList.value.push(res.data.disList[i])
     }
     currentPage++
+  }
+  if (res.data.total <= currentPage * pageSize) {
+    loadStatus.value = 'noMore'
   }
   isPullingDown.value = false
 }
