@@ -432,5 +432,6 @@ const clearImgList = () => {
   margin-left: 0;
   margin-right: 10rpx;
   background-color: #95ec69;
+  letter-spacing: 2rpx;
 }
 </style>

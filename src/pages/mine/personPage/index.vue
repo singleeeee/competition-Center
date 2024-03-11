@@ -127,7 +127,7 @@
       </swiper-item>
       <!-- 个人经历 -->
       <swiper-item class="steps">
-        <view style="background-color: #fff; width: 90vw; padding: 2vh 5vw">
+        <view style="background-color: #fff; width: 90vw; padding: 4vh 5vw">
           <uni-steps
             :options="expList"
             active-color="#007AFF"

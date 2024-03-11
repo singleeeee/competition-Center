@@ -2,6 +2,7 @@
   <view class="container">
     <scroll-view
       scroll-y
+      style="height: 92vh"
       @refresherrefresh="pulldownRefresh"
       :refresher-triggered="pulldownTriggered"
       :refresher-threshold="50"

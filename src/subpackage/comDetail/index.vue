@@ -7,8 +7,16 @@
     <!-- 比赛倒计时 -->
     <view class="countDown">
       <view class="countDownTitle">
-        <span> 距离比赛开始还有： </span>
-        <uni-countdown :font-size="16" :day="0" :hour="2" :minute="30" background-color="#007AFF" />
+        <span v-if="timeRest > 0">{{ countDownText }} </span>
+        <uni-countdown
+          v-if="timeRest > 0"
+          :font-size="16"
+          :day="timeRest"
+          :hour="0"
+          :minute="0"
+          background-color="#007AFF"
+        />
+        <view v-else-if="timeRest < 0" class="comEnd"> {{ countDownText }} </view>
       </view>
     </view>
     <!-- 比赛信息 -->
@@ -58,7 +66,7 @@
       </view>
     </view>
     <!-- 参赛报名 -->
-    <view class="enter">
+    <view class="enter" v-if="timeRest !== -1">
       <view class="line">比赛报名</view>
       <button class="btn">立即报名</button>
     </view>
@@ -98,14 +106,16 @@ import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { http } from '@/utils/http'
 import { toLocalTime } from '@/utils/toLocalTime'
+import { getTimeDifference } from '@/utils/getTimeDifference'
 let comID = ref(0)
 onLoad(async (options) => {
-  comID.value = options.comID
+  comID.value = options?.comID
   await getComInfoDetail()
   await getComType()
   await getComRating()
   await getPostList()
 })
+
 // 获取帖子列表
 const getPostList = async () => {
   const res = await http({
@@ -127,14 +137,37 @@ const navigateTo = (disId: number) => {
     url: `/subpackage/postDetail/index?disId=${disId}`,
   })
 }
+
 let comInfo = ref({})
+let timeRest = ref(0)
+let countDownText = ref('')
 // 获取比赛详细信息
 const getComInfoDetail = async () => {
   const res = await http({
     url: '/app/com/getComInfoByid?ID=' + comID.value,
   })
   comInfo.value = res.data.recomData
+  let differenceTime = getTimeDifference(new Date().getTime(), comInfo.value.comStart)
+  // 现在已经超过了比赛开始时间
+  if (differenceTime <= 0) {
+    // 比赛过程中或者比赛已经结束了
+    differenceTime = getTimeDifference(new Date().getTime(), comInfo.value.comEnd)
+    if (timeRest.value <= 0) {
+      // 比赛已经结束
+      countDownText.value = '比赛已结束!'
+      timeRest.value = -1
+    } else {
+      countDownText.value = '距离比赛结束还有:'
+      timeRest.value = differenceTime
+    }
+  } else {
+    // 比赛还未开始
+    countDownText.value = '距离比赛开始还有：'
+    timeRest.value = differenceTime
+  }
+  console.log(timeRest.value, countDownText.value)
 }
+
 let comTypeList = ref([])
 let comType = ref('')
 // 获取比赛种类
@@ -153,6 +186,7 @@ const getComType = async () => {
   }
   comType.value = comTypeList.value[comInfo.value.comType].label
 }
+
 // 当前分类所有比赛
 let comRatingList = ref([])
 // 当前的比赛等级
@@ -192,6 +226,9 @@ const getComRating = async () => {
       align-items: center;
       font-size: 26rpx;
       font-weight: 700;
+      .comEnd {
+        color: rgb(193, 0, 0);
+      }
     }
   }
   .detailBox {

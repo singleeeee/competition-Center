@@ -140,6 +140,7 @@ const collect = myDebounce(() => {
   .content {
     padding: 10rpx 0;
     font-size: 28rpx;
+    letter-spacing: 2rpx;
   }
   .imgBox {
     display: flex;

@@ -95,9 +95,8 @@
         </view>
       </view>
     </view>
+    <button class="btn" @tap="logout">退出登录</button>
   </view>
-
-  <button class="btn" @tap="logout">退出登录</button>
   <!-- 昵称 -->
   <uni-popup ref="nicknamePopup" background-color="#fff">
     <InputPopup
@@ -295,7 +294,6 @@ const introCancel = () => {
 .container {
   display: flex;
   flex-direction: column;
-
   .items {
     height: 140rpx;
     display: flex;
@@ -306,7 +304,6 @@ const introCancel = () => {
     &:active {
       background-color: #eee;
     }
-
     .right {
       display: flex;
       align-items: center;
@@ -347,6 +344,7 @@ const introCancel = () => {
 }
 .btn {
   margin-top: 100rpx;
+  margin-bottom: 100rpx;
   width: 70vw;
   height: 90rpx;
   border-radius: 50rpx;

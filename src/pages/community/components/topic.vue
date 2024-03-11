@@ -118,7 +118,7 @@ const getComList = async () => {
     url: '/app/com/getComInfoList',
     data: {
       disModel: 3,
-      // disStatus: 1, 1待审核 2 展示中 3 有问题
+      disStatus: 2,
       page: 1,
       pageSize: 5,
       sort: 'com_hot',
@@ -178,24 +178,25 @@ defineExpose({
       background-color: #eee;
     }
     .img {
-      width: 90rpx;
-      height: 90rpx;
+      width: 100rpx;
+      height: 100rpx;
       background-color: skyblue;
-      border-radius: 50%;
+      border-radius: 8rpx;
       margin-right: 20rpx;
     }
     .content {
-      height: 80rpx;
+      height: 100rpx;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       .topicTitle {
         display: inline;
-        font-size: 26rpx;
+        font-size: 28rpx;
         color: rgb(245, 169, 29);
       }
       .comTitle {
         color: rgb(35, 149, 231);
+        font-size: 30rpx;
       }
       .introduce {
         font-size: 24rpx;
