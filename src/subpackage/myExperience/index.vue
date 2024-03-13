@@ -29,13 +29,16 @@
     </uni-section>
     <button class="btn" @tap="confirm">确认</button>
     <uni-section title="预览效果" type="line"></uni-section>
-    <uni-steps
-      :options="expList"
-      active-color="#007AFF"
-      :active="active"
-      active-icon="medal"
-      direction="column"
-    />
+    <view v-if="expList.length > 0">
+      <uni-steps
+        :options="expList"
+        active-color="#007AFF"
+        :active="active"
+        active-icon="medal"
+        direction="column"
+      />
+    </view>
+    <view v-else style="text-align: center; padding-top: 20rpx; color: #aaa">暂无经历</view>
   </view>
   <!-- 选择某段经历 -->
   <uni-popup ref="experiencePopup" background-color="#fff">
@@ -54,7 +57,32 @@
 </template>
 
 <script lang="ts" setup>
+import { http } from '@/utils/http'
 import { ref } from 'vue'
+import { useUserInfoStore } from '@/stores'
+import { onLoad } from '@dcloudio/uni-app'
+const UserInfoStore = useUserInfoStore()
+
+onLoad(() => {
+  getUserExperience()
+})
+// 获取用户经历
+const getUserExperience = async () => {
+  const res = await http({
+    url: '/app/user/showUserHistory',
+    data: {
+      userID: UserInfoStore.userInfo.ID,
+    },
+  })
+  let arr: any = res.data.list.reverse().forEach((item) => {
+    const obj = {
+      ID: item.ID,
+      desc: item.time,
+      title: item.desc,
+    }
+    expList.value.push(obj)
+  })
+}
 
 // 提示信息ref
 const messageRef = ref()
@@ -76,6 +104,13 @@ let currentChosseExp = ref([0])
 // 打开弹出层
 const openPopup = () => {
   if (expList.value.length === 0) return uni.showToast({ title: '请先添加经历', icon: 'none' })
+  else if (expList.value.length === 1) {
+    currentExpIndex.value = 0
+    expValue.value = expList.value[0].title
+    datetimerange.value = expList.value[0].desc.split(' 至 ')
+    isControl.value = true
+    canDelete.value = true
+  }
 
   experiencePopup.value.open('bottom')
 }
@@ -94,45 +129,32 @@ const expChoose = (e) => {
 }
 // 删除某段经历
 const del = () => {
-  for (let i = 0; i < expList.value.length; i++) {
-    if (i == currentExpIndex.value) {
-      expList.value.splice(i, 1)
-      break
+  try {
+    const res = http({
+      url: '/app/user/deleteUserHistory?ID=' + expList.value[currentExpIndex.value].ID,
+      method: 'DELETE',
+    })
+    for (let i = 0; i < expList.value.length; i++) {
+      if (i == currentExpIndex.value) {
+        expList.value.splice(i, 1)
+        break
+      }
     }
+    expValue.value = ''
+    canDelete.value = false
+    datetimerange.value = []
+    isControl.value = false
+    currentExpIndex.value = -1
+    showMessage('success', '删除成功!')
+  } catch (error) {
+    uni.showToast({
+      title: '删除失败',
+      icon: 'none',
+    })
   }
-  expValue.value = ''
-  canDelete.value = false
-  datetimerange.value = []
-  isControl.value = false
-  currentExpIndex.value = -1
 }
 // 经历数组
-let expList = ref([
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '就读马庄小学，跟马庄小学校长是好哥儿们',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '高考740分,满昏状元，进入东莞理工学院',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '拿下黑丝校花学姐',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '蓝桥杯国一',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '入职腾讯，升职CEO',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '梦醒了，欠债百万',
-  },
-])
+let expList = ref([])
 // 当前经历步骤
 let active = ref(5)
 // 输入的经历内容
@@ -149,7 +171,7 @@ const add = () => {
   currentExpIndex.value = -1
 }
 // 确认按钮
-const confirm = () => {
+const confirm = async () => {
   // 新增模式
   if (currentExpIndex.value === -1) {
     if (!isControl.value) {
@@ -166,14 +188,38 @@ const confirm = () => {
         icon: 'none',
       })
     } else {
-      expList.value.push({
-        desc: datetimerange.value[0] + '至' + datetimerange.value[1],
-        title: expValue.value,
-      })
-      active.value = expList.value.length - 1
-      expValue.value = ''
-      datetimerange.value = []
-      showMessage('success', '新增成功')
+      try {
+        const res = await http({
+          url: '/app/user/createUserHistory',
+          method: 'POST',
+          data: {
+            userID: UserInfoStore.userInfo.ID,
+            desc: expValue.value,
+            time: datetimerange.value[0] + ' 至 ' + datetimerange.value[1],
+          },
+        })
+        const returnMsg = await http({
+          url: '/app/user/showUserHistory',
+          data: {
+            userID: UserInfoStore.userInfo.ID,
+          },
+        })
+        // 回显数据
+        expList.value.push({
+          ID: returnMsg.data.list[0].ID,
+          desc: datetimerange.value[0] + ' 至 ' + datetimerange.value[1],
+          title: expValue.value,
+        })
+        active.value = expList.value.length - 1
+        expValue.value = ''
+        datetimerange.value = []
+        showMessage('success', '新增成功')
+      } catch (error) {
+        active.value = expList.value.length - 1
+        expValue.value = ''
+        datetimerange.value = []
+        showMessage('error', '新增失败!')
+      }
     }
   } else {
     // 编辑模式
@@ -183,16 +229,36 @@ const confirm = () => {
         icon: 'none',
       })
     }
-    expList.value[currentExpIndex.value] = {
-      desc: datetimerange.value[0] + '至' + datetimerange.value[1],
-      title: expValue.value,
+    // 修改接口
+    try {
+      const res = await http({
+        url: '/app/user/updateUserHistory',
+        method: 'POST',
+        data: {
+          ID: expList.value[currentChosseExp.value].ID,
+          desc: expValue.value,
+          time: datetimerange.value[0] + ' 至 ' + datetimerange.value[1],
+        },
+      })
+      expList.value[currentExpIndex.value] = {
+        ID: expList.value[currentChosseExp.value].ID,
+        desc: datetimerange.value[0] + ' 至 ' + datetimerange.value[1],
+        title: expValue.value,
+      }
+      showMessage('success', '修改成功!')
+      isControl.value = false
+      expValue.value = ''
+      datetimerange.value = []
+      canDelete.value = false
+      currentExpIndex.value = -1
+    } catch (error) {
+      showMessage('error', '修改失败!')
+      isControl.value = false
+      expValue.value = ''
+      datetimerange.value = []
+      canDelete.value = false
+      currentExpIndex.value = -1
     }
-    showMessage('success', '修改成功')
-    isControl.value = false
-    expValue.value = ''
-    datetimerange.value = []
-    canDelete.value = false
-    currentExpIndex.value = -1
   }
 }
 </script>

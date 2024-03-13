@@ -13127,6 +13127,7 @@ exports.Ds = Ds;
 exports._export_sfc = _export_sfc;
 exports.bindIngXMixins = bindIngXMixins;
 exports.checkDate = checkDate;
+exports.computed = computed;
 exports.createAnimation = createAnimation;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;

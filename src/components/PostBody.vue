@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="title">{{ title }}</view>
-    <view class="content">{{ content }}</view>
+    <div class="content" v-html="disContentHTML"></div>
     <view class="imgBox" v-if="imgList.length > 0">
       <ul class="imgBox">
         <li v-for="(item, index) in imgList" :key="index">
@@ -42,7 +42,7 @@
 </template>
 <script lang="ts" setup>
 import { http } from '@/utils/http'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { myDebounce } from '@/utils/myDebounce'
 // 点击图片预览
 const onClickImg = (tempFilePaths) => {
@@ -55,6 +55,10 @@ const onClickImg = (tempFilePaths) => {
     },
   })
 }
+// 转换过\n的帖子内容 !!!! win
+const disContentHTML = computed(() => {
+  return props.content.replace(/\n/g, '<br>')
+})
 
 const props = defineProps({
   disId: {
@@ -65,11 +69,11 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: '震惊！某男子竟当众做出这样的举动',
+    default: '震惊！xxxxxx',
   },
   content: {
     type: String,
-    default: '说话',
+    default: '暂无内容',
   },
   imgList: {
     type: Array,

@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "帖子详情页",
+                    "pathName": "subpackage/postDetail/index",
+                    "query": "disId=9",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "比赛详情",
                     "pathName": "subpackage/comDetail/index",
                     "query": "comID=1",
@@ -74,13 +81,6 @@
                     "name": "粉丝关注",
                     "pathName": "subpackage/myFriends/index",
                     "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "帖子详情页",
-                    "pathName": "subpackage/postDetail/index",
-                    "query": "disId=1",
                     "launchMode": "default",
                     "scene": null
                 },

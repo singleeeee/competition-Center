@@ -87,7 +87,75 @@
       </view>
     </view>
     <swiper class="swiper" @change="swiperChange" :current="currentPage">
-      <swiper-item class="">动态</swiper-item>
+      <!-- 动态 -->
+      <swiper-item class="Activity">
+        <view class="item" v-for="(item, index) in activityList" :key="index">
+          <!-- 发布帖子 -->
+          <template v-if="item.pageType === 1">
+            <view style="display: flex; flex-direction: column">
+              <view>
+                <NameTitle
+                  :avatarUrl="item.data.userInfo.userAvatarUrl"
+                  :author="item.data.userInfo.userNickname"
+                  :date="toLocalTime(item.data.CreatedAt)"
+                  rightText="发布了帖子"
+                  :extra="' · ' + item.data.userInfo.userCity.split('/')[0]"
+                  :border="true"
+                />
+              </view>
+              <view class="contentBox">
+                <image
+                  class="img"
+                  :src="item.data.disPicture.length > 0 ? item.data.disPicture[0] : ''"
+                  mode="scaleToFill"
+                />
+                <view class="content">
+                  <span class="titleBox">
+                    <h1 class="title">{{ item.data.disTitle }}</h1>
+                    <p class="subTitle">{{ item.data.disContent }}</p>
+                  </span>
+                  <span class="extraBox">
+                    <span class="Tag">原创</span>
+                    <span class="date">{{ toLocalTime(item.data.CreatedAt).split(' ')[0] }}</span>
+                    <span class="readedNum">{{ item.data.disHot }}阅读</span>
+                    <span class="liked">{{ item.data.disLoveNumber }}点赞</span>
+                  </span>
+                </view>
+              </view>
+            </view>
+          </template>
+          <!-- 组队信息 -->
+          <template v-else-if="item.pageType === 3">
+            <view class="teamBox">
+              <image class="avatar" :src="userInfo.userAvatarUrl"></image>
+              <view class="content">
+                <view class="text"
+                  >组建了队伍<span style="color: orange; margin-left: 10rpx"
+                    >重生之带学妹拿奖</span
+                  ></view
+                >
+                <view style="font-size: 24rpx">{{ toLocalTime(item.data.CreatedAt) }}</view>
+              </view>
+            </view>
+          </template>
+          <!-- 评论 -->
+          <template v-else-if="item.pageType === 2">
+            <view class="commentActivity">
+              <NameTitle
+                :avatarUrl="item.data.userInfo.userAvatarUrl"
+                :author="item.data.userInfo.userNickname"
+                :date="toLocalTime(item.data.CreatedAt)"
+                :extra="' · ' + item.data.userInfo.userCity.split('/')[0]"
+                :border="true"
+              />
+              <view style="font-size: 28rpx; padding: 10rpx 20rpx">发表了评论</view>
+              <view class="comment">
+                {{ item.data.userInfo.userNickname }} : {{ item.data.commentText }}
+              </view>
+            </view>
+          </template>
+        </view>
+      </swiper-item>
       <!-- 收藏 -->
       <swiper-item class="container">
         <view v-for="(item, index) in collectionList" :key="index">
@@ -151,6 +219,9 @@ import { myDebounce } from '@/utils/myDebounce'
 import { toLocalTime } from '@/utils/toLocalTime'
 import skeleton from '../components/skeleton.vue'
 import type { CollectList } from '@/types/global'
+import { useUserInfoStore } from '@/stores'
+import NameTitle from '@/components/nameTitle.vue'
+const UserInfoStore = useUserInfoStore()
 // 是否用户本人
 const isSelf = ref(false)
 // 用户信息
@@ -164,13 +235,31 @@ onLoad(async (options) => {
   await gerUserinfo(options?.userID)
   // 获取帖子列表
   await getPostList()
+  // 获取用户经历
+  await getUserExperience()
+  // 获取用户动态
+  await getUserTrend()
   // 转换标签
-  await stringToTag()
+  stringToTag()
   // 判断是否用户本人
   if (+options?.userID === JSON.parse(uni.getStorageSync('UserInfo')).userInfo.ID) {
     isSelf.value = true
   }
 })
+
+// 用户数组
+const activityList = ref([])
+// 获取用户动态
+const getUserTrend = async () => {
+  const res = await http({
+    url: '/app/user/showUserHomePage',
+    data: {
+      userID: userInfo.value.ID,
+    },
+  })
+  activityList.value = res.data.Activity
+  console.log(res.data.Activity, '用户动态')
+}
 // 点击图片预览
 const onClickImg = (tempFilePaths: string) => {
   let fileUrlArray = [tempFilePaths]
@@ -180,6 +269,24 @@ const onClickImg = (tempFilePaths: string) => {
     fail: (error) => {
       console.log(error)
     },
+  })
+}
+
+// 获取用户经历
+const getUserExperience = async () => {
+  const res = await http({
+    url: '/app/user/showUserHistory',
+    data: {
+      userID: UserInfoStore.userInfo.ID,
+    },
+  })
+  let arr: any = res.data.list.reverse().forEach((item) => {
+    const obj = {
+      ID: item.ID,
+      desc: item.time,
+      title: item.desc,
+    }
+    expList.value.push(obj)
   })
 }
 
@@ -301,32 +408,7 @@ const stringToTag = () => {
 }
 
 // 经历数组
-let expList = ref([
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '就读马庄小学，跟马庄小学校长是好哥儿们',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '高考740分,满昏状元，进入东莞理工学院',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '拿下黑丝校花学姐',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '蓝桥杯国一',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '入职腾讯，升职CEO',
-  },
-  {
-    desc: '2012-11-13 至 2018-12',
-    title: '梦醒了，欠债百万',
-  },
-])
+let expList = ref([])
 // 当前经历步骤
 let active = ref(expList.value.length - 1)
 </script>
@@ -478,20 +560,62 @@ let active = ref(expList.value.length - 1)
       text-align: center;
     }
   }
-  .postList {
+  .postList,
+  .Activity {
+    overflow-y: scroll;
     .item {
       position: relative;
       box-sizing: border-box;
       display: flex;
       align-items: center;
       margin: 0 10rpx;
-      height: 180rpx;
       background-color: #fff;
       margin-top: 10rpx;
       margin-bottom: 20rpx;
       border-radius: 10rpx;
-      padding: 20rpx;
       overflow: hidden;
+      padding: 0 10rpx;
+      .teamBox {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 28rpx;
+        .avatar {
+          width: 100rpx;
+          height: 100rpx;
+          border-radius: 50%;
+          background-color: skyblue;
+          margin: 10rpx 20rpx;
+        }
+        .content {
+          height: 100rpx;
+          .text {
+            font-size: 28rpx;
+            color: #aaa;
+          }
+        }
+      }
+      .commentActivity {
+        width: 100%;
+        .comment {
+          background-color: #eee;
+          padding: 10rpx 20rpx;
+          margin: 20rpx 30rpx;
+          color: #aaa;
+          border-radius: 10rpx;
+          font-size: 26rpx;
+        }
+      }
+      .contentBox {
+        height: 180rpx;
+        display: flex;
+        justify-content: space-around;
+        background-color: #eee;
+        width: 100%;
+        margin: 30rpx 20rpx;
+        padding: 10rpx;
+        align-items: center;
+      }
       .img {
         height: 150rpx;
         width: 150rpx;

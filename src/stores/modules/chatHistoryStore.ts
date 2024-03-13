@@ -107,7 +107,10 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
                   messageTime: returnMsg.unReadMessageList[key][i].messageTime,
                   isImg: returnMsg.unReadMessageList[key][i].isImg,
                   myWord: returnMsg.unReadMessageList[key][i].toUserId === userInfo.value.ID,
-                  content: returnMsg.unReadMessageList[key][i].messageContent,
+                  content: returnMsg.unReadMessageList[key][i].messageContent.replace(
+                    /\n/g,
+                    '<br>',
+                  ),
                   avatarUrl:
                     returnMsg.unReadMessageList[key][i].toUserId === userInfo.value.ID
                       ? userInfo.value.userAvatarUrl
@@ -145,7 +148,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
           const message = {
             isImg: returnMsg.isImg,
             myWord: returnMsg.formUserId === userInfo.value.ID,
-            content: returnMsg.messageContent,
+            content: returnMsg.messageContent.replace(/\n/g, '<br>'),
             avatarUrl,
             imgUrl: returnMsg.messageContent,
             messageTime: returnMsg.messageTime, //漏了这个导致消息列表NAN，

@@ -152,12 +152,12 @@ const getComInfoDetail = async () => {
   if (differenceTime <= 0) {
     // 比赛过程中或者比赛已经结束了
     differenceTime = getTimeDifference(new Date().getTime(), comInfo.value.comEnd)
-    if (timeRest.value <= 0) {
+    if (differenceTime <= 0) {
       // 比赛已经结束
       countDownText.value = '比赛已结束!'
       timeRest.value = -1
     } else {
-      countDownText.value = '距离比赛结束还有:'
+      countDownText.value = '距离比赛结束还有：'
       timeRest.value = differenceTime
     }
   } else {
@@ -166,6 +166,10 @@ const getComInfoDetail = async () => {
     timeRest.value = differenceTime
   }
   console.log(timeRest.value, countDownText.value)
+}
+// 获取比赛参加队伍信息
+const getComTeam = async () => {
+  const res = await http({})
 }
 
 let comTypeList = ref([])

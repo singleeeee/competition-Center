@@ -26,7 +26,7 @@
               <view class="avatar">
                 <image class="avatar" :src="item.avatarUrl" />
               </view>
-              <view v-if="!item.isImg" class="content">{{ item.content }}</view>
+              <div v-if="!item.isImg" class="content" v-html="item.content"></div>
               <view v-else class="imgBox">
                 <image
                   @tap="onClickImg(item.imgUrl)"
@@ -42,7 +42,7 @@
                 <image class="avatar" :src="item.avatarUrl" />
               </view>
               <!-- 内容 -->
-              <view v-if="!item.isImg" class="content">{{ item.content }}</view>
+              <div v-if="!item.isImg" class="content" v-html="item.content"></div>
               <view v-else class="imgBox">
                 <image
                   @tap="onClickImg(item.imgUrl)"
@@ -71,7 +71,7 @@
 <script lang="ts" setup>
 import { ref, nextTick, onMounted, getCurrentInstance } from 'vue'
 import MyInput from '@/components/MyInput.vue'
-import { onShow, onLoad, onUnload } from '@dcloudio/uni-app'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { http } from '@/utils/http'
@@ -162,7 +162,7 @@ const getFirstLoadInfo = async () => {
       messageTime: item.messageTime,
       isImg: item.isImg,
       myWord: item.formUserId === userInfo.value.ID,
-      content: item.messageContent,
+      content: item.messageContent.replace(/\n/g, '<br>'),
       avatarUrl,
       imgUrl: item.messageContent,
     }
@@ -199,7 +199,7 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
     const obj = {
       isImg: item.isImg,
       myWord: item.formUserId === userInfo.value.ID,
-      content: item.messageContent,
+      content: item.messageContent.replace(/\n/g, '<br>'),
       avatarUrl: userAvatarUrl,
       imgUrl: item.messageContent,
     }
@@ -400,13 +400,13 @@ const clearImgList = () => {
 .chatRoom .each_time .detail_info .chat-Box .myBox .content {
   display: flex;
   align-items: center;
-  text-indent: 10rpx;
-  max-width: 50%;
+  max-width: 60%;
   margin-left: 10rpx;
   background-color: #fff;
-  padding: 15rpx 10rpx 15rpx 10rpx;
+  padding: 15rpx 10rpx 15rpx 20rpx;
   border-radius: 10rpx;
   font-size: 30rpx;
+  letter-spacing: 2rpx;
 }
 
 .chatRoom .each_time .detail_info .chat-Box .friendBox .imgBox,
