@@ -14,7 +14,7 @@
           class="topicBox"
           v-for="(item, index) in competitionList"
           :key="index"
-          @click="navigatetoPosts"
+          @click="navigatetoComdetail(item.ID)"
         >
           <view>
             <image class="img" :src="item.comPicture" mode="scaleToFill" />
@@ -31,7 +31,7 @@
 
       <view class="title">
         <view class="topic">热门帖子</view>
-        <view class="rightTitle" @tap="navigatetoPosts"
+        <view class="rightTitle" @tap="navigatetoComdetail(item.ID)"
           >更多<uni-icons type="forward" size="12"
         /></view>
       </view>
@@ -81,9 +81,9 @@ defineProps({
 const navigatetoPostDetail = (disId: number) => {
   uni.navigateTo({ url: `/subpackage/postDetail/index?disId=${disId}` })
 }
-// 跳转到全部帖子列表
-const navigatetoPosts = () => {
-  uni.navigateTo({ url: `/subpackage/posts/index` })
+// 跳转到比赛详情
+const navigatetoComdetail = (comID: number) => {
+  uni.navigateTo({ url: `/subpackage/comDetail/index?comID=${comID}` })
 }
 // 帖子列表数组
 const postList = ref([])
