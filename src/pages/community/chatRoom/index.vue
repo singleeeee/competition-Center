@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, onMounted, getCurrentInstance } from 'vue'
+import { ref, nextTick, onMounted, getCurrentInstance, watch } from 'vue'
 import MyInput from '@/components/MyInput.vue'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
@@ -78,6 +78,7 @@ import { http } from '@/utils/http'
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { myDebounce } from '@/utils/myDebounce'
+
 // 点击图片预览
 const onClickImg = (tempFilePaths) => {
   let fileUrlArray = [tempFilePaths]
@@ -109,7 +110,13 @@ const { userInfo } = storeToRefs(userInfoStore)
 // 获取ws
 const chatHistoryStore = useChatHistoryStore()
 // 消息记录数组
-const { chatInfoMap } = storeToRefs(chatHistoryStore)
+let { chatInfoMap } = storeToRefs(chatHistoryStore)
+// 侦听数据刷新
+watch(chatInfoMap, (newValue, oldValue) => {
+  console.log('watch chatInfoMap')
+  console.log(newValue)
+  console.log(oldValue)
+})
 //滚动到最新位置
 onMounted(() => {
   scrollToBottom()

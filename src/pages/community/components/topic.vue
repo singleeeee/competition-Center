@@ -17,11 +17,11 @@
           @click="navigatetoComdetail(item.ID)"
         >
           <view>
-            <image class="img" :src="item.comPicture" mode="scaleToFill" />
+            <image class="img" :src="item.comPicture" mode="aspectFill" />
           </view>
           <view class="content">
             <view class="topicTitle comTitle">{{ item.comTitle }}</view>
-            <view class="introduce">{{ item.comSubTitle }}</view>
+            <view class="introduce ellipsis">{{ item.comSubTitle }}</view>
           </view>
         </view>
       </template>
@@ -31,7 +31,7 @@
 
       <view class="title">
         <view class="topic">热门帖子</view>
-        <view class="rightTitle" @tap="navigatetoComdetail(item.ID)"
+        <view class="rightTitle" @tap="navigatetoPosts"
           >更多<uni-icons type="forward" size="12"
         /></view>
       </view>
@@ -48,9 +48,12 @@
           </view>
           <view class="content">
             <view class="topicTitle"> #{{ item.disTitle }}</view>
-            <view class="introduce">{{ item.disContent }}</view>
+            <view class="introduce ellipsis">{{ item.disContent }}</view>
           </view>
         </view>
+      </template>
+      <template v-else-if="postList.length === 0">
+        <uni-load-more status="noMore" iconType="circle" />
       </template>
       <template v-else>
         <uni-load-more status="loading" iconType="circle" />
@@ -84,6 +87,10 @@ const navigatetoPostDetail = (disId: number) => {
 // 跳转到比赛详情
 const navigatetoComdetail = (comID: number) => {
   uni.navigateTo({ url: `/subpackage/comDetail/index?comID=${comID}` })
+}
+// 跳转到帖子列表
+const navigatetoPosts = () => {
+  uni.navigateTo({ url: `/subpackage/posts/index` })
 }
 // 帖子列表数组
 const postList = ref([])
@@ -125,11 +132,9 @@ const getComList = async () => {
       order: 'descending',
     },
   })
-  setTimeout(() => {
-    for (let i = 0; i < res.data.list.length; i++) {
-      competitionList.value.push(res.data.list[i])
-    }
-  }, 500)
+  for (let i = 0; i < res.data.list.length; i++) {
+    competitionList.value.push(res.data.list[i])
+  }
 }
 // 刷新页面
 const refresh = async () => {
@@ -143,6 +148,7 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
+@import url('../../../utils/doubleEllipsis.css');
 .container {
   display: flex;
   flex-direction: column;
@@ -178,7 +184,7 @@ defineExpose({
       background-color: #eee;
     }
     .img {
-      width: 100rpx;
+      width: 120rpx;
       height: 100rpx;
       background-color: skyblue;
       border-radius: 8rpx;

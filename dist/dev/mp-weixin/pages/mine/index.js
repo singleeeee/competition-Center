@@ -181,31 +181,32 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           type: "right",
           color: "#ccc",
           size: "20"
-        })
+        }),
+        j: common_vendor.o(navigatetoPerson)
       }) : {
-        j: common_vendor.o(changeIsLog)
+        k: common_vendor.o(changeIsLog)
       }, {
-        k: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
-        l: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
-        m: common_vendor.o(($event) => navigateTo("myFollowers")),
-        n: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
-        o: common_vendor.o(($event) => navigateTo("myFriends")),
-        p: common_assets._imports_0,
-        q: common_vendor.o(($event) => navigateTo("myCollection")),
-        r: common_assets._imports_1,
-        s: common_vendor.o(($event) => navigateTo("subscribe")),
-        t: common_assets._imports_2,
-        v: common_vendor.o(($event) => navigateTo("myFollowers")),
-        w: common_assets._imports_3,
-        x: common_vendor.o(($event) => navigateTo("myFriends")),
-        y: common_assets._imports_4,
-        z: common_assets._imports_5,
-        A: common_vendor.o(($event) => navigateTo("PostWriting")),
-        B: common_assets._imports_6,
-        C: common_vendor.o(($event) => switchTab("personPage")),
-        D: common_assets._imports_7,
-        E: common_vendor.o(($event) => navigateTo("postManage")),
-        F: common_vendor.f(configItems, (item, k0, i0) => {
+        l: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
+        m: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
+        n: common_vendor.o(($event) => navigateTo("myFollowers")),
+        o: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
+        p: common_vendor.o(($event) => navigateTo("myFriends")),
+        q: common_assets._imports_0,
+        r: common_vendor.o(($event) => navigateTo("myCollection")),
+        s: common_assets._imports_1,
+        t: common_vendor.o(($event) => navigateTo("subscribe")),
+        v: common_assets._imports_2,
+        w: common_vendor.o(($event) => navigateTo("myFollowers")),
+        x: common_assets._imports_3,
+        y: common_vendor.o(($event) => navigateTo("myFriends")),
+        z: common_assets._imports_4,
+        A: common_assets._imports_5,
+        B: common_vendor.o(($event) => navigateTo("PostWriting")),
+        C: common_assets._imports_6,
+        D: common_vendor.o(($event) => switchTab("personPage")),
+        E: common_assets._imports_7,
+        F: common_vendor.o(($event) => navigateTo("postManage")),
+        G: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
@@ -218,7 +219,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             f: common_vendor.o(($event) => navigateTo(item.url), item.id)
           };
         }),
-        G: common_vendor.p({
+        H: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"

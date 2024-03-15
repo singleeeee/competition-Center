@@ -314,13 +314,13 @@ const comChange = (e: any) => {
     .tagList {
       display: flex;
       justify-content: space-between;
-      height: 80rpx;
+      height: 100rpx;
       background-color: #fff;
       align-items: center;
       .left {
         display: flex;
         flex: 1;
-        margin-right: 80rpx;
+        margin-right: 120rpx;
         overflow-x: scroll;
       }
 
@@ -332,16 +332,18 @@ const comChange = (e: any) => {
         font-size: 26rpx;
         margin: 0 20rpx;
         padding: 10rpx 20rpx;
+        border-radius: 30rpx;
       }
       .active {
         // background: linear-gradient(to top, rgb(44, 141, 192), rgb(90, 196, 238));
         background: linear-gradient(to top, rgb(6, 93, 160), rgb(88, 162, 228));
         color: #fff;
+        border-radius: 30rpx;
       }
     }
   }
   .itemList {
-    margin-top: 280rpx;
+    margin-top: 320rpx;
   }
 }
 .picker-view {

@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container" v-if="comInfo">
     <!-- 比赛图片 -->
     <view class="comImg">
       <image class="comImg" :src="comInfo.comPicture" mode="scaleToFill" />
@@ -103,7 +103,7 @@
             </span>
             <span class="extraBox">
               <span class="Tag">原创</span>
-              <span class="date">{{ toLocalTime(item.CreatedAt).split(' ')[0] }}</span>
+              <!-- <span class="date">{{ toLocalTime(item.CreatedAt).split(' ')[0] }}</span> -->
               <span class="readedNum">{{ item.disHot }}阅读</span>
               <span class="liked">{{ item.disLoveNumber }}点赞</span>
               <span class="followed">{{ item.disCollectNumber }}收藏</span>
@@ -118,61 +118,67 @@
         <image src="../../static/empty/emptyPost.png" mode="scaleToFill" />
       </view>
     </view>
-  </view>
-
-  <!-- 抽屉 -->
-  <uni-drawer ref="showLeft" mode="left" :width="320">
-    <view class="drawerBox">
-      <view class="title">{{ comInfo.comTitle }}</view>
-      <view class="line">报名参赛</view>
-      <!-- 输入框 -->
-      <uni-easyinput
-        trim="all"
-        v-model="teamName"
-        placeholder="请输入队伍名称"
-        style="margin-bottom: 20rpx"
-      ></uni-easyinput>
-      <view style="margin: 20rpx 0; color: #666; font-size: 26rpx"
-        ><span style="color: red">*</span> 比赛限制人数:{{ minTeamNum }}-{{
-          maxTeamNum
-        }}，默认第一位为队长</view
-      >
-      <!-- 队伍 -->
-      <view class="teamBox">
-        <view class="teamerItem" v-for="(item, index) in chosedTeamer" :key="index">
-          <image class="avatar" :src="item.userAvatarUrl"></image>
-          <view class="nickname">{{ item.userNickname }}</view>
-          <uni-icons class="clear" @tap="deleteTeamer(index)" type="clear" color="red" size="20" />
-        </view>
-        <!-- 提示添加 -->
-        <view class="teamerItem" v-if="chosedTeamer.length < maxTeamNum">
-          <image class="avatar" src="../../static/myExperience/add.png"></image>
-          <view class="nickname">继续添加</view>
-        </view>
-      </view>
-      <!-- 确认报名 -->
-      <view class="confirm">
-        <button class="btn" v-if="!isSignUp" @tap="createTeam">创建队伍并报名</button>
-      </view>
-      <!-- 选择好友 -->
-      <view class="line">选择好友</view>
-      <!-- 好友列表 -->
-      <view class="friendBox">
-        <view class="friendItem" v-for="(item, index) in friendList" :key="index">
-          <image class="avatar" :src="item.userAvatarUrl"></image>
-          <view class="contentBox">
-            <view class="nickName">{{ item.userNickname }}</view>
-            <view class="introduction">{{ item.userIntroduction }}</view>
+    <!-- 抽屉 -->
+    <uni-drawer ref="showLeft" mode="left" :width="320">
+      <view class="drawerBox">
+        <view class="title">{{ comInfo.comTitle }}</view>
+        <view class="line">报名参赛</view>
+        <!-- 输入框 -->
+        <uni-easyinput
+          trim="all"
+          v-model="teamName"
+          placeholder="请输入队伍名称"
+          style="margin-bottom: 20rpx"
+        ></uni-easyinput>
+        <view style="margin: 20rpx 0; color: #666; font-size: 26rpx"
+          ><span style="color: red">*</span> 比赛限制人数:{{ minTeamNum }}-{{
+            maxTeamNum
+          }}，默认第一位为队长</view
+        >
+        <!-- 队伍 -->
+        <view class="teamBox">
+          <view class="teamerItem" v-for="(item, index) in chosedTeamer" :key="index">
+            <image class="avatar" :src="item.userAvatarUrl"></image>
+            <view class="nickname">{{ item.userNickname }}</view>
+            <uni-icons
+              class="clear"
+              @tap="deleteTeamer(index)"
+              type="clear"
+              color="red"
+              size="20"
+            />
           </view>
-          <image
-            class="add"
-            src="../../static/myExperience/add.png"
-            @tap="addToChosedTeamer(item)"
-          ></image>
+          <!-- 提示添加 -->
+          <view class="teamerItem" v-if="chosedTeamer.length < maxTeamNum">
+            <image class="avatar" src="../../static/myExperience/add.png"></image>
+            <view class="nickname">继续添加</view>
+          </view>
+        </view>
+        <!-- 确认报名 -->
+        <view class="confirm">
+          <button class="btn" v-if="!isSignUp" @tap="createTeam">创建队伍并报名</button>
+        </view>
+        <!-- 选择好友 -->
+        <view class="line">选择好友</view>
+        <!-- 好友列表 -->
+        <view class="friendBox">
+          <view class="friendItem" v-for="(item, index) in friendList" :key="index">
+            <image class="avatar" :src="item.userAvatarUrl"></image>
+            <view class="contentBox">
+              <view class="nickName">{{ item.userNickname }}</view>
+              <view class="introduction">{{ item.userIntroduction }}</view>
+            </view>
+            <image
+              class="add"
+              src="../../static/myExperience/add.png"
+              @tap="addToChosedTeamer(item)"
+            ></image>
+          </view>
         </view>
       </view>
-    </view>
-  </uni-drawer>
+    </uni-drawer>
+  </view>
+  <skeleton v-else></skeleton>
 </template>
 
 <script lang="ts" setup>
@@ -182,6 +188,7 @@ import { http } from '@/utils/http'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { getTimeDifference } from '@/utils/getTimeDifference'
 import { useUserInfoStore } from '@/stores'
+import skeleton from './components/skeleton.vue'
 const { userInfo } = useUserInfoStore()
 let comID = ref(0)
 let isSignUp = ref(false)
@@ -325,7 +332,7 @@ const navigateTo = (disId: number) => {
   })
 }
 
-let comInfo = ref({})
+let comInfo = ref(null)
 let timeRest = ref(0)
 let countDownText = ref('')
 // 获取比赛详细信息
@@ -370,6 +377,7 @@ const getComTeam = async () => {
     isSignUp.value = true
   } else {
     isSignUp.value = false
+    return
   }
   // 保存数据
   teamInfo.value = res.data.list[0]
@@ -509,6 +517,7 @@ const signUp = async () => {
         align-items: center;
         margin: 0 10rpx;
         height: 180rpx;
+        border-radius: 20rpx;
         background-color: #f1f1f1;
         margin-bottom: 20rpx;
         padding: 20rpx;
@@ -555,10 +564,10 @@ const signUp = async () => {
             border-radius: 2rpx;
             color: rgb(203, 7, 7);
           }
-          .date {
-            padding: 4rpx 8rpx;
-            color: #aaa;
-          }
+          // .date {
+          //   padding: 4rpx 8rpx;
+          //   color: #aaa;
+          // }
           .readedNum {
             padding: 4rpx 8rpx;
             color: #aaa;

@@ -13175,3 +13175,4 @@ exports.src_default = src_default;
 exports.storeToRefs = storeToRefs;
 exports.t = t$1;
 exports.unref = unref;
+exports.watch = watch;

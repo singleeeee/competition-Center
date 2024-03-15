@@ -310,16 +310,7 @@ const swiperChange = (e) => {
     font-weight: 700;
   }
 }
-/*
-此文件为开发者工具生成，生成时间: 2024/2/17下午9:00:24
-
-在 E:\frontend\project\Competition-center\competition-Center\dist\dev\mp-weixin\pages\community\index.wxss 中引入样式
-```
-@import "./index.skeleton.wxss";
-```
-
-更多详细信息可以参考文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/skeleton.html
-*/
+// 骨架屏
 .sk-transparent {
   color: transparent !important;
 }

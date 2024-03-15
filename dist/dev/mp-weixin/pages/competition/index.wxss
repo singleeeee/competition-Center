@@ -85,14 +85,14 @@
 .container .headBox .tagList.data-v-3e564a22 {
   display: flex;
   justify-content: space-between;
-  height: 80rpx;
+  height: 100rpx;
   background-color: #fff;
   align-items: center;
 }
 .container .headBox .tagList .left.data-v-3e564a22 {
   display: flex;
   flex: 1;
-  margin-right: 80rpx;
+  margin-right: 120rpx;
   overflow-x: scroll;
 }
 .container .headBox .tagList .tag.data-v-3e564a22 {
@@ -103,13 +103,15 @@
   font-size: 26rpx;
   margin: 0 20rpx;
   padding: 10rpx 20rpx;
+  border-radius: 30rpx;
 }
 .container .headBox .tagList .active.data-v-3e564a22 {
   background: linear-gradient(to top, rgb(6, 93, 160), rgb(88, 162, 228));
   color: #fff;
+  border-radius: 30rpx;
 }
 .container .itemList.data-v-3e564a22 {
-  margin-top: 280rpx;
+  margin-top: 320rpx;
 }
 .picker-view.data-v-3e564a22 {
   width: 750rpx;

@@ -22,6 +22,7 @@
       <CommentArea :disId="postDetail.ID"></CommentArea>
     </view>
   </view>
+  <!-- 骨架屏 -->
   <view v-else>
     <!-- 骨架屏 -->
     <template name="skeleton">

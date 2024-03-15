@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="title">评论({{ commentTotal }})</view>
+    <view class="title">评论 ({{ commentTotal }}) </view>
     <template v-if="commentList.length > 0">
       <nameTitle
         v-for="(item, index) in commentList"
@@ -330,8 +330,8 @@ const delSecondComment = async (ID: number) => {
     margin: 0 20rpx;
     padding: 0 20rpx;
     width: 100%;
-    background-color: #eee;
-    border-radius: 10rpx;
+    background-color: #f0f3f8;
+    border-radius: 20rpx;
     display: flex;
     align-items: center;
     color: #ccc;

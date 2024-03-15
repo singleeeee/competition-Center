@@ -75,7 +75,7 @@ const getNotificationList = async () => {
       title: resList.value[i].disTitle,
       time: toLocalTime(resList.value[i].CreatedAt, false),
       font: resList.value[i].disLoveNumber,
-      imageUrl: resList.value[i].disPicture[0],
+      imageUrl: resList.value[i].disPicture[0] || '',
       author: resList.value[i].userInfo.userNickname,
     }
     newsList.value.push(obj)

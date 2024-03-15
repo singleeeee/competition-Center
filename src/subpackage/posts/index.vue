@@ -34,6 +34,7 @@ const getPostList = async () => {
   const res = await http({
     url: `/app/dis/getDisInfoList`,
     data: {
+      disStatus: 2,
       page: currentPage.value,
       pageSize: pageSize.value,
     },
@@ -126,7 +127,6 @@ onReachBottom(() => {
     uni.showToast({
       title: '没有更多内容了!',
       icon: 'none',
-      mask: true,
     })
     return
   }

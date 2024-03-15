@@ -196,7 +196,8 @@ const onClickImg = (tempFilePaths) => {
             </view>
           </view>
         </view>
-        <view class="detail">
+        <view class="detail" @click="navigatetoPerson">
+          <view class="text">编辑资料</view>
           <uni-icons type="right" color="#ccc" size="20"></uni-icons>
         </view>
       </view>
@@ -249,7 +250,7 @@ const onClickImg = (tempFilePaths) => {
           >
           <view class="items" @tap="switchTab('personPage')">
             <image class="img" src="@/static/mine/person.png" mode="scaleToFill" />
-            个人中心</view
+            个人主页</view
           >
           <view class="items" @tap="navigateTo('postManage')">
             <image class="img" src="@/static/mine/manage.png" mode="scaleToFill" />
@@ -274,10 +275,9 @@ const onClickImg = (tempFilePaths) => {
 
 <style scoped lang="scss">
 .container {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: rgb(254, 237, 239);
 
   .header {
     height: 300rpx;
@@ -317,7 +317,16 @@ const onClickImg = (tempFilePaths) => {
         justify-content: center;
         align-items: center;
         height: 80rpx;
-        width: 80rpx;
+        margin-right: 20rpx;
+        color: #222;
+        vertical-align: center;
+        .text {
+          font-size: 30rpx;
+          color: #333;
+          font-weight: 700;
+          margin-right: 10rpx;
+        }
+        // background-color: pink;
       }
     }
   }
@@ -326,9 +335,10 @@ const onClickImg = (tempFilePaths) => {
     top: -100rpx;
     z-index: 999;
     border-radius: 10rpx;
-    height: 400rpx;
     margin: 0 20rpx;
     box-sizing: border-box;
+    margin-bottom: -80rpx;
+
     .collectBox,
     .messageBox {
       box-sizing: border-box;

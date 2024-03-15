@@ -24,10 +24,9 @@
 /* 透明度 */
 /* 文章场景相关 */
 .container.data-v-9023ef44 {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: rgb(254, 237, 239);
 }
 .container .header.data-v-9023ef44 {
   height: 300rpx;
@@ -68,16 +67,24 @@
   justify-content: center;
   align-items: center;
   height: 80rpx;
-  width: 80rpx;
+  margin-right: 20rpx;
+  color: #222;
+  vertical-align: center;
+}
+.container .header .avatarBox .detail .text.data-v-9023ef44 {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 700;
+  margin-right: 10rpx;
 }
 .container .body.data-v-9023ef44 {
   position: relative;
   top: -100rpx;
   z-index: 999;
   border-radius: 10rpx;
-  height: 400rpx;
   margin: 0 20rpx;
   box-sizing: border-box;
+  margin-bottom: -80rpx;
 }
 .container .body .collectBox.data-v-9023ef44,
 .container .body .messageBox.data-v-9023ef44 {
