@@ -9389,7 +9389,9 @@ const subPackages = [
       {
         path: "index",
         style: {
-          navigationBarTitleText: "关于我们"
+          navigationBarTitleText: "关于我们",
+          navigationBarBackgroundColor: "#12a66a",
+          navigationBarTextStyle: "white"
         }
       }
     ]

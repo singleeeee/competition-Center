@@ -186,7 +186,6 @@ import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { http } from '@/utils/http'
 import { toLocalTime } from '@/utils/toLocalTime'
-import { getTimeDifference } from '@/utils/getTimeDifference'
 import { useUserInfoStore } from '@/stores'
 import skeleton from './components/skeleton.vue'
 const { userInfo } = useUserInfoStore()

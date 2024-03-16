@@ -2,13 +2,11 @@
   <view class="container">
     <view class="title">{{ title }}</view>
     <div class="content" v-html="disContentHTML"></div>
-    <view class="imgBox" v-if="imgList.length > 0">
-      <ul class="imgBox">
-        <li v-for="(item, index) in imgList" :key="index">
-          <image @tap="onClickImg(item)" class="img" :src="item" mode="heightFix" />
-        </li>
-      </ul>
-    </view>
+    <ul class="imgBox" v-if="imgList.length > 0">
+      <li v-for="(item, index) in imgList" :key="index">
+        <image @tap="onClickImg(item)" class="img" :src="item" mode="scaleToFill" />
+      </li>
+    </ul>
     <view class="share">
       <view class="lineBox">
         <view class="line"></view>
@@ -86,8 +84,6 @@ const props = defineProps({
     type: Boolean,
   },
 })
-// 点赞
-console.log(props, 'props')
 
 const isLiked = ref(props.liked)
 const like = myDebounce(() => {
@@ -149,12 +145,12 @@ const collect = myDebounce(() => {
   .imgBox {
     display: flex;
     align-items: center;
-    height: 220rpx;
+    height: 350rpx;
     width: 100%;
+    margin: 20rpx 10rpx;
     .img {
       flex: 1;
-      height: 220rpx;
-      margin: 20rpx 10rpx;
+      height: 350rpx;
       margin-left: 0rpx;
     }
   }
