@@ -1,5 +1,5 @@
 <template>
-  <view v-if="isPostShow">
+  <view v-if="isPostShow === true && isPostLost === false">
     <view class="header">
       <nameTitle
         :author="postDetail.userInfo.userNickname"
@@ -23,7 +23,7 @@
     </view>
   </view>
   <!-- 骨架屏 -->
-  <view v-else>
+  <view v-else-if="isPostShow === false && isPostLost === false">
     <!-- 骨架屏 -->
     <template name="skeleton">
       <view class="sk-container">
@@ -335,7 +335,7 @@
       </view>
     </template>
   </view>
-  <view v-if="isPostLost" class="empty">
+  <view v-else class="empty">
     <img src="../../static/empty/emptyPost.png" />
     <span style="font-size: 36rpx; color: #999">帖子被外星人偷走了!</span></view
   >
@@ -348,6 +348,8 @@ import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { ref } from 'vue'
 import { toLocalTime } from '@/utils/toLocalTime'
+// 显示帖子是否已丢失
+const isPostLost = ref(false)
 
 // 帖子详细信息
 const postDetail = ref()
@@ -355,25 +357,33 @@ const postDetail = ref()
 const isPostShow = ref(false)
 onLoad(async (options) => {
   const { disId } = options
+  if (!disId) {
+    isPostLost.value = true
+    isPostShow.value = true
+  }
   getPostDetail(disId)
 })
 
 // 获取帖子详细信息
 const getPostDetail = async (disId: number) => {
-  // 请求获取帖子详细信息
-  const res = await http({
-    url: `/app/dis/getDisInfoByid?ID=${disId}`,
-  })
-  postDetail.value = res.data.redisData
+  try {
+    // 请求获取帖子详细信息
+    const res = await http({
+      url: `/app/dis/getDisInfoByid?ID=${disId}`,
+    })
+    postDetail.value = res.data.redisData
 
-  const time = toLocalTime(postDetail.value.CreatedAt)
-  // 修改时间
-  postDetail.value.date = time
-  const province = postDetail.value.userInfo.userCity
+    const time = toLocalTime(postDetail.value.CreatedAt)
+    // 修改时间
+    postDetail.value.date = time
+    const province = postDetail.value.userInfo.userCity
 
-  // 修改省份
-  postDetail.value.extra = province.slice(0, province.indexOf('/'))
-  isPostShow.value = true
+    // 修改省份
+    postDetail.value.extra = province.slice(0, province.indexOf('/'))
+    isPostShow.value = true
+  } catch (error) {
+    isPostLost.value = true
+  }
 }
 
 // 跳转到用户主页

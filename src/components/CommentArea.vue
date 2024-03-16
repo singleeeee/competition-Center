@@ -58,12 +58,19 @@
     </template>
   </view>
   <!-- 评论框 -->
-  <view class="inputArea">
+  <view class="inputArea" @tap="openInput(props.disId, false)">
     <!-- 首页或自动打开 -->
-    <view class="input" @tap="openInput(props.disId, false)">
-      <uni-icons style="padding-right: 10rpx" type="compose" color="#ccc" size="24" />
-      请文明发言</view
-    >
+    <view class="input"></view>
+    <view class="imgBox">
+      <image
+        style="width: 46rpx; height: 46rpx; margin-left: 20rpx"
+        src="@/static/Input/face.png"
+      ></image>
+      <image
+        style="width: 54rpx; height: 54rpx; margin-left: 20rpx"
+        src="@/static/Input/picture.png"
+      ></image>
+    </view>
   </view>
   <!-- 评论弹窗 -->
   <uni-popup ref="popup" type="center" @mask-click="closeInput">
@@ -329,13 +336,18 @@ const delSecondComment = async (ID: number) => {
     box-sizing: border-box;
     margin: 0 20rpx;
     padding: 0 20rpx;
-    width: 100%;
+    width: 70%;
+    height: 50rpx;
     background-color: #f0f3f8;
-    border-radius: 20rpx;
+    border-radius: 30rpx;
     display: flex;
     align-items: center;
     color: #ccc;
     font-size: 28rpx;
+  }
+  .imgBox {
+    display: flex;
+    align-items: center;
   }
 }
 </style>

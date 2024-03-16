@@ -8,16 +8,16 @@
         "miniprogram": {
             "list": [
                 {
-                    "name": "我的队伍",
-                    "pathName": "subpackage/myTeam/index",
-                    "query": "",
+                    "name": "帖子详情页",
+                    "pathName": "subpackage/postDetail/index",
+                    "query": "disId=50",
                     "launchMode": "default",
                     "scene": null
                 },
                 {
-                    "name": "帖子详情页",
-                    "pathName": "subpackage/postDetail/index",
-                    "query": "disId=9",
+                    "name": "我的队伍",
+                    "pathName": "subpackage/myTeam/index",
+                    "query": "",
                     "launchMode": "default",
                     "scene": null
                 },
