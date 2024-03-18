@@ -9,7 +9,7 @@
         /></view>
       </view>
       <!-- 比赛列表 -->
-      <template v-if="competitionList.length > 0">
+      <!-- <template v-if="competitionList.length > 0">
         <view
           class="topicBox"
           v-for="(item, index) in competitionList"
@@ -34,7 +34,7 @@
         <view class="rightTitle" @tap="navigatetoPosts"
           >更多<uni-icons type="forward" size="12"
         /></view>
-      </view>
+      </view> -->
       <!-- 帖子列表 -->
       <template v-if="postList.length > 0">
         <view

@@ -31,22 +31,15 @@
       />
     </view>
     <view class="img">
-      <view
-        class="imageItem"
-        v-for="(item, index) in imgList"
-        :key="index"
-        :data-id="index"
-        @tap="deleteImg"
-      >
-        <image class="image" :src="item" mode="scaleToFill" />
-        <uni-icons class="clear" type="clear" color="" size="20" />
+      <view class="imageItem" v-for="(item, index) in imgList" :key="index" :data-id="index">
+        <image @tap="previewImg(item)" class="image" :src="item" mode="scaleToFill" />
+        <uni-icons @tap="deleteImg" class="clear" type="clear" color="" size="20" />
       </view>
     </view>
     <view class="function">
       <view class="icon">
-        <uni-icons type="image" color="#888" size="30" @tap="chooseImg" />
-        <uni-icons type="folder-add" color="#888" size="30" @tap="chooseImg" />
-        <uni-icons type="camera" color="#888" size="30" @tap="chooseImg" />
+        <uni-icons type="image" color="#888" size="30" @tap="chooseImg('album')" />
+        <uni-icons type="camera" color="#888" size="30" @tap="chooseImg('camera')" />
       </view>
       <view>
         <button class="sendBtn" plain @tap="send">发布</button>
@@ -74,6 +67,21 @@ onLoad(async () => {
     matchList.value.push(matchItem)
   }
 })
+// 预览图片
+const previewImg = (url: string) => {
+  if (!url) return
+  let urls = [url]
+  uni.previewImage({
+    urls,
+    success: (result) => {},
+    fail: (error) => {
+      uni.showToast({
+        title: '预览失败',
+        icon: 'none',
+      })
+    },
+  })
+}
 // 内容区
 const textarea = ref('')
 // 关联比赛
@@ -88,9 +96,11 @@ const titleChange = () => {}
 // 图片列表
 const imgList = ref<string[]>([])
 // 上传图片
-const chooseImg = () => {
+const chooseImg = (mode: string) => {
+  const arr = mode === 'album' ? ['album'] : ['camera']
   uni.chooseImage({
     count: 1,
+    sourceType: arr,
     success: (success) => {
       if (imgList.value.length < 3) {
         uni.showLoading({
@@ -148,7 +158,7 @@ const send = () => {
       duration: 1400,
       success: () => {
         uni.navigateTo({
-          url: '/subpackage/posts/index',
+          url: '/subpackage/postManage/index',
         })
       },
     })
@@ -206,7 +216,6 @@ const send = () => {
     background-color: #fff;
     .imageItem {
       position: relative;
-      width: 120rpx;
       height: 120rpx;
       margin: 0 20rpx;
       .image {

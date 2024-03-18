@@ -7,20 +7,58 @@
       <view :class="{ item: true, active: currentPage === 2 }" @tap="currentPage = 2">信息</view>
     </view>
     <!-- 滑动内容 -->
-    <swiper v-show="!isSkeletonShow" class="swiper" @change="swiperChange" :current="currentPage">
+    <swiper
+      :style="{ height: windowHeight - 50 + 'px' }"
+      class="swiper"
+      @change="swiperChange"
+      :current="currentPage"
+    >
       <!-- 大厅 -->
       <swiper-item>
         <scroll-view
+          :style="{ height: windowHeight - 50 + 'px' }"
           scroll-y
-          :style="{ height: windowHeight * 2 - 40 + 'rpx' }"
           @refresherrefresh="pulldownRefresh"
           :refresher-triggered="pulldownTriggered"
           :refresher-threshold="50"
           :refresher-enabled="true"
+          @scrolltolower="onReachBottom"
         >
-          <view class="hall">
-            <topic title="热门比赛" ref="topicRef" @handleSkeletonShow="handleSkeletonShow"></topic>
-          </view>
+          <!-- <view class="hall">
+            <topic title="热门帖子" ref="topicRef" @handleSkeletonShow="handleSkeletonShow"></topic>
+          </view> -->
+
+          <!-- 帖子列表 -->
+          <template v-if="postList.length > 0">
+            <card
+              v-for="(item, index) in postList"
+              :key="index"
+              :author="item.author"
+              :title="item.title"
+              :content="item.content"
+              :time="item.time"
+              :avatar-url="item.avatarUrl"
+              :imageUrl="item.imageUrl[0]"
+              :collected-num="item.collectedNum"
+              :comment-num="item.disCommentNum"
+              :liked-num="item.likedNum"
+              :isLiked="item.isLiked"
+              :isCollected="item.isCollected"
+              :id="index"
+              @liked-change="likedChange"
+              ;
+              @collected-change="collectedChange"
+              @switchToDetail="switchToDetail"
+            ></card>
+            <view style="background-color: #f1f1f3">
+              <uni-load-more :status="loadingStatus" iconType="circle" />
+            </view>
+          </template>
+          <template v-else>
+            <view style="text-align: center">
+              <uni-load-more status="loading" iconType="circle" />
+            </view>
+          </template>
         </scroll-view>
       </swiper-item>
       <!-- 好友 -->
@@ -36,239 +74,167 @@
         </view>
       </swiper-item>
     </swiper>
-    <!-- 骨架屏 -->
-    <scroll-view
-      v-show="isSkeletonShow"
-      scroll-y="true"
-      class="data-v-485a05f3 data-v-485a05f3"
-      refresher-enabled="true"
-      refresher-threshold="50"
-      style="height: 622px"
-    >
-      <view class="hall hall data-v-485a05f3 data-v-485a05f3">
-        <view is="pages/community/components/topic" class="r r data-v-485a05f3 data-v-485a05f3">
-          <view class="container topic--container data-v-9df290d1 topic--data-v-9df290d1">
-            <view
-              style="margin-top: 100rpx"
-              class="title topic--title data-v-9df290d1 topic--data-v-9df290d1"
-            >
-              <view
-                class="topic topic--topic data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-564 sk-text"
-                >热门比赛</view
-              >
-              <view
-                class="rightTitle topic--rightTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent"
-                >更多
-                <view
-                  is="node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons"
-                  class="data-v-9df290d1 topic--data-v-9df290d1"
-                >
-                  <text
-                    class="uni-icons icons--uni-icons uniui-forward icons--uniui-forward sk-pseudo sk-pseudo-circle"
-                    style="color: #333333; font-size: 12px"
-                  ></text>
-                </view>
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1">
-                <view
-                  class="topicTitle topic--topicTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-604 sk-text"
-                >
-                  #acm</view
-                >
-                <view
-                  class="introduce topic--introduce data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-856 sk-text"
-                  >机不可失失不再来</view
-                >
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1">
-                <view
-                  class="topicTitle topic--topicTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-219 sk-text"
-                >
-                  #蓝桥杯</view
-                >
-                <view
-                  class="introduce topic--introduce data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-311 sk-text"
-                  >机不可失 时不再来</view
-                >
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1">
-                <view
-                  class="topicTitle topic--topicTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-974 sk-text"
-                >
-                  #中国互联网+创新创业大赛</view
-                >
-                <view
-                  class="introduce topic--introduce data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-997 sk-text"
-                  >机不可失 失不再来</view
-                >
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1">
-                <view
-                  class="topicTitle topic--topicTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-180 sk-text"
-                >
-                  #acm</view
-                >
-                <view
-                  class="introduce topic--introduce data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-811 sk-text"
-                  >机不可失失不再来</view
-                >
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1">
-                <view
-                  class="topicTitle topic--topicTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-892 sk-text"
-                >
-                  #蓝桥杯</view
-                >
-                <view
-                  class="introduce topic--introduce data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-878 sk-text"
-                  >机不可失 时不再来</view
-                >
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1">
-                <view
-                  class="topicTitle topic--topicTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-548 sk-text"
-                >
-                  #中国互联网+创新创业大赛</view
-                >
-                <view
-                  class="introduce topic--introduce data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-47 sk-text"
-                  >机不可失 失不再来</view
-                >
-              </view>
-            </view>
-          </view>
-        </view>
-        <view is="pages/community/components/topic" class="r r data-v-485a05f3 data-v-485a05f3">
-          <view class="container topic--container data-v-9df290d1 topic--data-v-9df290d1">
-            <view class="title topic--title data-v-9df290d1 topic--data-v-9df290d1">
-              <view
-                class="topic topic--topic data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-210 sk-text"
-                >热门帖子</view
-              >
-              <view
-                class="rightTitle topic--rightTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent"
-                >更多
-                <view
-                  is="node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons"
-                  class="data-v-9df290d1 topic--data-v-9df290d1"
-                >
-                  <text
-                    class="uni-icons icons--uni-icons uniui-forward icons--uniui-forward sk-pseudo sk-pseudo-circle"
-                    style="color: #333333; font-size: 12px"
-                  ></text>
-                </view>
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1">
-                <view
-                  class="topicTitle topic--topicTitle data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-598 sk-text"
-                >
-                  #快点关注窝</view
-                >
-                <view
-                  class="introduce topic--introduce data-v-9df290d1 topic--data-v-9df290d1 sk-transparent sk-text-14-2857-774 sk-text"
-                  >窝窝头，一块钱三个</view
-                >
-              </view>
-            </view>
-            <view class="topicBox topic--topicBox data-v-9df290d1 topic--data-v-9df290d1">
-              <view class="data-v-9df290d1 topic--data-v-9df290d1">
-                <image
-                  class="img topic--img data-v-9df290d1 topic--data-v-9df290d1 sk-image"
-                  mode="scaleToFill"
-                ></image>
-              </view>
-              <view class="content topic--content data-v-9df290d1 topic--data-v-9df290d1"></view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </scroll-view>
   </view>
 </template>
 <script lang="ts" setup>
-import topic from './components/topic.vue'
-import friends from './components/friends.vue'
-import { ref } from 'vue'
-import message from './components/message.vue'
+// import topic from './components/topic.vue'
 // 控制骨架屏显示
-let isSkeletonShow = ref(true)
-// 显示
-let handleSkeletonShow = (boolean: boolean) => {
-  isSkeletonShow.value = boolean
+// let isSkeletonShow = ref(false)
+// 显示骨架屏
+// let handleSkeletonShow = (boolean: boolean) => {
+//   isSkeletonShow.value = boolean
+// }
+import friends from './components/friends.vue'
+import { ref, onMounted } from 'vue'
+import message from './components/message.vue'
+import card from './components/card.vue'
+import { http } from '@/utils/http'
+import type { PostList } from '@/types/global'
+// 获取可用屏幕高度
+let windowHeight = 0
+;(() => {
+  const deviceInfo = uni.getWindowInfo()
+  windowHeight = deviceInfo?.windowHeight
+})()
+// 上滑触底
+const onReachBottom = () => {
+  console.log('触底了')
+  loadingStatus.value = 'loading'
+  currentPageNum.value++
+  getPostList()
 }
+// 下拉刷新的loading状态
+let loadingStatus = ref('more')
 // 控制下拉刷新
 let pulldownTriggered = ref(false)
 // 监听刷新事件
 const pulldownRefresh = async () => {
   pulldownTriggered.value = true
-  await topicRef.value.refresh()
-  pulldownTriggered.value = false
+  postList.value = []
+  currentPageNum.value = 1
+  getPostList()
+  setTimeout(function () {
+    pulldownTriggered.value = false
+  }, 1000)
 }
-// 子组件ref
-const postRef = ref()
-const topicRef = ref()
-// 获取可用屏幕高度
-let windowHeight = 0
-;(() => {
-  const deviceInfo = uni.getWindowInfo()
-  windowHeight = deviceInfo?.windowHeight - 40
-})()
+// 帖子列表
+let postList = ref<PostList[]>([])
+// 加载时
+onMounted(() => {
+  getPostList()
+})
+// 当前页数
+const currentPageNum = ref(1)
+// 当前页面大小
+const pageSize = ref(5)
+// 最大帖子数量
+let total = ref(0)
+
+// 获取帖子列表
+const getPostList = async () => {
+  if (currentPageNum.value === 1) postList.value = []
+  // 返回的数据
+  const dataList = ref<any>([])
+  // 请求数据
+  const res = await http({
+    url: `/app/dis/getDisInfoList`,
+    data: {
+      disStatus: 2,
+      page: currentPageNum.value,
+      pageSize: pageSize.value,
+    },
+  })
+  total.value = res.data.total
+  dataList.value = (res.data as any).list
+  // 处理需要的数据 用map失效？
+  setTimeout(() => {
+    for (let i = 0; i < dataList.value.length; i++) {
+      // 处理时间
+      const data = new Date((dataList.value[i] as any).CreatedAt)
+      const year = data.getFullYear()
+      const month = data.getMonth() + 1
+      const day = data.getDate()
+      const time = `${year}/${month}/${day}`
+      // 最终格式
+      const obj = {
+        ID: dataList.value[i].ID, // 帖子ID
+        isLiked: dataList.value[i].isLiked, // 帖子是否被点赞
+        isCollected: dataList.value[i].isCollected, // 帖子是否被收藏
+        disComId: dataList.value[i].disComId, // 关联的比赛ID
+        title: dataList.value[i].disTitle, // 帖子标题
+        content: dataList.value[i].disContent, // 帖子内容
+        time, // 帖子发布时间
+        collectedNum: dataList.value[i].disCollectNumber, // 帖子被收藏数量
+        likedNum: dataList.value[i].disLoveNumber, // 帖子被点赞数量
+        userInfoID: dataList.value[i].userInfo.ID, // 帖子作者的ID
+        author: dataList.value[i].userInfo.userNickname, // 帖子作者昵称
+        avatarUrl: dataList.value[i].userInfo.userAvatarUrl, // 帖子作者头像
+        imageUrl: dataList.value[i].disPicture || [], // 帖子首页展示图片，只展示第一张
+        disCommentNum: dataList.value[i].disCommentNumber, // 帖子被评论数量
+        disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
+      }
+      // 存入数组
+      postList.value.push(obj)
+    }
+    if (currentPageNum.value * pageSize.value >= total.value) {
+      loadingStatus.value = 'nomore'
+      return
+    }
+    loadingStatus.value = 'more'
+  }, 1000)
+}
+
+// 点赞和取消点赞
+const likedChange = async (val: boolean, index: number) => {
+  if (val) {
+    console.log('点赞')
+    http({
+      url: '/app/dis/userLikeDis',
+      data: {
+        ID: postList.value[index].ID, // 帖子ID
+        likeUserID: postList.value[index].userInfoID, // 帖子作者的ID
+      },
+    })
+    postList.value[index].isLiked = true
+    postList.value[index].likedNum++
+  } else {
+    console.log('取消点赞')
+    http({
+      url: `/app/dis/userUnLikeDis?ID=${postList.value[index].ID}&dislikeUserID=${postList.value[index].userInfoID}`,
+      method: 'DELETE',
+    })
+    postList.value[index].isLiked = false
+    postList.value[index].likedNum--
+  }
+}
+// 收藏
+const collectedChange = async (val: boolean, index: number) => {
+  if (val) {
+    console.log('收藏')
+    http({
+      url: '/app/dis/userCollectDis',
+      data: {
+        disID: postList.value[index].ID,
+      },
+    })
+    postList.value[index].isCollected = true
+    postList.value[index].collectedNum++
+  } else {
+    console.log('取消收藏')
+    http({
+      url: `/app/dis/userCancelCollectDis?disID=${postList.value[index].ID}`,
+      method: 'DELETE',
+    })
+    postList.value[index].isCollected = false
+    postList.value[index].collectedNum--
+  }
+}
+// 点击评论跳转到详情页
+const switchToDetail = (index: number) => {
+  uni.navigateTo({
+    url: `/subpackage/postDetail/index?disId=${postList.value[index].ID}`,
+  })
+}
 
 //tab栏切换
 let currentPage = ref(0)
@@ -280,14 +246,14 @@ const swiperChange = (e) => {
 .container {
   background-color: #eee;
   .swiper {
-    margin-top: 8vh;
+    margin-top: 100rpx;
     height: 92vh;
   }
   .topTab {
     position: fixed;
     top: 0;
     z-index: 999;
-    height: 8vh;
+    height: 100rpx;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -309,233 +275,5 @@ const swiperChange = (e) => {
     transition: all 0.2s ease;
     font-weight: 700;
   }
-}
-// 骨架屏
-.sk-transparent {
-  color: transparent !important;
-}
-.sk-text-25-7576-162 {
-  background-image: linear-gradient(
-    transparent 25.7576%,
-    #eeeeee 0%,
-    #eeeeee 74.2424%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 59.7826rpx;
-  position: relative !important;
-}
-.sk-text {
-  background-origin: content-box !important;
-  background-clip: content-box !important;
-  background-color: transparent !important;
-  color: transparent !important;
-  background-repeat: repeat-y !important;
-}
-.sk-text-25-7576-535 {
-  background-image: linear-gradient(
-    transparent 25.7576%,
-    #eeeeee 0%,
-    #eeeeee 74.2424%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 59.7826rpx;
-  position: relative !important;
-}
-.sk-text-25-7576-986 {
-  background-image: linear-gradient(
-    transparent 25.7576%,
-    #eeeeee 0%,
-    #eeeeee 74.2424%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 59.7826rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-564 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 40.5797rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-604 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 35.5072rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-856 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 32.971rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-219 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 35.5072rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-311 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 32.971rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-974 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 35.5072rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-997 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 32.971rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-180 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 35.5072rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-811 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 32.971rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-892 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 35.5072rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-878 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 32.971rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-548 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 35.5072rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-47 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 32.971rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-210 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 40.5797rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-598 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 35.5072rpx;
-  position: relative !important;
-}
-.sk-text-14-2857-774 {
-  background-image: linear-gradient(
-    transparent 14.2857%,
-    #eeeeee 0%,
-    #eeeeee 85.7143%,
-    transparent 0%
-  ) !important;
-  background-size: 100% 32.971rpx;
-  position: relative !important;
-}
-.sk-image {
-  background: #efefef !important;
-}
-.sk-pseudo::before,
-.sk-pseudo::after {
-  background: #efefef !important;
-  background-image: none !important;
-  color: transparent !important;
-  border-color: transparent !important;
-}
-.sk-pseudo-rect::before,
-.sk-pseudo-rect::after {
-  border-radius: 0 !important;
-}
-.sk-pseudo-circle::before,
-.sk-pseudo-circle::after {
-  border-radius: 50% !important;
-}
-.sk-container {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: transparent;
 }
 </style>

@@ -2,10 +2,9 @@
 import card from './components/card.vue'
 import { ref, onMounted } from 'vue'
 import { http } from '@/utils/http'
-import { useUserInfoStore } from '@/stores'
-import { storeToRefs } from 'pinia'
 import type { PostList } from '@/types/global'
 import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app'
+// 下拉刷新
 onPullDownRefresh(() => {
   postList.value = []
   currentPage.value = 1
@@ -14,7 +13,6 @@ onPullDownRefresh(() => {
     uni.stopPullDownRefresh()
   }, 1000)
 })
-const userInfoStore = useUserInfoStore()
 let postList = ref<PostList[]>([])
 onMounted(() => {
   getPostList()

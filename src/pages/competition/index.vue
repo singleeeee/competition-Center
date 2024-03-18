@@ -278,7 +278,7 @@ const comChange = (e: any) => {
     }
     .scrollBox {
       height: 60rpx;
-      margin: 20rpx 0;
+      margin: 10rpx 0;
       .scroll-view {
         height: 60rpx;
         white-space: nowrap;

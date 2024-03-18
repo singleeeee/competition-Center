@@ -31,7 +31,7 @@
 }
 .container .report.data-v-1b8b30bc {
   height: 100%;
-  padding: 0 20rpx;
+  padding: 0 10rpx;
 }
 .swiper.data-v-1b8b30bc {
   height: 320rpx;

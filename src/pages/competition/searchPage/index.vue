@@ -49,7 +49,6 @@
         </view>
       </view>
     </view>
-    }
   </view>
   <view v-else class="searchResult">
     <view class="topTab">
@@ -224,22 +223,6 @@ const getData = myDebounce(async () => {
     }
     resultList.value.push(obj)
   }
-  // 好友数据
-  res = await http({
-    url: '/app/user/getUserInfoList',
-    data: {
-      userNickname: inputValue.value,
-      page: 1,
-      pageSize: 10,
-    },
-  })
-  for (let i = 0; i < res.data.list.length; i++) {
-    const obj = {
-      disID: res.data.list[i].ID,
-      disTitle: res.data.list[i].userNickname,
-    }
-    resultList.value.push(obj)
-  }
   loadingStatus.value = 'noMore'
 })
 
@@ -248,13 +231,6 @@ const toResult = (id: number) => {
   searchRecord.addRecord(inputValue.value)
   uni.navigateTo({
     url: '/subpackage/postDetail/index?disId=' + id,
-  })
-}
-// 跳转到用户主页
-const toPersonPage = (id: number) => {
-  searchRecord.addRecord(inputValue.value)
-  uni.navigateTo({
-    url: '/pages/mine/personPage/index?userID=' + id,
   })
 }
 // tab栏改变

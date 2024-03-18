@@ -78,7 +78,7 @@ const getSwiperData = async () => {
   })
   for (let i = 0; i < list.length; i++) {
     ;(swiperDataList as any).value.push({
-      content: list[i].disInfo.disTitle.slice(0, 22) + '...',
+      content: list[i].disInfo.disTitle.slice(0, 20) + '...',
       disId: list[i].disId,
       url: list[i].pictureUrl,
     })
@@ -117,7 +117,7 @@ const closeNoticebar = () => {
   padding-bottom: 200rpx;
   .report {
     height: 100%;
-    padding: 0 20rpx;
+    padding: 0 10rpx;
   }
 }
 .swiper {

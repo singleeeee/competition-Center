@@ -38,7 +38,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
       for (let i = 0; i < list.length; i++) {
         swiperDataList.value.push({
-          content: list[i].disInfo.disTitle.slice(0, 22) + "...",
+          content: list[i].disInfo.disTitle.slice(0, 20) + "...",
           disId: list[i].disId,
           url: list[i].pictureUrl
         });

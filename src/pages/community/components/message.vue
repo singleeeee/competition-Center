@@ -2,31 +2,207 @@
   <view class="container">
     <scroll-view
       scroll-y
-      style="height: 92vh"
+      :style="{ height: windowHeight - 50 + 'px' }"
       @refresherrefresh="pulldownRefresh"
       :refresher-triggered="pulldownTriggered"
       :refresher-threshold="50"
       :refresher-enabled="true"
     >
-      <view v-if="messageList.length > 0">
-        <view
-          class="messageBox"
-          v-for="item in messageList"
-          :key="item.messageTime"
-          @tap="navigateToChat(item.userID)"
-        >
-          <view style="position: relative">
-            <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
-            <view class="dot" v-show="item.unReadCount > 0"></view>
+      <view v-if="messageList.length > 0" style="padding-bottom: 100rpx">
+        <!-- 比赛订阅信息 -->
+        <h1 class="title">比赛订阅信息</h1>
+        <view class="friendMessageBox">
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
           </view>
-          <view class="bodyBox">
-            <view class="nickname">{{ item.userName }}</view>
-            <view class="message">{{ item.lastMessage }}</view>
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
           </view>
-          <view class="timeBox">
-            <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
-            <view class="num">
-              <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+        </view>
+        <!-- 消息列表 -->
+        <h1 class="title">好友信息</h1>
+        <view class="friendMessageBox">
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
+          </view>
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
+          </view>
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
+          </view>
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
+          </view>
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
+          </view>
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
+            </view>
+          </view>
+          <view
+            class="messageBox"
+            v-for="item in messageList"
+            :key="item.messageTime"
+            @tap="navigateToChat(item.userID)"
+          >
+            <view style="position: relative">
+              <image class="avatar" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <view class="dot" v-show="item.unReadCount > 0"></view>
+            </view>
+            <view class="bodyBox">
+              <view class="nickname">{{ item.userName }}</view>
+              <view class="message">{{ item.lastMessage }}</view>
+            </view>
+            <view class="timeBox">
+              <view class="time">{{ toLocalTime(item.lastMessageTime, false) }}</view>
+              <view class="num">
+                <uni-tag :circle="true" :text="item.unReadCount" type="error" size="mini" />
+              </view>
             </view>
           </view>
         </view>
@@ -47,6 +223,12 @@ import { ref } from 'vue'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { onShow } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores/modules/userInfoStore'
+// 获取可用屏幕高度
+let windowHeight = 0
+;(() => {
+  const deviceInfo = uni.getWindowInfo()
+  windowHeight = deviceInfo?.windowHeight
+})()
 const userInfoStore = useUserInfoStore()
 onShow(() => {
   undateUnreadInfo()
@@ -89,68 +271,82 @@ const navigateToChat = (userID) => {
 </script>
 <style scoped lang="scss">
 .container {
-  .messageBox {
-    height: 150rpx;
-    display: flex;
-    align-items: center;
+  padding: 0 20rpx;
+  .title {
+    font-weight: 700;
+    font-size: 30rpx;
+    padding-left: 20rpx;
+    margin-top: 20rpx;
+  }
+  .friendMessageBox {
+    margin-top: 20rpx;
+    border-radius: 20rpx;
+    overflow: hidden;
     background-color: #fff;
-    justify-content: space-between;
-    padding: 60rpx 20rpx;
-    box-sizing: border-box;
-    border-bottom: 1px solid #ebeef5;
-    .avatar {
-      width: 110rpx;
-      height: 110rpx;
-      border-radius: 10%;
-    }
-    .dot {
-      position: absolute;
-      height: 10rpx;
-      width: 10rpx;
-      top: -10rpx;
-      right: -6rpx;
-      background-color: red;
-      padding: 6rpx;
-      font-size: 18rpx;
-      color: #fff;
-      border-radius: 20rpx;
-    }
-    .bodyBox {
-      flex: 1;
+    padding: 20rpx;
+    .messageBox {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100rpx;
-      padding: 0 25rpx;
-      box-sizing: border-box;
-      margin-bottom: 10rpx;
-      .nickname {
-        font-size: 32rpx;
-      }
-      .message {
-        font-size: 24rpx;
-        color: #888;
-        overflow: hidden;
-        -webkit-line-clamp: 1;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-      }
-    }
-    .timeBox {
-      height: 100rpx;
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: space-around;
-      width: 200rpx;
-      font-size: 22rpx;
-      color: #666;
-      .num {
-        padding-top: 10rpx;
+      justify-content: space-between;
+      margin: 20rpx 0;
+      padding-bottom: 10rpx;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ebeef5;
+      background-color: #fff;
+      .avatar {
+        width: 110rpx;
+        height: 110rpx;
+        border-radius: 10%;
+      }
+      .dot {
+        position: absolute;
+        height: 10rpx;
+        width: 10rpx;
+        top: -10rpx;
+        right: -6rpx;
+        background-color: red;
+        padding: 6rpx;
+        font-size: 18rpx;
+        color: #fff;
+        border-radius: 20rpx;
+      }
+      .bodyBox {
+        flex: 1;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100rpx;
+        padding: 0 25rpx;
+        box-sizing: border-box;
+        margin-bottom: 10rpx;
+        .nickname {
+          font-size: 32rpx;
+        }
+        .message {
+          font-size: 24rpx;
+          color: #888;
+          overflow: hidden;
+          -webkit-line-clamp: 1;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+        }
+      }
+      .timeBox {
+        height: 100rpx;
+        display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: space-around;
+        width: 200rpx;
+        font-size: 22rpx;
+        color: #666;
+        .num {
+          padding-top: 10rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
     }
   }

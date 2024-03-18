@@ -163,7 +163,7 @@ const infoList = [
   top: 0;
   display: flex;
   flex-direction: column;
-  height: 350rpx;
+  height: 300rpx;
   justify-content: center;
   background-color: #12a66a;
   padding-left: 40rpx;
@@ -193,7 +193,7 @@ const infoList = [
   width: 100%;
   padding: 20rpx;
   background: linear-gradient(to right, #d9faf5, #e0f9f5, #e8faf7);
-  margin-top: 350rpx;
+  margin-top: 300rpx;
   .card {
     margin: 40rpx 40rpx;
     padding: 10rpx 40rpx;
