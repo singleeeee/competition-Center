@@ -17,6 +17,10 @@ const card = () => "./components/card.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
+    common_vendor.onLoad((options) => {
+      const current = +(options == null ? void 0 : options.currentTab);
+      currentPage.value = current || 0;
+    });
     let windowHeight = 0;
     (() => {
       const deviceInfo = common_vendor.index.getWindowInfo();

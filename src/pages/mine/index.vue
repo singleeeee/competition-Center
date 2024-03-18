@@ -71,12 +71,7 @@ const navigatetoPerson = () => {
     url: '/subpackage/personal_data/index',
   })
 }
-// 跳转到个人主页
-const navigatetoPersonPage = () => {
-  uni.navigateTo({
-    url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}`,
-  })
-}
+
 // 主页item配置项
 const configItems = [
   {
@@ -142,9 +137,13 @@ const navigateTo = (target: string) => {
     url: `/subpackage/${target}/index`,
   })
 }
-// 跳转都tabbar页面
-const switchTab = (target: string) => {
+// 跳转到个人主页
+const switchToPersonPage = (target: string) => {
   uni.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` })
+}
+// 跳转到信息页面
+const switchToMessage = (mode: number) => {
+  uni.switchTab({ url: `/pages/community/index?currentTab=${mode}` })
 }
 </script>
 
@@ -225,7 +224,7 @@ const switchTab = (target: string) => {
       </view>
       <view class="messageBox">
         <view class="itemsBox">
-          <view class="items">
+          <view class="items" @tap="switchToMessage(2)">
             <image class="img" src="@/static/mine/message.png" mode="scaleToFill" />
             信息</view
           >
@@ -233,7 +232,7 @@ const switchTab = (target: string) => {
             <image class="img" src="@/static/mine/draft.png" mode="scaleToFill" />
             草稿</view
           >
-          <view class="items" @tap="switchTab('personPage')">
+          <view class="items" @tap="switchToPersonPage('personPage')">
             <image class="img" src="@/static/mine/person.png" mode="scaleToFill" />
             个人主页</view
           >

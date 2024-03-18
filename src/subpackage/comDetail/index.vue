@@ -11,9 +11,9 @@
         <uni-countdown
           v-if="timeRest > 0"
           :font-size="16"
-          :day="timeRest"
-          :hour="0"
-          :minute="0"
+          :day="countDownDay"
+          :hour="countDownHour"
+          :minute="countDownMinute"
           background-color="#007AFF"
         />
         <view v-else-if="timeRest < 0" class="comEnd"> {{ countDownText }} </view>
@@ -188,6 +188,7 @@ import { http } from '@/utils/http'
 import { toLocalTime } from '@/utils/toLocalTime'
 import { useUserInfoStore } from '@/stores'
 import skeleton from './components/skeleton.vue'
+import { getTimeDifference } from '@/utils/getTimeDifference'
 const { userInfo } = useUserInfoStore()
 let comID = ref(0)
 let isSignUp = ref(false)
@@ -342,6 +343,14 @@ const getComInfoDetail = async () => {
   comInfo.value = res.data.recomData
   maxTeamNum.value = comInfo.value.comMaxNumber
   minTeamNum.value = comInfo.value.comMinNumber
+  getCountDown()
+}
+// 倒计时所需时间
+let countDownDay = ref(0)
+let countDownHour = ref(0)
+let countDownMinute = ref(0)
+// 获取倒计时
+const getCountDown = () => {
   let differenceTime = getTimeDifference(new Date().getTime(), comInfo.value.comStart)
   // 现在已经超过了比赛开始时间
   if (differenceTime <= 0) {
@@ -354,11 +363,23 @@ const getComInfoDetail = async () => {
     } else {
       countDownText.value = '距离比赛结束还有：'
       timeRest.value = differenceTime
+      // 计算天数
+      countDownDay.value = Math.floor(differenceTime / (1000 * 3600 * 24))
+      // 计算小时数
+      countDownHour.value = Math.floor((differenceTime % (1000 * 3600 * 24)) / (1000 * 3600))
+      // 计算分钟数
+      countDownMinute.value = Math.floor((differenceTime % (1000 * 3600)) / (1000 * 60))
     }
   } else {
     // 比赛还未开始
     countDownText.value = '距离比赛开始还有：'
     timeRest.value = differenceTime
+    // 计算天数
+    countDownDay.value = Math.floor(differenceTime / (1000 * 3600 * 24))
+    // 计算小时数
+    countDownHour.value = Math.floor((differenceTime % (1000 * 3600 * 24)) / (1000 * 3600))
+    // 计算分钟数
+    countDownMinute.value = Math.floor((differenceTime % (1000 * 3600)) / (1000 * 60))
   }
 }
 // 队伍信息
@@ -425,6 +446,7 @@ const getComType = async () => {
     comTypeList.value.push(res.data.list[i])
   }
   comType.value = comTypeList.value[comInfo.value.comType].label
+  console.log(comType.value, '比赛种类')
 }
 
 // 当前分类所有比赛

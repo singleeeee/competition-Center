@@ -144,6 +144,7 @@ const likeChange = () => {
         background-color: #fff;
         height: 330rpx;
         margin: 10rpx 0;
+        max-width: 100%;
       }
     }
     .others {

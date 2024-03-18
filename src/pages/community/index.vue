@@ -90,6 +90,11 @@ import message from './components/message.vue'
 import card from './components/card.vue'
 import { http } from '@/utils/http'
 import type { PostList } from '@/types/global'
+import { onLoad } from '@dcloudio/uni-app'
+onLoad((options) => {
+  const current = +options?.currentTab
+  currentPage.value = current || 0
+})
 // 获取可用屏幕高度
 let windowHeight = 0
 ;(() => {

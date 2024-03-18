@@ -130,9 +130,9 @@
               <image class="avatar" :src="userInfo.userAvatarUrl"></image>
               <view class="content">
                 <view class="text"
-                  >组建了队伍<span style="color: orange; margin-left: 10rpx"
-                    >重生之带学妹拿奖</span
-                  ></view
+                  >组建了队伍<span style="color: orange; margin-left: 10rpx">{{
+                    item.data.groupName
+                  }}</span></view
                 >
                 <view style="font-size: 24rpx">{{ toLocalTime(item.data.CreatedAt) }}</view>
               </view>

@@ -133,8 +133,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: `/subpackage/${target}/index`
       });
     };
-    const switchTab = (target) => {
+    const switchToPersonPage = (target) => {
       common_vendor.index.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` });
+    };
+    const switchToMessage = (mode) => {
+      common_vendor.index.switchTab({ url: `/pages/community/index?currentTab=${mode}` });
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
@@ -187,13 +190,14 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         v: common_assets._imports_3,
         w: common_vendor.o(($event) => navigateTo("myFriends")),
         x: common_assets._imports_4,
-        y: common_assets._imports_5,
-        z: common_vendor.o(($event) => navigateTo("PostWriting")),
-        A: common_assets._imports_6,
-        B: common_vendor.o(($event) => switchTab("personPage")),
-        C: common_assets._imports_7,
-        D: common_vendor.o(($event) => navigateTo("postManage")),
-        E: common_vendor.f(configItems, (item, k0, i0) => {
+        y: common_vendor.o(($event) => switchToMessage(2)),
+        z: common_assets._imports_5,
+        A: common_vendor.o(($event) => navigateTo("PostWriting")),
+        B: common_assets._imports_6,
+        C: common_vendor.o(($event) => switchToPersonPage("personPage")),
+        D: common_assets._imports_7,
+        E: common_vendor.o(($event) => navigateTo("postManage")),
+        F: common_vendor.f(configItems, (item, k0, i0) => {
           return {
             a: "9023ef44-4-" + i0,
             b: common_vendor.p({
@@ -206,7 +210,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             f: common_vendor.o(($event) => navigateTo(item.url), item.id)
           };
         }),
-        F: common_vendor.p({
+        G: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"
