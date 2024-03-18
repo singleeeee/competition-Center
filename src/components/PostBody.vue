@@ -13,7 +13,7 @@
         <view class="text">分享至</view>
         <view class="line"></view>
       </view>
-      <view class="iconBox">
+      <view class="iconBox" @tap="share">
         <uni-icons style="margin-right: 30rpx" type="weixin" color="#ccc" size="38" />
         <uni-icons style="margin-right: 30rpx" type="qq" color="#ccc" size="38" />
         <uni-icons style="margin-right: 30rpx" type="weibo" color="#ccc" size="38" />
@@ -42,6 +42,14 @@
 import { http } from '@/utils/http'
 import { ref, computed } from 'vue'
 import { myDebounce } from '@/utils/myDebounce'
+// 分享
+const share = () => {
+  uni.showToast({
+    title: '暂未开放',
+    icon: 'none',
+    duration: 500,
+  })
+}
 // 点击图片预览
 const onClickImg = (tempFilePaths) => {
   let fileUrlArray = [tempFilePaths]

@@ -2,7 +2,12 @@
   <template v-if="isLog">
     <uni-collapse ref="collapse">
       <!-- 好友分组 -->
-      <uni-collapse-item v-for="(group, index) in groupList" :key="index" :title="group.groupName">
+      <uni-collapse-item
+        v-for="(group, index) in groupList"
+        :key="index"
+        :title="group.groupName"
+        :open="true"
+      >
         <view class="content">
           <view class="frdbox" v-for="item in group.groupMember" :key="item.id">
             <view>
@@ -77,15 +82,15 @@ const groupList = ref([
 </script>
 <style scoped lang="scss">
 .frdbox {
-  height: 100rpx;
+  height: 140rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20rpx 20rpx;
   box-sizing: border-box;
   .image {
-    width: 80rpx;
-    height: 80rpx;
+    width: 100rpx;
+    height: 100rpx;
     border-radius: 50%;
     background-color: skyblue;
   }
@@ -93,8 +98,8 @@ const groupList = ref([
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    height: 80rpx;
+    justify-content: space-between;
+    height: 90rpx;
     padding: 0 20rpx;
     box-sizing: border-box;
     .nickname {
@@ -104,10 +109,15 @@ const groupList = ref([
     }
     .info {
       font-size: 20rpx;
+      color: #888;
     }
   }
   .statusBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     box-sizing: border-box;
+    height: 90rpx;
     width: 80rpx;
     .status {
       font-size: 20rpx;

@@ -9,7 +9,10 @@
       <view class="left">
         <view class="title">{{ item.title }}</view>
         <view class="bottom">
-          <view class="author">{{ item.author }}&nbsp;&nbsp;{{ item.time }}</view>
+          <view style="display: flex; align-items: center">
+            <view class="author">{{ item.author }} ·</view>
+            <view class="date">{{ item.time }}</view>
+          </view>
           <view class="hot">
             <uni-icons color="#ccc" type="fire" size="14" />{{ item.hot }}
             <uni-icons color="#ccc" type="hand-up" size="14" />{{ item.font }}
@@ -81,11 +84,13 @@ const getNotificationList = async () => {
     newsList.value.push(obj)
   }
   currentNotificationPage.value++
-  if (currentNotificationPage.value * notificationPageSize.value >= res.data.total) {
-    loadingStatus.value = 'noMore'
-  } else {
-    loadingStatus.value = 'more'
-  }
+  setTimeout(() => {
+    if (currentNotificationPage.value * notificationPageSize.value >= res.data.total) {
+      loadingStatus.value = 'noMore'
+    } else {
+      loadingStatus.value = 'more'
+    }
+  }, 500)
 }
 
 // 跳转到详情页
@@ -125,25 +130,32 @@ defineExpose({
 
       .title {
         font-size: 28rpx;
+        line-height: 40rpx;
         overflow: hidden;
         padding-top: 20rpx;
         -webkit-line-clamp: 2;
         text-overflow: ellipsis;
         display: -webkit-box;
-        font-weight: 700;
         -webkit-box-orient: vertical;
+        margin-right: 10rpx;
+        font-weight: 700;
       }
       .bottom {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         font-size: 24rpx;
-        color: #ccc;
+        color: #aaa;
         padding: 0 20rpx 10rpx 0;
+        .author {
+          box-sizing: border-box;
+          margin-right: 10rpx;
+        }
       }
     }
     .image {
       width: 240rpx;
-      height: 180rpx;
+      height: 160rpx;
       background-color: skyblue;
     }
   }

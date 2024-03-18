@@ -102,7 +102,6 @@ const navigateToChat = (userID) => {
       width: 110rpx;
       height: 110rpx;
       border-radius: 10%;
-      background-color: skyblue;
     }
     .dot {
       position: absolute;

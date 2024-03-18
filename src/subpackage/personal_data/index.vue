@@ -2,14 +2,12 @@
   <view class="container">
     <!-- 头像 -->
     <view class="items">
-      <view class="left">更换头像</view>
-      <view class="right">
-        <view class="back">
-          <button class="avatarBox" plain open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
-            <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
-          </button>
+      <button class="avatarBox" plain open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
+        <view class="left">更换头像</view>
+        <view class="right">
+          <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
         </view>
-      </view>
+      </button>
     </view>
     <!-- 昵称 -->
     <view class="items" @tap="nicknamePopup.open('center')">
@@ -148,11 +146,11 @@
   </uni-popup>
   <!-- 成功提示 -->
   <uni-popup ref="successInfo" type="message">
-    <uni-popup-message type="success" message="修改成功" :duration="1000"></uni-popup-message>
+    <uni-popup-message type="success" message="修改成功" :duration="500"></uni-popup-message>
   </uni-popup>
   <!-- 失败提示 -->
   <uni-popup ref="errorInfo" type="message">
-    <uni-popup-message type="error" message="修改失败" :duration="1000"></uni-popup-message>
+    <uni-popup-message type="error" message="修改失败" :duration="500"></uni-popup-message>
   </uni-popup>
 </template>
 
@@ -165,6 +163,7 @@ import TextareaPopup from './components/TextareaPopup.vue'
 import CityChoose from './components/CityChoose.vue'
 import LabelPopup from './components/LabelPopup.vue'
 import { storeToRefs } from 'pinia'
+
 // 回显和使用
 const userInfoStore = useUserInfoStore()
 const { userInfo } = storeToRefs(userInfoStore)
@@ -218,6 +217,7 @@ const genderChange = (e: any) => {
   const val = e.detail.value
   genderSelectd.value = genderArray[val[0]]
   userInfoStore.changeUserInfo('userGender', genderSelectd.value === '男' ? 1 : 2)
+  successInfo.value.open()
 }
 // 专业修改
 const professionArray = [
@@ -242,6 +242,7 @@ const professionChange = (e: any) => {
   const val = e.detail.value
   professionSelectd.value = professionArray[val[0]]
   userInfoStore.changeUserInfo('userProfession', professionSelectd.value)
+  successInfo.value.open()
 }
 // 年级修改
 const gradeArray = new Array(20).fill(0).map((item, index) => 2010 + index)
@@ -251,6 +252,7 @@ const gradeChange = (e: any) => {
   const val = e.detail.value
   gradeSelectd.value = gradeArray[val[0]]
   userInfoStore.changeUserInfo('userGrade', gradeSelectd.value)
+  successInfo.value.open()
 }
 
 // 退出登录
@@ -269,6 +271,7 @@ let nickname = ref<String>(userInfo.value.userNickname)
 const nicknameConfirm = () => {
   userInfoStore.changeUserInfo('userNickname', nickname.value)
   nicknamePopup.value.close()
+  successInfo.value.open()
 }
 // 取消
 const nicknameCancel = () => {
@@ -285,7 +288,7 @@ const introConfirm = () => {
 }
 // 取消
 const introCancel = () => {
-  introduction.value = userInfo.value.userNickname
+  introduction.value = userInfo.value.userIntroduction
   introducePopup.value.close()
 }
 </script>
@@ -304,24 +307,21 @@ const introCancel = () => {
     &:active {
       background-color: #eee;
     }
-    .right {
+    .avatarBox {
       display: flex;
+      width: 100%;
+      border: 0;
+      justify-content: space-between;
       align-items: center;
-      .avatarBox {
-        display: inline-block;
-        padding: 0;
-        width: 120rpx;
-        height: 120rpx;
-        background-color: #fff;
-        border: 0;
-        border-radius: 50%;
-        margin-right: 20rpx;
+      font-size: 32rpx;
+      font-family: '微软雅黑';
+      padding: 0;
+      .right {
         .avatar {
           display: block;
           width: 120rpx;
           height: 120rpx;
           border-radius: 50%;
-          background-color: skyblue;
           margin-right: 20rpx;
         }
       }

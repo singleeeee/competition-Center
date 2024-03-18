@@ -26,7 +26,7 @@
 .container.data-v-9023ef44 {
   display: flex;
   flex-direction: column;
-  background-color: rgb(254, 237, 239);
+  background-color: rgb(254, 252, 253);
 }
 .container .header.data-v-9023ef44 {
   height: 300rpx;
@@ -58,9 +58,6 @@
   padding-bottom: 10rpx;
   color: #000;
   font-weight: 700;
-}
-.container .header .avatarBox .bodyBox .label.data-v-9023ef44 {
-  margin-right: 30rpx;
 }
 .container .header .avatarBox .detail.data-v-9023ef44 {
   display: flex;
@@ -155,7 +152,7 @@
   padding-bottom: 10rpx;
 }
 .container .body .messageBox.data-v-9023ef44 {
-  height: 160rpx;
+  height: 180rpx;
 }
 .container .body .messageBox .itemsBox.data-v-9023ef44 {
   height: 140rpx;

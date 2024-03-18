@@ -168,6 +168,7 @@ defineExpose({
       font-weight: 700;
       border-left: 4px solid #12a661;
       padding-left: 14rpx;
+      letter-spacing: 2rpx;
     }
 
     .rightTitle {
@@ -184,9 +185,8 @@ defineExpose({
       background-color: #eee;
     }
     .img {
-      width: 120rpx;
-      height: 100rpx;
-      background-color: skyblue;
+      width: 110rpx;
+      height: 90rpx;
       border-radius: 8rpx;
       margin-right: 20rpx;
     }
@@ -197,7 +197,7 @@ defineExpose({
       justify-content: space-around;
       .topicTitle {
         display: inline;
-        font-size: 28rpx;
+        font-size: 30rpx;
         color: rgb(245, 169, 29);
       }
       .comTitle {

@@ -188,7 +188,6 @@
               <span class="readedNum">{{ item.disHot }}阅读</span>
               <span class="liked">{{ item.disLoveNumber }}点赞</span>
               <span class="followed">{{ item.disCollectNumber }}收藏</span>
-              <span class="commentNum">{{ item.disCommentNumber }}评论</span>
             </span>
           </view>
         </view>
@@ -568,10 +567,10 @@ let active = ref(expList.value.length - 1)
       box-sizing: border-box;
       display: flex;
       align-items: center;
-      margin: 0 10rpx;
+      margin: 0 20rpx;
       background-color: #fff;
       margin-top: 10rpx;
-      margin-bottom: 20rpx;
+      margin-bottom: 40rpx;
       border-radius: 10rpx;
       overflow: hidden;
       padding: 0 10rpx;
@@ -580,12 +579,12 @@ let active = ref(expList.value.length - 1)
         display: flex;
         align-items: center;
         font-size: 28rpx;
+        height: 160rpx;
         .avatar {
-          width: 100rpx;
-          height: 100rpx;
+          width: 110rpx;
+          height: 110rpx;
           border-radius: 50%;
           background-color: skyblue;
-          margin: 10rpx 20rpx;
         }
         .content {
           height: 100rpx;

@@ -146,34 +146,18 @@ const navigateTo = (target: string) => {
 const switchTab = (target: string) => {
   uni.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` })
 }
-// 点击图片预览
-const onClickImg = (tempFilePaths) => {
-  let fileUrlArray = [tempFilePaths]
-  uni.previewImage({
-    urls: fileUrlArray,
-    success: (result) => {},
-    fail: (error) => {
-      console.log(error)
-    },
-  })
-}
 </script>
 
 <template>
   <view class="container">
     <view class="header">
-      <view class="avatarBox" v-if="isHeadShow">
-        <image
-          class="avatar"
-          @tap="onClickImg(userInfo.userAvatarUrl)"
-          :src="userInfo.userAvatarUrl"
-          mode="scaleToFill"
-        />
-        <view class="bodyBox" @click="navigatetoPerson">
+      <view class="avatarBox" v-if="isHeadShow" @click="navigatetoPerson">
+        <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
+        <view class="bodyBox">
           <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
             <view class="tag-view">
-              <view v-if="tagList.length > 0">
+              <view v-if="tagList.length > 0" style="display: flex; flex-wrap: wrap">
                 <uni-tag
                   v-for="(item, index) in tagList"
                   :key="index"
@@ -182,6 +166,7 @@ const onClickImg = (tempFilePaths) => {
                   :circle="true"
                   type="primary"
                   size="small"
+                  style="margin-right: 10rpx; margin-bottom: 10rpx"
                 />
               </view>
               <view v-else>
@@ -196,7 +181,7 @@ const onClickImg = (tempFilePaths) => {
             </view>
           </view>
         </view>
-        <view class="detail" @click="navigatetoPerson">
+        <view class="detail">
           <view class="text">编辑资料</view>
           <uni-icons type="right" color="#ccc" size="20"></uni-icons>
         </view>
@@ -277,7 +262,7 @@ const onClickImg = (tempFilePaths) => {
 .container {
   display: flex;
   flex-direction: column;
-  background-color: rgb(254, 237, 239);
+  background-color: rgb(254, 252, 253);
 
   .header {
     height: 300rpx;
@@ -308,9 +293,6 @@ const onClickImg = (tempFilePaths) => {
           color: #000;
           font-weight: 700;
         }
-        .label {
-          margin-right: 30rpx;
-        }
       }
       .detail {
         display: flex;
@@ -326,7 +308,6 @@ const onClickImg = (tempFilePaths) => {
           font-weight: 700;
           margin-right: 10rpx;
         }
-        // background-color: pink;
       }
     }
   }
@@ -402,7 +383,7 @@ const onClickImg = (tempFilePaths) => {
     }
 
     .messageBox {
-      height: 160rpx;
+      height: 180rpx;
       .itemsBox {
         height: 140rpx;
       }

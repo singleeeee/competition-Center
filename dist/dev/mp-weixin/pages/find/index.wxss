@@ -26,11 +26,12 @@
 .container.data-v-1b8b30bc {
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 200rpx;
 }
 .container .report.data-v-1b8b30bc {
   height: 100%;
+  padding: 0 20rpx;
 }
 .swiper.data-v-1b8b30bc {
   height: 320rpx;
@@ -47,16 +48,17 @@
   z-index: 999;
 }
 .section.data-v-1b8b30bc {
-  height: 60rpx;
+  height: 50rpx;
   display: flex;
   align-items: center;
-  padding: 20rpx;
+  padding: 20rpx 26rpx;
   background-color: #fff;
   font-weight: 700;
+  letter-spacing: 4rpx;
 }
 .section .line.data-v-1b8b30bc {
   background-color: #12a661;
   width: 10rpx;
-  height: 60rpx;
+  height: 50rpx;
   margin-right: 20rpx;
 }

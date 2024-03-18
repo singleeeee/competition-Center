@@ -54,7 +54,9 @@
       </nameTitle>
     </template>
     <template v-else>
-      <image src="../static/empty/emptyComment.png" mode="scaleToFill" />
+      <view style="display: flex; justify-content: center; align-items: center">
+        <image src="../static/empty/emptyComment.png" mode="scaleToFill" />
+      </view>
     </template>
   </view>
   <!-- 评论框 -->

@@ -29,4 +29,12 @@ onHide(() => {
   console.log('App Hide')
 })
 </script>
-<style></style>
+<style>
+/* 去除scroll滚动条 */
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  background-color: transparent;
+}
+</style>

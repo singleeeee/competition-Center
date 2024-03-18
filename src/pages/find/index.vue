@@ -78,7 +78,7 @@ const getSwiperData = async () => {
   })
   for (let i = 0; i < list.length; i++) {
     ;(swiperDataList as any).value.push({
-      content: list[i].disInfo.disTitle,
+      content: list[i].disInfo.disTitle.slice(0, 22) + '...',
       disId: list[i].disId,
       url: list[i].pictureUrl,
     })
@@ -113,10 +113,11 @@ const closeNoticebar = () => {
 .container {
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 200rpx;
   .report {
     height: 100%;
+    padding: 0 20rpx;
   }
 }
 .swiper {
@@ -134,16 +135,17 @@ const closeNoticebar = () => {
   z-index: 999;
 }
 .section {
-  height: 60rpx;
+  height: 50rpx;
   display: flex;
   align-items: center;
-  padding: 20rpx;
+  padding: 20rpx 26rpx;
   background-color: #fff;
   font-weight: 700;
+  letter-spacing: 4rpx;
   .line {
     background-color: #12a661;
     width: 10rpx;
-    height: 60rpx;
+    height: 50rpx;
     margin-right: 20rpx;
   }
 }

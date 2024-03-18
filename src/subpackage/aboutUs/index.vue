@@ -122,6 +122,15 @@ const infoList = [
     work: '后端',
   },
   {
+    nickname: 'ww"',
+    introduce: '春风若有怜花香，可否许我再少年。',
+    content:
+      '欢迎来到竞赛云界：这里不仅仅有比赛，更是一个舞台，在这里每一个热爱竞赛的人都可以发光发热。其次，我要感谢我团队小伙伴，因为有你们，我才能成长进步。',
+    avatar:
+      'https://jk-competition.oss-cn-guangzhou.aliyuncs.com/picture/uploads/2024-03-17/ww.jpg',
+    work: '测试',
+  },
+  {
     nickname: '🌟',
     introduce: '那就去追星星吧  乘着浪花攀越悬崖。',
     content:
@@ -280,6 +289,7 @@ const infoList = [
           font-weight: 700;
         }
         .intro {
+          margin-top: 10rpx;
           font-size: 22rpx;
           color: #666;
         }
