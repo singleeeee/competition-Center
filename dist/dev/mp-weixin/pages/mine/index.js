@@ -12,7 +12,7 @@ if (!Array) {
 const _easycom_uni_tag = () => "../../node-modules/@dcloudio/uni-ui/lib/uni-tag/uni-tag.js";
 const _easycom_uni_icons = () => "../../node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons.js";
 if (!Math) {
-  (_easycom_uni_tag + _easycom_uni_icons + UnLog)();
+  (_easycom_uni_tag + UnLog + _easycom_uni_icons)();
 }
 const UnLog = () => "./components/UnLog.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
@@ -68,11 +68,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         common_vendor.index.stopPullDownRefresh();
       }, 1e3);
     });
-    const navigatetoPerson = () => {
-      common_vendor.index.navigateTo({
-        url: "/subpackage/personal_data/index"
-      });
-    };
     const configItems = [
       {
         id: 1,
@@ -100,8 +95,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       },
       {
         id: 5,
-        title: "联系客服",
-        icon: "headphones",
+        title: "意见反馈",
+        icon: "email",
         url: "customerService"
       },
       {
@@ -122,7 +117,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       isHeadShow.value = val;
     };
     const navigateTo = (target) => {
-      if (target === "customerService" || target === "moreSetting") {
+      if (target === "customerService") {
         common_vendor.index.showToast({
           title: "暂未开放",
           icon: "none"
@@ -133,21 +128,19 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         url: `/subpackage/${target}/index`
       });
     };
-    const switchToPersonPage = (target) => {
-      common_vendor.index.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` });
-    };
-    const switchToMessage = (mode) => {
-      common_vendor.index.switchTab({ url: `/pages/community/index?currentTab=${mode}` });
+    const switchToPersonPage = () => {
+      common_vendor.index.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` });
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.unref(isHeadShow)
       }, common_vendor.unref(isHeadShow) ? common_vendor.e({
-        b: common_vendor.unref(userInfo).userAvatarUrl,
-        c: common_vendor.t(common_vendor.unref(userInfo).userNickname),
-        d: common_vendor.unref(tagList).length > 0
+        b: common_vendor.o(switchToPersonPage),
+        c: common_vendor.unref(userInfo).userAvatarUrl,
+        d: common_vendor.t(common_vendor.unref(userInfo).userNickname),
+        e: common_vendor.unref(tagList).length > 0
       }, common_vendor.unref(tagList).length > 0 ? {
-        e: common_vendor.f(common_vendor.unref(tagList), (item, index, i0) => {
+        f: common_vendor.f(common_vendor.unref(tagList), (item, index, i0) => {
           return {
             a: index,
             b: "9023ef44-0-" + i0,
@@ -160,19 +153,14 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           };
         })
       } : {
-        f: common_vendor.p({
+        g: common_vendor.p({
           text: "暂无标签",
           circle: true,
           type: "primary",
           size: "small"
         })
       }, {
-        g: common_vendor.p({
-          type: "right",
-          color: "#ccc",
-          size: "20"
-        }),
-        h: common_vendor.o(navigatetoPerson)
+        h: common_vendor.o(switchToPersonPage)
       }) : {
         i: common_vendor.o(changeIsLog)
       }, {
@@ -190,27 +178,26 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         v: common_assets._imports_3,
         w: common_vendor.o(($event) => navigateTo("myFriends")),
         x: common_assets._imports_4,
-        y: common_vendor.o(($event) => switchToMessage(2)),
-        z: common_assets._imports_5,
-        A: common_vendor.o(($event) => navigateTo("PostWriting")),
-        B: common_assets._imports_6,
-        C: common_vendor.o(($event) => switchToPersonPage("personPage")),
-        D: common_assets._imports_7,
-        E: common_vendor.o(($event) => navigateTo("postManage")),
-        F: common_vendor.f(configItems, (item, k0, i0) => {
+        y: common_assets._imports_5,
+        z: common_vendor.o(($event) => navigateTo("PostWriting")),
+        A: common_assets._imports_6,
+        B: common_vendor.o(switchToPersonPage),
+        C: common_assets._imports_7,
+        D: common_vendor.o(($event) => navigateTo("postManage")),
+        E: common_vendor.f(configItems, (item, k0, i0) => {
           return {
-            a: "9023ef44-4-" + i0,
+            a: "9023ef44-3-" + i0,
             b: common_vendor.p({
               type: item.icon,
               size: "24"
             }),
             c: common_vendor.t(item.title),
-            d: "9023ef44-5-" + i0,
+            d: "9023ef44-4-" + i0,
             e: item.id,
             f: common_vendor.o(($event) => navigateTo(item.url), item.id)
           };
         }),
-        G: common_vendor.p({
+        F: common_vendor.p({
           type: "right",
           color: "#ccc",
           size: "18"

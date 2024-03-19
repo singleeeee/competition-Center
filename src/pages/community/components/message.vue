@@ -283,19 +283,19 @@ const navigateToChat = (userID) => {
     border-radius: 20rpx;
     overflow: hidden;
     background-color: #fff;
-    padding: 20rpx;
+    padding: 10rpx 20rpx;
     .messageBox {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 20rpx 0;
+      margin: 10rpx 0;
       padding-bottom: 10rpx;
       box-sizing: border-box;
       border-bottom: 1px solid #ebeef5;
       background-color: #fff;
       .avatar {
-        width: 110rpx;
-        height: 110rpx;
+        width: 100rpx;
+        height: 100rpx;
         border-radius: 10%;
       }
       .dot {
@@ -320,10 +320,11 @@ const navigateToChat = (userID) => {
         box-sizing: border-box;
         margin-bottom: 10rpx;
         .nickname {
-          font-size: 32rpx;
+          font-size: 28rpx;
+          font-weight: 700;
         }
         .message {
-          font-size: 24rpx;
+          font-size: 22rpx;
           color: #888;
           overflow: hidden;
           -webkit-line-clamp: 1;

@@ -609,11 +609,10 @@ let active = ref(expList.value.length - 1)
         height: 180rpx;
         display: flex;
         justify-content: space-around;
-        background-color: #eee;
-        width: 100%;
         margin: 30rpx 20rpx;
-        padding: 10rpx;
+        padding: 20rpx;
         align-items: center;
+        background-color: #f1f1f1;
       }
       .img {
         height: 150rpx;

@@ -93,7 +93,6 @@
         </view>
       </view>
     </view>
-    <button class="btn" @tap="logout">退出登录</button>
   </view>
   <!-- 昵称 -->
   <uni-popup ref="nicknamePopup" background-color="#fff">
@@ -254,16 +253,6 @@ const gradeChange = (e: any) => {
   userInfoStore.changeUserInfo('userGrade', gradeSelectd.value)
   successInfo.value.open()
 }
-
-// 退出登录
-const logout = async () => {
-  await userInfoStore.resetStore()
-  await userInfoStore.clearUserInfo()
-  uni.switchTab({
-    url: '/pages/mine/index',
-  })
-}
-
 // 昵称修改
 let nickname = ref<String>(userInfo.value.userNickname)
 
@@ -342,17 +331,5 @@ const introCancel = () => {
     text-align: center;
   }
 }
-.btn {
-  margin-top: 100rpx;
-  margin-bottom: 100rpx;
-  width: 70vw;
-  height: 90rpx;
-  border-radius: 50rpx;
-  color: #fff;
-  box-shadow: 0 0 4rpx black;
-  background: linear-gradient(45deg, #010101, #211f1f, #323030, #4a4646, #5b5959);
-  &:active {
-    transform: scale(1.01);
-  }
-}
+
 </style>

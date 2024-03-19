@@ -100,8 +100,8 @@ const configItems = [
   },
   {
     id: 5,
-    title: '联系客服',
-    icon: 'headphones',
+    title: '意见反馈',
+    icon: 'email',
     url: 'customerService',
   },
   {
@@ -126,7 +126,7 @@ const changeIsLog = (val: boolean) => {
 
 // 跳转非tabbar页面
 const navigateTo = (target: string) => {
-  if (target === 'customerService' || target === 'moreSetting') {
+  if (target === 'customerService') {
     uni.showToast({
       title: '暂未开放',
       icon: 'none',
@@ -138,21 +138,22 @@ const navigateTo = (target: string) => {
   })
 }
 // 跳转到个人主页
-const switchToPersonPage = (target: string) => {
-  uni.navigateTo({ url: `/pages/mine/${target}/index?userID=${userInfo.value.ID}` })
-}
-// 跳转到信息页面
-const switchToMessage = (mode: number) => {
-  uni.switchTab({ url: `/pages/community/index?currentTab=${mode}` })
+const switchToPersonPage = () => {
+  uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` })
 }
 </script>
 
 <template>
   <view class="container">
     <view class="header">
-      <view class="avatarBox" v-if="isHeadShow" @click="navigatetoPerson">
-        <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
-        <view class="bodyBox">
+      <view class="avatarBox" v-if="isHeadShow">
+        <image
+          class="avatar"
+          @click="switchToPersonPage"
+          :src="userInfo.userAvatarUrl"
+          mode="scaleToFill"
+        />
+        <view class="bodyBox" @click="switchToPersonPage">
           <view class="nickname">{{ userInfo.userNickname }}</view>
           <view class="label">
             <view class="tag-view">
@@ -180,10 +181,10 @@ const switchToMessage = (mode: number) => {
             </view>
           </view>
         </view>
-        <view class="detail">
+        <!-- <view class="detail">
           <view class="text">编辑资料</view>
           <uni-icons type="right" color="#ccc" size="20"></uni-icons>
-        </view>
+        </view> -->
       </view>
       <UnLog @changeIsLog="changeIsLog" v-else></UnLog>
     </view>
@@ -224,7 +225,7 @@ const switchToMessage = (mode: number) => {
       </view>
       <view class="messageBox">
         <view class="itemsBox">
-          <view class="items" @tap="switchToMessage(2)">
+          <view class="items">
             <image class="img" src="@/static/mine/message.png" mode="scaleToFill" />
             信息</view
           >
@@ -232,7 +233,7 @@ const switchToMessage = (mode: number) => {
             <image class="img" src="@/static/mine/draft.png" mode="scaleToFill" />
             草稿</view
           >
-          <view class="items" @tap="switchToPersonPage('personPage')">
+          <view class="items" @tap="switchToPersonPage">
             <image class="img" src="@/static/mine/person.png" mode="scaleToFill" />
             个人主页</view
           >

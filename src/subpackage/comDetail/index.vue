@@ -19,9 +19,13 @@
         <view v-else-if="timeRest < 0" class="comEnd"> {{ countDownText }} </view>
       </view>
     </view>
+    <!-- 比赛订阅 -->
+    <button class="subscribe" v-if="isSubscribe" plain @tap="comSubscribe">比赛订阅</button>
+    <button class="subscribe subscribed" v-else plain @tap="cancelSubscribe">已订阅</button>
+
     <!-- 比赛信息 -->
     <view class="detailBox">
-      <view class="line">比赛信息</view>
+      <view class="line">比赛信息 </view>
       <p>
         <span class="comName">赛事名称：</span>
         <span class="detail">{{ comInfo.comTitle }}</span>
@@ -80,10 +84,11 @@
             <view class="nickname" v-else>{{ item.userNickname }}</view>
           </view>
         </view>
+        <!-- 队伍状态 -->
         <view class="status" v-if="teamInfo.groupStatus === 2">待审核</view>
         <view
           class="status"
-          style="background-color: lightseagreen; color: #fff"
+          style="background-color: #95ec69; color: #000"
           v-else-if="teamInfo.groupStatus === 3"
           >报名成功</view
         >
@@ -207,6 +212,22 @@ onLoad(async (options) => {
   // 获取好友列表
   await getFriendList()
 })
+// 订阅状态
+const isSubscribe = ref(true)
+const comSubscribe = () => {
+  const res = http({
+    url: '/app/sub/createSub',
+    method: 'POST',
+    data: {},
+  })
+}
+const cancelSubscribe = () => {
+  isSubscribe.value = true
+  const res = http({
+    url: '/app/sub/deleteSub?ID=' + 2,
+    method: 'DELETE',
+  })
+}
 // 抽屉
 const showLeft = ref()
 // 队伍名称
@@ -481,6 +502,27 @@ const signUp = async () => {
   flex-direction: column;
   align-items: center;
   padding: 10rpx 20rpx;
+  .subscribe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 410rpx;
+    height: 70rpx;
+    background-color: #409eff;
+    color: #fff;
+    margin-top: 50rpx;
+    margin-bottom: 50rpx;
+    border: 1rpx solid #136fd1;
+  }
+  .subscribed {
+    color: #a5d1ff;
+    background-color: #ecf5ff;
+    border: 1rpx solid #a5d1ff;
+    &:active {
+      background-color: #0553a7;
+      transform: scale(1);
+    }
+  }
   .comImg {
     height: 320rpx;
     border-radius: 20rpx;
@@ -641,6 +683,7 @@ const signUp = async () => {
       color: #fff;
       margin-top: 50rpx;
       margin-bottom: 50rpx;
+
       &:active {
         background-color: #0553a7;
         transform: scale(0.99);
@@ -649,10 +692,11 @@ const signUp = async () => {
     .teamInfo {
       position: relative;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: space-between;
       margin: 30rpx 0;
-      height: 220rpx;
+      padding: 10rpx 0;
       border-radius: 20rpx;
       background-color: #efefef;
       .teamName {
@@ -662,6 +706,7 @@ const signUp = async () => {
       }
       .teamers {
         display: flex;
+        margin-top: 30rpx;
         justify-content: space-evenly;
         height: 140rpx;
         flex: 1;
@@ -669,6 +714,7 @@ const signUp = async () => {
           display: flex;
           flex-direction: column;
           align-items: center;
+          margin-right: 30rpx;
           .avatar {
             width: 100rpx;
             height: 100rpx;
@@ -682,10 +728,13 @@ const signUp = async () => {
         }
       }
       .status {
+        position: absolute;
+        top: 0;
+        right: 0;
         align-self: flex-start;
-        padding: 10rpx 20rpx;
+        padding: 20rpx 20rpx;
         background-color: rgb(244, 244, 127);
-        font-size: 20rpx;
+        font-size: 24rpx;
         font-weight: 700;
         border-radius: 10rpx;
         margin: 10rpx;
@@ -796,6 +845,7 @@ const signUp = async () => {
   }
 
   .line {
+    display: block;
     padding-left: 20rpx;
     border-left: #2979ff 6rpx solid;
     margin-top: 40rpx;

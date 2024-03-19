@@ -56,3 +56,13 @@
   transition: all 0.2s ease;
   font-weight: 700;
 }
+.fabButton.data-v-485a05f3 {
+  position: relative;
+  z-index: 99;
+  bottom: 400rpx;
+  right: 100rpx;
+  background-color: red;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+}

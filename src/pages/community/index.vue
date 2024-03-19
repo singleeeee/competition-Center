@@ -95,6 +95,7 @@ onLoad((options) => {
   const current = +options?.currentTab
   currentPage.value = current || 0
 })
+
 // 获取可用屏幕高度
 let windowHeight = 0
 ;(() => {
@@ -280,5 +281,15 @@ const swiperChange = (e) => {
     transition: all 0.2s ease;
     font-weight: 700;
   }
+}
+.fabButton {
+  position: relative;
+  z-index: 99;
+  bottom: 400rpx;
+  right: 100rpx;
+  background-color: red;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
 }
 </style>

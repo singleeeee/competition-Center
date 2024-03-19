@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "更多设置",
+                    "pathName": "subpackage/moreSetting/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "关于我们",
                     "pathName": "subpackage/aboutUs/index",
                     "query": "",
