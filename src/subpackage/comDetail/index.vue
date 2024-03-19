@@ -214,6 +214,7 @@ onLoad(async (options) => {
 })
 // 订阅状态
 const isSubscribe = ref(true)
+// 比赛订阅
 const comSubscribe = () => {
   const res = http({
     url: '/app/sub/createSub',
@@ -221,6 +222,7 @@ const comSubscribe = () => {
     data: {},
   })
 }
+// 取消订阅
 const cancelSubscribe = () => {
   isSubscribe.value = true
   const res = http({

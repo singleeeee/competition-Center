@@ -9,8 +9,6 @@ import { http } from '@/utils/http'
 const userInfoStore = useUserInfoStore()
 // 大坑！！！！！解构赋值还是会丢失响应式的，但是log出来还是proxy？
 const { userInfo } = storeToRefs(userInfoStore)
-let tagList = ref<string[]>([])
-let isHeadShow = ref(true)
 
 onLoad(() => {
   let userInfo = uni.getStorageSync('UserInfo')
@@ -32,6 +30,8 @@ onShow(() => {
     isHeadShow.value = false
   }
 })
+// 标签数组
+let tagList = ref<string[]>([])
 // 标签格式化
 const formatLabel = () => {
   if (userInfo.value) {
@@ -71,52 +71,7 @@ const navigatetoPerson = () => {
     url: '/subpackage/personal_data/index',
   })
 }
-
-// 主页item配置项
-const configItems = [
-  {
-    id: 1,
-    title: '我的奖项',
-    icon: 'medal',
-    url: 'myMedal',
-  },
-  {
-    id: 2,
-    title: '我的队伍',
-    icon: 'flag',
-    url: 'myTeam',
-  },
-  {
-    id: 3,
-    title: '参赛报名',
-    icon: 'paperplane',
-    url: 'myTeam',
-  },
-  {
-    id: 4,
-    title: '我的经历',
-    icon: 'person',
-    url: 'myExperience',
-  },
-  {
-    id: 5,
-    title: '意见反馈',
-    icon: 'email',
-    url: 'customerService',
-  },
-  {
-    id: 6,
-    title: '更多设置',
-    icon: 'gear',
-    url: 'moreSetting',
-  },
-  {
-    id: 7,
-    title: '关于我们',
-    icon: 'redo',
-    url: 'aboutUs',
-  },
-]
+let isHeadShow = ref(true)
 
 // 改变登录状态
 const changeIsLog = (val: boolean) => {
@@ -145,114 +100,92 @@ const switchToPersonPage = () => {
 
 <template>
   <view class="container">
-    <view class="header">
-      <view class="avatarBox" v-if="isHeadShow">
-        <image
-          class="avatar"
-          @click="switchToPersonPage"
-          :src="userInfo.userAvatarUrl"
-          mode="scaleToFill"
-        />
-        <view class="bodyBox" @click="switchToPersonPage">
-          <view class="nickname">{{ userInfo.userNickname }}</view>
-          <view class="label">
-            <view class="tag-view">
-              <view v-if="tagList.length > 0" style="display: flex; flex-wrap: wrap">
-                <uni-tag
-                  v-for="(item, index) in tagList"
-                  :key="index"
-                  class="label"
-                  :text="item"
-                  :circle="true"
-                  type="primary"
-                  size="small"
-                  style="margin-right: 10rpx; margin-bottom: 10rpx"
-                />
-              </view>
-              <view v-else>
-                <uni-tag
-                  class="label"
-                  text="暂无标签"
-                  :circle="true"
-                  type="primary"
-                  size="small"
-                ></uni-tag>
-              </view>
-            </view>
-          </view>
-        </view>
-        <!-- <view class="detail">
-          <view class="text">编辑资料</view>
-          <uni-icons type="right" color="#ccc" size="20"></uni-icons>
-        </view> -->
+    <view class="header" v-if="isHeadShow">
+      <!-- 头像 -->
+      <image
+        class="avatar"
+        @tap="navigatetoPerson"
+        :src="userInfo.userAvatarUrl"
+        mode="scaleToFill"
+      />
+      <!-- 昵称 -->
+      <view class="nickname">
+        {{ userInfo.userNickname }}
       </view>
-      <UnLog @changeIsLog="changeIsLog" v-else></UnLog>
+      <!-- 标签栏 -->
+      <view class="tagList">
+        <uni-tag
+          v-for="(item, index) in tagList"
+          :key="index"
+          class="label"
+          :text="item"
+          :circle="true"
+          type="primary"
+          size="small"
+        ></uni-tag>
+      </view>
+      <!-- 粉丝数量等 -->
+      <view class="dataBox">
+        <view class="itemBox">
+          <view class="num">{{ userInfo.loveNumber }}</view>
+          <view class="text">获赞</view>
+        </view>
+        <view class="itemBox" @tap="navigateTo('myFriends')">
+          <view class="num">{{ userInfo.fansNumber }}</view>
+          <view class="text">粉丝</view>
+        </view>
+        <view class="itemBox" @tap="navigateTo('myFollowers')">
+          <view class="num">{{ userInfo.followerNumber }}</view>
+          <view class="text">关注</view>
+        </view>
+      </view>
     </view>
-    <view class="body">
-      <view class="collectBox">
-        <view class="numberBox">
-          <view class="liked">
-            <view class="Number">{{ userInfo.loveNumber || 0 }}</view>
-            <view class="text">获赞</view>
-          </view>
-          <view class="liked" @tap="navigateTo('myFollowers')">
-            <view class="Number">{{ userInfo.followerNumber || 0 }}</view>
-            <view class="text">关注</view>
-          </view>
-          <view class="liked" @tap="navigateTo('myFriends')">
-            <view class="Number">{{ userInfo.fansNumber || 0 }}</view>
-            <view class="text">粉丝</view>
-          </view>
-        </view>
-        <view class="itemsBox">
-          <view class="items" @tap="navigateTo('myCollection')">
-            <image class="img" src="@/static/mine/collect.png" mode="scaleToFill" />
-            收藏</view
-          >
-          <view class="items" @tap="navigateTo('subscribe')">
-            <image class="img" src="@/static/mine/subscribe.png" mode="scaleToFill" />
-            订阅</view
-          >
-          <view class="items" @tap="navigateTo('myFollowers')">
-            <image class="img" src="@/static/mine/follow.png" mode="scaleToFill" />
-            关注</view
-          >
-          <view class="items" @tap="navigateTo('myFriends')">
-            <image class="img" src="@/static/mine/fans.png" mode="scaleToFill" />
-            粉丝</view
-          >
-        </view>
+    <template v-else>
+      <UnLog @changeIsLog="changeIsLog"></UnLog>
+    </template>
+    <!-- 收藏、订阅 -->
+    <view class="configBox">
+      <view class="itemBox" @tap="navigateTo('myCollection')">
+        <uni-icons type="star" size="26" style="margin-right: 10rpx" />
+        收藏
       </view>
-      <view class="messageBox">
-        <view class="itemsBox">
-          <view class="items">
-            <image class="img" src="@/static/mine/message.png" mode="scaleToFill" />
-            信息</view
-          >
-          <view class="items" @tap="navigateTo('PostWriting')">
-            <image class="img" src="@/static/mine/draft.png" mode="scaleToFill" />
-            草稿</view
-          >
-          <view class="items" @tap="switchToPersonPage">
-            <image class="img" src="@/static/mine/person.png" mode="scaleToFill" />
-            个人主页</view
-          >
-          <view class="items" @tap="navigateTo('postManage')">
-            <image class="img" src="@/static/mine/manage.png" mode="scaleToFill" />
-            内容管理</view
-          >
-        </view>
+      <view class="itemBox noneBorder" @tap="navigateTo('subscribe')">
+        <uni-icons type="calendar" size="26" style="margin-right: 10rpx" />
+        订阅
       </view>
-      <view class="list">
-        <view class="item" v-for="item in configItems" :key="item.id" @tap="navigateTo(item.url)">
-          <view class="left">
-            <uni-icons style="vertical-align: middle" :type="item.icon" size="24" />
-            {{ item.title }}</view
-          >
-          <view class="right">
-            <uni-icons type="right" color="#ccc" size="18" />
-          </view>
-        </view>
+    </view>
+    <!-- 草稿、订阅、个人主页 -->
+    <view class="configBox">
+      <view class="itemBox" @tap="navigateTo('PostWriting')">
+        <uni-icons type="compose" size="26" style="margin-right: 10rpx" />
+        发布文章
+      </view>
+      <view class="itemBox" @tap="navigateTo('postManage')">
+        <uni-icons type="eye" size="26" style="margin-right: 10rpx" />
+        内容管理
+      </view>
+      <view class="itemBox noneBorder" @tap="switchToPersonPage">
+        <uni-icons type="person" size="26" style="margin-right: 10rpx" />
+        个人主页
+      </view>
+    </view>
+    <!-- 我的队伍、我的经历、关于我们 -->
+    <view class="configBox">
+      <view class="itemBox" @tap="navigateTo('myTeam')">
+        <uni-icons type="flag" size="26" style="margin-right: 10rpx" />
+        我的队伍
+      </view>
+      <view class="itemBox" @tap="navigateTo('myExperience')">
+        <uni-icons type="videocam" size="26" style="margin-right: 10rpx" />
+        我的经历
+      </view>
+      <view class="itemBox" @tap="navigateTo('aboutUs')">
+        <uni-icons type="info" size="26" style="margin-right: 10rpx" />
+        关于我们
+      </view>
+      <view class="itemBox noneBorder" @tap="navigateTo('moreSetting')">
+        <uni-icons type="gear" size="26" style="margin-right: 10rpx" />
+        更多设置
       </view>
     </view>
   </view>
@@ -262,147 +195,80 @@ const switchToPersonPage = () => {
 .container {
   display: flex;
   flex-direction: column;
-  background-color: rgb(254, 252, 253);
-
+  background-color: #f5f5f5;
+  padding-bottom: 100rpx;
   .header {
-    height: 300rpx;
-    background-color: #12a66a;
-    padding: 0 20rpx;
-    .avatarBox {
-      padding-left: 20rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 380rpx;
+    background: linear-gradient(to right bottom, #7bd686, #4c9872);
+    margin: 30rpx 40rpx;
+    margin-top: 90rpx;
+    border-radius: 100rpx;
+    .avatar {
+      position: absolute;
+      top: -80rpx;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160rpx;
+      height: 160rpx;
+      border-radius: 50%;
+      border: 6rpx solid #fff;
+    }
+    .nickname {
+      margin-top: 100rpx;
+      font-weight: 700;
+      font-size: 36rpx;
+      color: #fff;
+    }
+    .tagList {
       display: flex;
-      align-items: center;
-      height: 200rpx;
-      .avatar {
-        width: 140rpx;
-        height: 140rpx;
-        border-radius: 50%;
+      margin-top: 10rpx;
+      .label {
+        margin-right: 20rpx;
       }
-      .bodyBox {
-        flex: 1;
-        height: 120rpx;
-        padding-left: 30rpx;
+    }
+    .dataBox {
+      width: 90%;
+      margin-top: 30rpx;
+      display: flex;
+      justify-content: space-evenly;
+      color: #fff;
+      .itemBox {
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
-
-        .nickname {
-          font-family: '微软雅黑';
-          font-size: 40rpx;
-          padding-bottom: 10rpx;
-          color: #000;
-          font-weight: 700;
-        }
-      }
-      .detail {
-        display: flex;
-        justify-content: center;
         align-items: center;
-        height: 80rpx;
-        margin-right: 20rpx;
-        color: #222;
-        vertical-align: center;
+        .num {
+          font-size: 56rpx;
+        }
         .text {
-          font-size: 30rpx;
-          color: #333;
-          font-weight: 700;
-          margin-right: 10rpx;
+          color: #eee;
+          font-size: 28rpx;
         }
       }
     }
   }
-  .body {
-    position: relative;
-    top: -100rpx;
-    z-index: 999;
-    border-radius: 10rpx;
-    margin: 0 20rpx;
-    box-sizing: border-box;
-    margin-bottom: -80rpx;
-
-    .collectBox,
-    .messageBox {
-      box-sizing: border-box;
-      background-color: #fff;
-      border-radius: 10rpx;
-      height: 280rpx;
-      margin: 0 20rpx 20rpx 20rpx;
-      padding: 20rpx;
-      box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.08);
-      .numberBox {
-        width: 100%;
-        display: flex;
-        border-bottom: 1px solid #ccc;
-        align-items: center;
-        .liked {
-          display: flex;
-          position: relative;
-          padding-bottom: 20rpx;
-          padding-left: 30rpx;
-          margin-right: 40rpx;
-          .Number {
-            font-size: 44rpx;
-            padding-right: 10rpx;
-            color: red;
-            font-weight: 700;
-          }
-          .text {
-            font-size: 26rpx;
-            font-family: 'songti';
-            font-weight: 700;
-            margin-top: 18rpx;
-          }
-        }
-      }
-
-      .itemsBox {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        height: 180rpx;
-        font-weight: 700;
-        font-size: 28rpx;
-        .items {
-          display: flex;
-          width: 200rpx;
-          height: 180rpx;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          border-radius: 10rpx;
-          &:active {
-            background-color: #eee;
-          }
-          .img {
-            width: 60rpx;
-            height: 60rpx;
-            padding-bottom: 10rpx;
-          }
-        }
+  .configBox {
+    margin: 0rpx 30rpx;
+    margin-top: 20rpx;
+    background-color: #fff;
+    padding: 10rpx 30rpx;
+    border-radius: 20rpx;
+    box-shadow: 0rpx 4rpx 12rpx 2rpx #ddd;
+    .itemBox {
+      display: flex;
+      align-items: center;
+      padding: 20rpx 0;
+      border-bottom: 2rpx solid #eee;
+      font-size: 28rpx;
+      &:active {
+        background-color: #fdfdfd;
       }
     }
-
-    .messageBox {
-      height: 180rpx;
-      .itemsBox {
-        height: 140rpx;
-      }
-    }
-    .list {
-      height: auto;
-      background-color: #fff;
-      margin: 0 20rpx 20rpx 20rpx;
-      border-radius: 10rpx;
-      box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.08);
-      .item {
-        display: flex;
-        justify-content: space-between;
-        padding: 30rpx;
-        font-size: 28rpx;
-        &:active {
-          background-color: #eee;
-        }
-      }
+    .noneBorder {
+      border: 0;
     }
   }
 }

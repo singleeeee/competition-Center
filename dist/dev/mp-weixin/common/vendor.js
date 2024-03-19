@@ -9203,10 +9203,10 @@ const pages = [
     path: "pages/mine/index",
     style: {
       navigationBarTitleText: "",
-      navigationBarBackgroundColor: "#12a66a",
+      navigationBarBackgroundColor: "#fefcfd",
       enablePullDownRefresh: true,
-      backgroundColor: "#12a66a",
-      backgroundTextStyle: "light"
+      backgroundColor: "#fff",
+      backgroundTextStyle: "dark"
     }
   },
   {

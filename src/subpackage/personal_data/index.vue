@@ -331,5 +331,4 @@ const introCancel = () => {
     text-align: center;
   }
 }
-
 </style>

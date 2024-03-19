@@ -3,13 +3,8 @@
     <view class="avatar">
       <uni-icons type="person-filled" color="#ddd" size="54" />
     </view>
-    <view class="bodyBox">
-      <view class="nickname">登录/注册</view>
-      <view class="info">见证更精彩的世界 </view>
-    </view>
-    <view class="detail">
-      <uni-icons type="right" color="#ccc" size="20" />
-    </view>
+    <view class="nickname">登录/注册</view>
+    <view class="info">一起见证更精彩的世界！ </view>
   </view>
 </template>
 <script lang="ts" setup>
@@ -85,43 +80,37 @@ const Login = async () => {
 </script>
 <style lang="scss" scoped>
 .avatarBox {
-  padding-left: 20rpx;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  height: 200rpx;
+  position: relative;
+  height: 380rpx;
+  background: linear-gradient(to right bottom, #7bd686, #4c9872);
+  margin: 30rpx 40rpx;
+  margin-top: 90rpx;
+  border-radius: 100rpx;
   .avatar {
+    margin-top: 20rpx;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 140rpx;
-    height: 140rpx;
+    width: 160rpx;
+    height: 160rpx;
     border-radius: 50%;
     background-color: #ccc;
   }
-  .bodyBox {
-    flex: 1;
-    height: 120rpx;
-    padding-left: 30rpx;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    .nickname {
-      font-family: '微软雅黑';
-      font-size: 40rpx;
-      color: #000;
-      font-weight: 700;
-    }
-    .info {
-      font-size: 26rpx;
-      padding-right: 10rpx;
-    }
+
+  .nickname {
+    margin-top: 20rpx;
+    font-family: '微软雅黑';
+    font-size: 40rpx;
+    color: #000;
+    font-weight: 700;
   }
-  .detail {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 120rpx;
-    width: 70rpx;
+  .info {
+    margin-top: 20rpx;
+    font-size: 26rpx;
+    padding-right: 10rpx;
   }
 }
 </style>

@@ -1,6 +1,5 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-const common_assets = require("../../common/assets.js");
 require("../../stores/index.js");
 const utils_http = require("../../utils/http.js");
 const stores_modules_userInfoStore = require("../../stores/modules/userInfoStore.js");
@@ -20,8 +19,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   setup(__props) {
     const userInfoStore = stores_modules_userInfoStore.useUserInfoStore();
     const { userInfo } = common_vendor.storeToRefs(userInfoStore);
-    let tagList = common_vendor.ref([]);
-    let isHeadShow = common_vendor.ref(true);
     common_vendor.onLoad(() => {
       let userInfo2 = common_vendor.index.getStorageSync("UserInfo");
       if (userInfo2) {
@@ -41,6 +38,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         isHeadShow.value = false;
       }
     });
+    let tagList = common_vendor.ref([]);
     const formatLabel = () => {
       if (userInfo.value) {
         for (let i = 0; i < tagList.value.length; i++)
@@ -68,50 +66,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         common_vendor.index.stopPullDownRefresh();
       }, 1e3);
     });
-    const configItems = [
-      {
-        id: 1,
-        title: "我的奖项",
-        icon: "medal",
-        url: "myMedal"
-      },
-      {
-        id: 2,
-        title: "我的队伍",
-        icon: "flag",
-        url: "myTeam"
-      },
-      {
-        id: 3,
-        title: "参赛报名",
-        icon: "paperplane",
-        url: "myTeam"
-      },
-      {
-        id: 4,
-        title: "我的经历",
-        icon: "person",
-        url: "myExperience"
-      },
-      {
-        id: 5,
-        title: "意见反馈",
-        icon: "email",
-        url: "customerService"
-      },
-      {
-        id: 6,
-        title: "更多设置",
-        icon: "gear",
-        url: "moreSetting"
-      },
-      {
-        id: 7,
-        title: "关于我们",
-        icon: "redo",
-        url: "aboutUs"
-      }
-    ];
+    const navigatetoPerson = () => {
+      common_vendor.index.navigateTo({
+        url: "/subpackage/personal_data/index"
+      });
+    };
+    let isHeadShow = common_vendor.ref(true);
     const changeIsLog = (val) => {
       formatLabel();
       isHeadShow.value = val;
@@ -134,13 +94,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.unref(isHeadShow)
-      }, common_vendor.unref(isHeadShow) ? common_vendor.e({
-        b: common_vendor.o(switchToPersonPage),
+      }, common_vendor.unref(isHeadShow) ? {
+        b: common_vendor.o(navigatetoPerson),
         c: common_vendor.unref(userInfo).userAvatarUrl,
         d: common_vendor.t(common_vendor.unref(userInfo).userNickname),
-        e: common_vendor.unref(tagList).length > 0
-      }, common_vendor.unref(tagList).length > 0 ? {
-        f: common_vendor.f(common_vendor.unref(tagList), (item, index, i0) => {
+        e: common_vendor.f(common_vendor.unref(tagList), (item, index, i0) => {
           return {
             a: index,
             b: "9023ef44-0-" + i0,
@@ -151,57 +109,60 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
               size: "small"
             })
           };
-        })
-      } : {
-        g: common_vendor.p({
-          text: "暂无标签",
-          circle: true,
-          type: "primary",
-          size: "small"
-        })
-      }, {
-        h: common_vendor.o(switchToPersonPage)
-      }) : {
-        i: common_vendor.o(changeIsLog)
-      }, {
-        j: common_vendor.t(common_vendor.unref(userInfo).loveNumber || 0),
-        k: common_vendor.t(common_vendor.unref(userInfo).followerNumber || 0),
-        l: common_vendor.o(($event) => navigateTo("myFollowers")),
-        m: common_vendor.t(common_vendor.unref(userInfo).fansNumber || 0),
-        n: common_vendor.o(($event) => navigateTo("myFriends")),
-        o: common_assets._imports_0,
-        p: common_vendor.o(($event) => navigateTo("myCollection")),
-        q: common_assets._imports_1,
-        r: common_vendor.o(($event) => navigateTo("subscribe")),
-        s: common_assets._imports_2,
-        t: common_vendor.o(($event) => navigateTo("myFollowers")),
-        v: common_assets._imports_3,
-        w: common_vendor.o(($event) => navigateTo("myFriends")),
-        x: common_assets._imports_4,
-        y: common_assets._imports_5,
-        z: common_vendor.o(($event) => navigateTo("PostWriting")),
-        A: common_assets._imports_6,
-        B: common_vendor.o(switchToPersonPage),
-        C: common_assets._imports_7,
-        D: common_vendor.o(($event) => navigateTo("postManage")),
-        E: common_vendor.f(configItems, (item, k0, i0) => {
-          return {
-            a: "9023ef44-3-" + i0,
-            b: common_vendor.p({
-              type: item.icon,
-              size: "24"
-            }),
-            c: common_vendor.t(item.title),
-            d: "9023ef44-4-" + i0,
-            e: item.id,
-            f: common_vendor.o(($event) => navigateTo(item.url), item.id)
-          };
         }),
-        F: common_vendor.p({
-          type: "right",
-          color: "#ccc",
-          size: "18"
-        })
+        f: common_vendor.t(common_vendor.unref(userInfo).loveNumber),
+        g: common_vendor.t(common_vendor.unref(userInfo).fansNumber),
+        h: common_vendor.o(($event) => navigateTo("myFriends")),
+        i: common_vendor.t(common_vendor.unref(userInfo).followerNumber),
+        j: common_vendor.o(($event) => navigateTo("myFollowers"))
+      } : {
+        k: common_vendor.o(changeIsLog)
+      }, {
+        l: common_vendor.p({
+          type: "star",
+          size: "26"
+        }),
+        m: common_vendor.o(($event) => navigateTo("myCollection")),
+        n: common_vendor.p({
+          type: "calendar",
+          size: "26"
+        }),
+        o: common_vendor.o(($event) => navigateTo("subscribe")),
+        p: common_vendor.p({
+          type: "compose",
+          size: "26"
+        }),
+        q: common_vendor.o(($event) => navigateTo("PostWriting")),
+        r: common_vendor.p({
+          type: "eye",
+          size: "26"
+        }),
+        s: common_vendor.o(($event) => navigateTo("postManage")),
+        t: common_vendor.p({
+          type: "person",
+          size: "26"
+        }),
+        v: common_vendor.o(switchToPersonPage),
+        w: common_vendor.p({
+          type: "flag",
+          size: "26"
+        }),
+        x: common_vendor.o(($event) => navigateTo("myTeam")),
+        y: common_vendor.p({
+          type: "videocam",
+          size: "26"
+        }),
+        z: common_vendor.o(($event) => navigateTo("myExperience")),
+        A: common_vendor.p({
+          type: "info",
+          size: "26"
+        }),
+        B: common_vendor.o(($event) => navigateTo("aboutUs")),
+        C: common_vendor.p({
+          type: "gear",
+          size: "26"
+        }),
+        D: common_vendor.o(($event) => navigateTo("moreSetting"))
       });
     };
   }
