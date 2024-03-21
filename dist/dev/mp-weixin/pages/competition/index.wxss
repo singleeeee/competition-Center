@@ -106,7 +106,7 @@
   border-radius: 30rpx;
 }
 .container .headBox .tagList .active.data-v-3e564a22 {
-  background: linear-gradient(to top, rgb(6, 93, 160), rgb(88, 162, 228));
+  background: linear-gradient(to right bottom, #7bd686, #4c9872);
   color: #fff;
   border-radius: 30rpx;
 }

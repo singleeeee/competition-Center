@@ -1,7 +1,10 @@
 <template>
-  <view class="container" v-if="userInfo">
+  <view class="container" v-if="activityList.length > 0">
     <view class="header">
-      <image class="bg" src="https://s11.ax1x.com/2024/01/24/pFeshjA.jpg" />
+      <image
+        class="bg"
+        src="https://jk-competition.oss-cn-guangzhou.aliyuncs.com/picture/uploads/2024-03-19/pexels-catalina-carvajal-herrera-18310131.jpg"
+      />
     </view>
     <view class="body">
       <view class="avatarBox">
@@ -194,7 +197,7 @@
       </swiper-item>
       <!-- 个人经历 -->
       <swiper-item class="steps">
-        <view style="background-color: #fff; width: 90vw; padding: 4vh 5vw">
+        <view style="padding: 20rpx">
           <uni-steps
             :options="expList"
             active-color="#007AFF"
@@ -206,7 +209,9 @@
       </swiper-item>
     </swiper>
   </view>
-  <view v-else> <skeleton></skeleton> </view>
+  <template v-else>
+    <skeleton />
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -270,7 +275,8 @@ const onClickImg = (tempFilePaths: string) => {
     },
   })
 }
-
+// 当前经历步骤
+let active = ref(1)
 // 获取用户经历
 const getUserExperience = async () => {
   const res = await http({
@@ -408,8 +414,6 @@ const stringToTag = () => {
 
 // 经历数组
 let expList = ref([])
-// 当前经历步骤
-let active = ref(expList.value.length - 1)
 </script>
 
 <style lang="scss" scoped>

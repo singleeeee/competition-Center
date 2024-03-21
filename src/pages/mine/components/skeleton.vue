@@ -11,12 +11,12 @@
             <view class="data-v-71046a88 data-v-71046a88" style="display: flex">
               <view
                 class="edit data-v-71046a88 sk-transparent sk-text-30-3030-755 sk-text"
-                style="background-position-x: 50%"
+                style="background-position-x: 50%; border: 0"
                 >取消关注</view
               >
               <view
                 class="edit data-v-71046a88 sk-transparent sk-text-30-3030-358 sk-text"
-                style="background-position-x: 50%"
+                style="background-position-x: 50%; border: 0"
                 >私信</view
               >
             </view>
@@ -71,7 +71,7 @@
               >
                 <text
                   class="uni-tag tag--uni-tag uni-tag--primary tag--uni-tag--primary uni-tag--small tag--uni-tag--small uni-tag--circle tag--uni-tag--circle uni-tag-text--small tag--uni-tag-text--small sk-transparent sk-text-7-1429-929 sk-text"
-                  style="true"
+                  style="border: 0"
                   >大二</text
                 >
               </view>
@@ -81,7 +81,7 @@
               >
                 <text
                   class="uni-tag tag--uni-tag uni-tag--primary tag--uni-tag--primary uni-tag--small tag--uni-tag--small uni-tag--circle tag--uni-tag--circle uni-tag-text--small tag--uni-tag-text--small sk-transparent sk-text-7-1429-503 sk-text"
-                  style="true"
+                  style="border: 0"
                   >计算机</text
                 >
               </view>

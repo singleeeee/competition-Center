@@ -20,7 +20,7 @@
         <template #comment>
           <slot>
             <view>
-              <view class="commentText">
+              <text :user-select="true" class="commentText">
                 {{ item.content }}
                 <!-- 二级评论 -->
                 <view v-if="item.commentSons.length > 0">
@@ -32,7 +32,9 @@
                   >
                     <view class="left">
                       <view class="userInfo">{{ items.userInfo.userNickname }}</view>
-                      <view class="content">{{ items.commentText }}</view>
+                      <text :selectable="true" :user-select="true" class="content">{{
+                        items.commentText
+                      }}</text>
                       <view class="replyTime"
                         >{{ toLocalTime(items.CreatedAt) }}
                         {{
@@ -47,7 +49,7 @@
                     </view>
                   </view>
                 </view>
-              </view>
+              </text>
             </view>
           </slot>
         </template>

@@ -1,5 +1,5 @@
 <template>
-  <view class="container" v-if="comInfo">
+  <view class="container" v-if="!isSkeletonShow">
     <!-- 比赛图片 -->
     <view class="comImg">
       <image class="comImg" :src="comInfo.comPicture" mode="scaleToFill" />
@@ -20,21 +20,21 @@
       </view>
     </view>
     <!-- 比赛订阅 -->
-    <button class="subscribe" v-if="isSubscribe" plain @tap="comSubscribe">比赛订阅</button>
-    <button class="subscribe subscribed" v-else plain @tap="cancelSubscribe">已订阅</button>
+    <button class="subscribe" v-if="!isSubscribe" plain @tap="comSubscribe">比赛订阅</button>
+    <button class="subscribe subscribed" v-else plain @tap="cancelSubscribe">取消订阅</button>
 
     <!-- 比赛信息 -->
     <view class="detailBox">
       <view class="line">比赛信息 </view>
       <p>
         <span class="comName">赛事名称：</span>
-        <span class="detail">{{ comInfo.comTitle }}</span>
+        <text :user-select="true" class="detail">{{ comInfo.comTitle }}</text>
       </p>
       <p>
         <span class="comName">赛事时间：</span>
-        <span class="detail"
+        <text :user-select="true" class="detail"
           >{{ toLocalTime(comInfo.comStart).split(' ')[0] }} -
-          {{ toLocalTime(comInfo.comEnd).split(' ')[0] }}</span
+          {{ toLocalTime(comInfo.comEnd).split(' ')[0] }}</text
         >
       </p>
       <p>
@@ -54,12 +54,12 @@
     <!-- 比赛简介 -->
     <view class="shortInfoBox">
       <view class="line">比赛简介</view>
-      <p class="comSubTitle">{{ comInfo.comSubTitle }}</p>
+      <text :user-select="true" class="comSubTitle">{{ comInfo.comSubTitle }}</text>
     </view>
     <!-- 比赛详细介绍 -->
     <view class="shortInfoBox">
       <view class="line">详细介绍</view>
-      <p class="comSubTitle">{{ comInfo.comIntroduction }}</p>
+      <text :user-select="true" class="comSubTitle">{{ comInfo.comIntroduction }}</text>
     </view>
     <!-- 比赛评分 -->
     <view class="grade">
@@ -83,6 +83,7 @@
             }}</view>
             <view class="nickname" v-else>{{ item.userNickname }}</view>
           </view>
+          <button class="btn" @tap="onDel(teamInfo.ID)">删除队伍</button>
         </view>
         <!-- 队伍状态 -->
         <view class="status" v-if="teamInfo.groupStatus === 2">待审核</view>
@@ -100,7 +101,13 @@
       <view class="line">相关帖子</view>
       <view class="postBox" v-if="postList.length > 0">
         <view class="item" v-for="item in postList" :key="item.ID" @tap="navigateTo(item.ID)">
-          <image class="img" :src="item.disPicture ? item.disPicture[0] : ''" mode="scaleToFill" />
+          <image
+            class="img"
+            :src="
+              item.disPicture.length > 0 ? item.disPicture[0] : ' ../../static/empty/emptyImg.png'
+            "
+            mode="scaleToFill"
+          />
           <view class="content">
             <span class="titleBox">
               <h1 class="title">{{ item.disTitle }}</h1>
@@ -125,7 +132,7 @@
     </view>
     <!-- 抽屉 -->
     <uni-drawer ref="showLeft" mode="left" :width="320">
-      <view class="drawerBox">
+      <scroll-view scroll-y class="drawerBox">
         <view class="title">{{ comInfo.comTitle }}</view>
         <view class="line">报名参赛</view>
         <!-- 输入框 -->
@@ -167,7 +174,11 @@
         <view class="line">选择好友</view>
         <!-- 好友列表 -->
         <view class="friendBox">
-          <view class="friendItem" v-for="(item, index) in friendList" :key="index">
+          <view
+            class="friendItem"
+            v-for="(item, index) in friendList.filter((element) => element.userID != 9999)"
+            :key="index"
+          >
             <image class="avatar" :src="item.userAvatarUrl"></image>
             <view class="contentBox">
               <view class="nickName">{{ item.userNickname }}</view>
@@ -180,10 +191,31 @@
             ></image>
           </view>
         </view>
-      </view>
+      </scroll-view>
     </uni-drawer>
   </view>
-  <skeleton v-else></skeleton>
+  <template v-else>
+    <skeleton></skeleton>
+  </template>
+  <!-- 成功提示 -->
+  <uni-popup ref="successInfo" type="message">
+    <uni-popup-message type="success" :message="successMsg" :duration="500"></uni-popup-message>
+  </uni-popup>
+  <!-- 失败提示 -->
+  <uni-popup ref="errorInfo" type="message">
+    <uni-popup-message type="error" :message="errorMsg" :duration="500"></uni-popup-message>
+  </uni-popup>
+  <!-- 确定删除弹窗 -->
+  <uni-popup ref="alertDialog" type="dialog">
+    <uni-popup-dialog
+      type="warn"
+      cancelText="取消"
+      confirmText="确认"
+      title="警告"
+      content="您确认要删除这个队伍吗"
+      @confirm="delTeam()"
+    ></uni-popup-dialog>
+  </uni-popup>
 </template>
 
 <script lang="ts" setup>
@@ -195,6 +227,7 @@ import { useUserInfoStore } from '@/stores'
 import skeleton from './components/skeleton.vue'
 import { getTimeDifference } from '@/utils/getTimeDifference'
 const { userInfo } = useUserInfoStore()
+const isSkeletonShow = ref(true)
 let comID = ref(0)
 let isSignUp = ref(false)
 onLoad(async (options) => {
@@ -211,24 +244,80 @@ onLoad(async (options) => {
   await getPostList()
   // 获取好友列表
   await getFriendList()
+  // 获取订阅信息
+  await getSubStatu()
+  isSkeletonShow.value = false
 })
-// 订阅状态
-const isSubscribe = ref(true)
-// 比赛订阅
-const comSubscribe = () => {
-  const res = http({
-    url: '/app/sub/createSub',
-    method: 'POST',
-    data: {},
+// 订阅id
+const subID = ref(0)
+//获取订阅信息
+const getSubStatu = async () => {
+  const res = await http({
+    url: '/app/sub/getSubInfoList',
+    data: {
+      userId: userInfo.ID,
+      comId: +comID.value,
+    },
   })
+  if (res.data.list.length > 0) {
+    subID.value = res.data.list[0].ID
+    isSubscribe.value = true
+  } else isSubscribe.value = false
+}
+// 成功和失败ref
+const successInfo = ref()
+const errorInfo = ref()
+const successMsg = ref('')
+const errorMsg = ref('')
+// 订阅状态
+const isSubscribe = ref(false)
+// 比赛订阅
+const comSubscribe = async () => {
+  try {
+    const res = await http({
+      url: '/app/sub/createSub',
+      method: 'POST',
+      data: {
+        comId: +comID.value,
+      },
+    })
+    uni.showLoading({
+      title: '',
+      mask: true,
+    })
+    setTimeout(() => {
+      uni.hideLoading()
+      successMsg.value = '订阅成功'
+      successInfo.value.open()
+      isSubscribe.value = true
+    }, 500)
+  } catch (error) {
+    errorMsg.value = '订阅失败'
+    isSubscribe.value = false
+    errorInfo.value.open()
+  }
 }
 // 取消订阅
-const cancelSubscribe = () => {
-  isSubscribe.value = true
-  const res = http({
-    url: '/app/sub/deleteSub?ID=' + 2,
-    method: 'DELETE',
-  })
+const cancelSubscribe = async () => {
+  try {
+    const res = await http({
+      url: '/app/sub/deleteSub?ID=' + +subID.value,
+      method: 'DELETE',
+    })
+    uni.showLoading({
+      title: '',
+      mask: true,
+    })
+    setTimeout(() => {
+      uni.hideLoading()
+      successMsg.value = '取消订阅成功'
+      successInfo.value.open()
+      isSubscribe.value = false
+    }, 500)
+  } catch (error) {
+    isSubscribe.value = true
+    successMsg.value = '取消订阅失败'
+  }
 }
 // 抽屉
 const showLeft = ref()
@@ -258,7 +347,6 @@ const getFriendList = async () => {
   for (let i = 0; i < res.data.length; i++) {
     friendList.value.push(res.data[i])
   }
-  console.log(res.data, '好友列表')
 }
 // 获取帖子列表
 const getPostList = async () => {
@@ -335,6 +423,11 @@ const createTeam = async () => {
     })
     showLeft.value.close()
     isSignUp.value = true
+    setTimeout(() => {
+      uni.reLaunch({
+        url: '/subpackage/comDetail/index?comID=' + comID.value,
+      })
+    }, 500)
   } catch (error) {
     uni.showToast({
       title: '创建失败，请重试!',
@@ -405,6 +498,30 @@ const getCountDown = () => {
     countDownMinute.value = Math.floor((differenceTime % (1000 * 3600)) / (1000 * 60))
   }
 }
+// 队伍ID
+const teamID = ref(0)
+// 弹窗ref
+const alertDialog = ref()
+// 点击删除按钮
+const onDel = (teamId: number) => {
+  alertDialog.value.open()
+  teamID.value = teamId
+}
+// 删除队伍
+const delTeam = async () => {
+  if (teamID.value != 0) {
+    try {
+      http({
+        url: '/app/group/deleteGroup?ID=' + teamID.value,
+        method: 'DELETE',
+      })
+      isSignUp.value = false
+      successInfo.value.open()
+    } catch (error) {
+      errorInfo.value.open()
+    }
+  }
+}
 // 队伍信息
 let teamInfo = ref({})
 // 获取比赛参加队伍信息
@@ -432,7 +549,6 @@ const getComTeam = async () => {
   for (let i = 0; i < arr.length; i++) {
     teamInfo.value.userInfoList.push(await getTeamerInfo(arr[i]))
   }
-  console.log(teamInfo.value, '处理完的队伍信息')
 }
 // 根据用户ID获取队员信息
 const getTeamerInfo = async (userID: number) => {
@@ -469,7 +585,6 @@ const getComType = async () => {
     comTypeList.value.push(res.data.list[i])
   }
   comType.value = comTypeList.value[comInfo.value.comType].label
-  console.log(comType.value, '比赛种类')
 }
 
 // 当前分类所有比赛
@@ -510,9 +625,9 @@ const signUp = async () => {
     justify-content: center;
     width: 410rpx;
     height: 70rpx;
-    background-color: #409eff;
+    background-color: #2979ff;
     color: #fff;
-    margin-top: 50rpx;
+    margin-top: 10rpx;
     margin-bottom: 50rpx;
     border: 1rpx solid #136fd1;
   }
@@ -708,6 +823,7 @@ const signUp = async () => {
       }
       .teamers {
         display: flex;
+        flex-wrap: wrap;
         margin-top: 30rpx;
         justify-content: space-evenly;
         height: 140rpx;
@@ -726,6 +842,22 @@ const signUp = async () => {
           .nickname {
             margin-top: 6rpx;
             font-size: 24rpx;
+          }
+        }
+        .btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 70rpx;
+          width: 180rpx;
+          background-color: #2979ff;
+          color: #fff;
+          margin-top: 20rpx;
+          margin-right: 40rpx;
+          font-size: 24rpx;
+          &:active {
+            background-color: #0553a7;
+            transform: scale(0.99);
           }
         }
       }
@@ -753,7 +885,9 @@ const signUp = async () => {
 }
 .drawerBox {
   height: 100vh;
-  padding: 20rpx 10rpx;
+  box-sizing: border-box;
+  padding: 20rpx 20rpx;
+  overflow: scroll;
   .title {
     text-align: center;
     font-size: 38rpx;
@@ -791,16 +925,17 @@ const signUp = async () => {
   .friendBox {
     display: flex;
     flex-direction: column;
+    padding-bottom: 50rpx;
     .friendItem {
       display: flex;
       align-items: center;
       justify-content: space-around;
-      height: 120rpx;
-      margin: 10rpx 0;
+      height: 140rpx;
+      margin: 10rpx 10rpx;
       border-bottom: 2rpx solid #eee;
       .avatar {
-        width: 110rpx;
-        height: 110rpx;
+        width: 100rpx;
+        height: 100rpx;
         border-radius: 50%;
         background-color: skyblue;
       }
@@ -810,9 +945,9 @@ const signUp = async () => {
         flex-direction: column;
         justify-content: space-around;
         height: 110rpx;
-        margin: 0 10rpx;
+        margin: 0 20rpx;
         .nickname {
-          font-size: 26rpx;
+          font-size: 28rpx;
         }
         .introduction {
           font-size: 24rpx;
@@ -820,8 +955,8 @@ const signUp = async () => {
         }
       }
       .add {
-        width: 80rpx;
-        height: 80rpx;
+        width: 60rpx;
+        height: 60rpx;
         border-radius: 50%;
         background-color: orange;
       }

@@ -58,10 +58,9 @@
 }
 .container .header .tagList.data-v-9023ef44 {
   display: flex;
+  width: 60%;
+  justify-content: space-evenly;
   margin-top: 10rpx;
-}
-.container .header .tagList .label.data-v-9023ef44 {
-  margin-right: 20rpx;
 }
 .container .header .dataBox.data-v-9023ef44 {
   width: 90%;

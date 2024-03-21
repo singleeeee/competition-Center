@@ -7,7 +7,11 @@
         :key="item.ID"
         @tap="navigateTo(item.disStatus, item.ID)"
       >
-        <image class="img" :src="item.disPicture[0]" mode="scaleToFill" />
+        <image
+          class="img"
+          :src="item.disPicture[0] || ' ../../static/empty/emptyImg.png'"
+          mode="scaleToFill"
+        />
         <view class="content">
           <span class="titleBox">
             <h1 class="title">{{ item.disTitle }}</h1>
@@ -98,7 +102,6 @@ const navigateTo = (status: number, disId: number) => {
     .img {
       height: 160rpx;
       width: 160rpx;
-      background-color: skyblue;
       border-radius: 10rpx;
     }
     .content {

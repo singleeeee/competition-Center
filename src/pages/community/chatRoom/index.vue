@@ -26,7 +26,7 @@
               <view class="avatar">
                 <image class="avatar" :src="item.avatarUrl" />
               </view>
-              <div v-if="!item.isImg" class="content" v-html="item.content"></div>
+              <text :user-select="true" v-if="!item.isImg" class="content">{{ item.content }}</text>
               <view v-else class="imgBox">
                 <image
                   @tap="onClickImg(item.imgUrl)"
@@ -42,7 +42,7 @@
                 <image class="avatar" :src="item.avatarUrl" />
               </view>
               <!-- 内容 -->
-              <div v-if="!item.isImg" class="content" v-html="item.content"></div>
+              <text :user-select="true" v-if="!item.isImg" class="content">{{ item.content }}</text>
               <view v-else class="imgBox">
                 <image
                   @tap="onClickImg(item.imgUrl)"

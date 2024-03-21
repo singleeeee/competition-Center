@@ -34,6 +34,16 @@ export const useUserInfoStore = defineStore(
       followerNumber: 0,
       // 粉丝个数
       fansNumber: 0,
+      // 真实姓名
+      userName: '',
+      // 班级
+      userClass: '',
+      // 身份证号码
+      userPersonalId: '',
+      // 手机号码
+      userPhone: '',
+      // 学号
+      userStudentId: '',
     })
 
     // 修改某项属性
@@ -91,6 +101,16 @@ export const useUserInfoStore = defineStore(
       userInfo.value.fansNumber = 0
       // 关注个数
       userInfo.value.followerNumber = 0
+      // 真实姓名
+      userInfo.value.userName = ''
+      // 班级
+      userInfo.value.userClass = ''
+      // 身份证号码
+      userInfo.value.userPersonalId = ''
+      // 手机号码
+      userInfo.value.userPhone = ''
+      // 学号
+      userInfo.value.userStudentId = ''
     }
     // 清除用户信息
     const clearUserInfo = () => {
@@ -127,6 +147,16 @@ export const useUserInfoStore = defineStore(
       userInfo.value.fansNumber = res.fansNumber
       // 关注个数
       userInfo.value.followerNumber = res.followerNumber
+      // 姓名
+      userInfo.value.userName = res.userName
+      // 学号
+      userInfo.value.userStudentId = res.userStudentId
+      // 身份证号
+      userInfo.value.userPersonalId = res.userPersonalId
+      // 电话号码
+      userInfo.value.userPhone = res.userPhone
+      // 班级
+      userInfo.value.userClass = res.userClass
     }
     // 记得 return
     return {

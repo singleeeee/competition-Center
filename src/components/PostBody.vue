@@ -1,7 +1,10 @@
 <template>
   <view class="container">
-    <view class="title">{{ title }}</view>
-    <div class="content" v-html="disContentHTML"></div>
+    <text :user-select="true" class="title">{{ title }}</text>
+    <text :user-select="true" :selectable="true">
+      <!-- <div class="content" v-html="disContentHTML"></div> -->
+      {{ content }}
+    </text>
     <ul class="imgBox" v-if="imgList.length > 0">
       <li v-for="(item, index) in imgList" :key="index">
         <image @tap="onClickImg(item)" class="img" :src="item" mode="scaleToFill" />
@@ -62,9 +65,9 @@ const onClickImg = (tempFilePaths) => {
   })
 }
 // 转换过\n的帖子内容 !!!! win
-const disContentHTML = computed(() => {
-  return props.content.replace(/\n/g, '<br>')
-})
+// const disContentHTML = computed(() => {
+//   return props.content.replace(/\n/g, '<br>')
+// })
 
 const props = defineProps({
   disId: {
@@ -94,23 +97,37 @@ const props = defineProps({
 })
 
 const isLiked = ref(props.liked)
-const like = myDebounce(() => {
+const like = myDebounce(async () => {
   // 取消点赞
   if (isLiked.value) {
-    http({
-      url: `/app/dis/userUnLikeDis?ID=${props.disId}&dislikeUserID=${props.authorId}`,
-      method: 'DELETE',
-    })
-    isLiked.value = !isLiked.value
+    try {
+      const res = await http({
+        url: `/app/dis/userUnLikeDis?ID=${props.disId}&dislikeUserID=${props.authorId}`,
+        method: 'DELETE',
+      })
+      if (res.code !== '7') isLiked.value = !isLiked.value
+    } catch (error) {
+      uni.showToast({
+        title: '未知错误',
+        icon: 'none',
+      })
+    }
   } else {
-    http({
-      url: '/app/dis/userLikeDis',
-      data: {
-        ID: props.disId,
-        likeUserID: props.authorId,
-      },
-    })
-    isLiked.value = !isLiked.value
+    try {
+      const res = await http({
+        url: '/app/dis/userLikeDis',
+        data: {
+          ID: props.disId,
+          likeUserID: props.authorId,
+        },
+      })
+      if (res.code !== '7') isLiked.value = !isLiked.value
+    } catch (error) {
+      uni.showToast({
+        title: '点赞失败!',
+        icon: 'none',
+      })
+    }
   }
 }, 200)
 // 收藏

@@ -26,6 +26,16 @@ export type UserInfo = {
   followerNumber: number
   // 粉丝个数
   fansNumber: number
+  // 真实姓名
+  userName: string
+  // 学号
+  userStudentId: string
+  // 班级
+  userClass: string
+  // 手机号码
+  userPhone: string
+  // 身份证号码
+  userPersonalId: string
 }
 // 帖子列表
 export type PostList = {

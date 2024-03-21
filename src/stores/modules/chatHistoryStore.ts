@@ -58,7 +58,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       // 修改连接状态
       socketOpen.value = true
       // 开启心跳检测
-      startHeartbeat()
+      // startHeartbeat()
     })
     // 监听服务器返回信息
     socketTask.value.onMessage(async (data) => {
@@ -107,10 +107,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
                   messageTime: returnMsg.unReadMessageList[key][i].messageTime,
                   isImg: returnMsg.unReadMessageList[key][i].isImg,
                   myWord: returnMsg.unReadMessageList[key][i].toUserId === userInfo.value.ID,
-                  content: returnMsg.unReadMessageList[key][i].messageContent.replace(
-                    /\n/g,
-                    '<br>',
-                  ),
+                  content: returnMsg.unReadMessageList[key][i].messageContent,
                   avatarUrl:
                     returnMsg.unReadMessageList[key][i].toUserId === userInfo.value.ID
                       ? userInfo.value.userAvatarUrl
@@ -148,7 +145,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
           const message = {
             isImg: returnMsg.isImg,
             myWord: returnMsg.formUserId === userInfo.value.ID,
-            content: returnMsg.messageContent.replace(/\n/g, '<br>'),
+            content: returnMsg.messageContent,
             avatarUrl,
             imgUrl: returnMsg.messageContent,
             messageTime: returnMsg.messageTime, //漏了这个导致消息列表NAN，
@@ -195,39 +192,38 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
   // 重连函数
   const reconnect = () => {
     // 确保关闭后重新打开
-    uni.closeSocket()
+    if (socketOpen.value) uni.closeSocket()
     socketOpen.value = false
     if (!socketOpen.value) {
       clearTimeout(socketTimer)
       // 为啥共用定时器，这两个不可能同时存在
       socketTimer = setTimeout(() => {
-        // console.log('开始重连...')
+        console.log('开始重连...')
         chatInfoMap.value = []
-        unReadInfoList.value = []
         connectWebSocket()
       }, RECONNECT_INTERVAL)
     } else {
-      // console.log('WebSocket连接已打开，无需重连！')
+      console.log('WebSocket连接已打开，无需重连！')
     }
   }
   // 心跳检测
-  const startHeartbeat = () => {
-    const sendHeartbeat = () => {
-      // console.log('ping')
-      // if (socketOpen.value) {
-      //   uni
-      //     .sendSocketMessage({
-      //       data: heartbeatMsg,
-      //     })
-      //     .catch((error) => {
-      //       console.log('发送心跳消息失败:', error)
-      //       reconnect()
-      //     })
-      // }
-    }
-    // 发送心跳包
-    socketTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL)
-  }
+  // const startHeartbeat = () => {
+  //   const sendHeartbeat = () => {
+  //     console.log('ping')
+  //     if (socketOpen.value) {
+  //       uni
+  //         .sendSocketMessage({
+  //           data: heartbeatMsg,
+  //         })
+  //         .catch((error) => {
+  //           console.log('发送心跳消息失败:', error)
+  //           reconnect()
+  //         })
+  //     }
+  //   }
+  //   // 发送心跳包
+  //   socketTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL)
+  // }
   // 发送信息
   const sendMessage = (targetID: number, message: any) => {
     for (let i = 0; i < chatInfoMap.value.length; i++) {

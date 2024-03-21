@@ -44,6 +44,11 @@ const Login = async () => {
       loveNumber,
       fansNumber,
       followerNumber,
+      userClass,
+      userName,
+      userPersonalId,
+      userPhone,
+      userStudentId,
     } = resUserInfo.data.user as UserInfo
     // 自己封装需要的数据结构
     const serviceUserInfo: UserInfo = {
@@ -60,6 +65,11 @@ const Login = async () => {
       loveNumber,
       fansNumber,
       followerNumber,
+      userClass,
+      userName,
+      userPersonalId,
+      userPhone,
+      userStudentId,
     }
     // 更新本地仓库
     userInfoStore.updateUserInfo(serviceUserInfo)

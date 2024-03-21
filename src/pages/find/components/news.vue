@@ -20,7 +20,11 @@
         </view>
       </view>
       <view>
-        <image class="image" :src="item.imageUrl" mode="scaleToFill" />
+        <image
+          class="image"
+          :src="item.imageUrl || ' ../../../static/empty/emptyImg.png'"
+          mode="scaleToFill"
+        />
       </view>
     </view>
     <view>
@@ -110,20 +114,20 @@ defineExpose({
   height: 100%;
   .container {
     margin: 20rpx 10rpx;
-    margin-bottom: 20rpx;
+    margin-bottom: 30rpx;
     display: flex;
     align-items: center;
     box-sizing: border-box;
     padding: 10rpx 20rpx 10rpx 20rpx;
     border-bottom: 0.5rpx solid #efefef;
     background-color: #fff;
-    border-radius: 10rpx;
+    border-radius: 20rpx;
     overflow-y: scroll;
     box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.08);
 
     .left {
       flex: 1;
-      height: 180rpx;
+      height: 200rpx;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -155,8 +159,7 @@ defineExpose({
     }
     .image {
       width: 240rpx;
-      height: 160rpx;
-      background-color: skyblue;
+      height: 170rpx;
     }
   }
 }

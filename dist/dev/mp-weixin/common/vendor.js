@@ -12000,6 +12000,32 @@ let Ns = new class {
 })();
 var Ds = Ns;
 const en$2 = {
+  "uni-popup.cancel": "cancel",
+  "uni-popup.ok": "ok",
+  "uni-popup.placeholder": "pleace enter",
+  "uni-popup.title": "Hint",
+  "uni-popup.shareTitle": "Share to"
+};
+const zhHans$2 = {
+  "uni-popup.cancel": "取消",
+  "uni-popup.ok": "确定",
+  "uni-popup.placeholder": "请输入",
+  "uni-popup.title": "提示",
+  "uni-popup.shareTitle": "分享到"
+};
+const zhHant$2 = {
+  "uni-popup.cancel": "取消",
+  "uni-popup.ok": "確定",
+  "uni-popup.placeholder": "請輸入",
+  "uni-popup.title": "提示",
+  "uni-popup.shareTitle": "分享到"
+};
+const messages$1 = {
+  en: en$2,
+  "zh-Hans": zhHans$2,
+  "zh-Hant": zhHant$2
+};
+const en$1 = {
   "uni-datetime-picker.selectDate": "select date",
   "uni-datetime-picker.selectTime": "select time",
   "uni-datetime-picker.selectDateTime": "select date and time",
@@ -12021,7 +12047,7 @@ const en$2 = {
   "uni-calender.SUN": "SUN",
   "uni-calender.confirm": "confirm"
 };
-const zhHans$2 = {
+const zhHans$1 = {
   "uni-datetime-picker.selectDate": "选择日期",
   "uni-datetime-picker.selectTime": "选择时间",
   "uni-datetime-picker.selectDateTime": "选择日期时间",
@@ -12043,7 +12069,7 @@ const zhHans$2 = {
   "uni-calender.SAT": "六",
   "uni-calender.confirm": "确认"
 };
-const zhHant$2 = {
+const zhHant$1 = {
   "uni-datetime-picker.selectDate": "選擇日期",
   "uni-datetime-picker.selectTime": "選擇時間",
   "uni-datetime-picker.selectDateTime": "選擇日期時間",
@@ -12066,9 +12092,9 @@ const zhHant$2 = {
   "uni-calender.confirm": "確認"
 };
 const i18nMessages = {
-  en: en$2,
-  "zh-Hans": zhHans$2,
-  "zh-Hant": zhHant$2
+  en: en$1,
+  "zh-Hans": zhHans$1,
+  "zh-Hant": zhHant$1
 };
 class Calendar {
   constructor({
@@ -12419,28 +12445,28 @@ function fixIosDateFormat(value) {
   }
   return value;
 }
-const en$1 = {
+const en = {
   "uni-countdown.day": "day",
   "uni-countdown.h": "h",
   "uni-countdown.m": "m",
   "uni-countdown.s": "s"
 };
-const zhHans$1 = {
+const zhHans = {
   "uni-countdown.day": "天",
   "uni-countdown.h": "时",
   "uni-countdown.m": "分",
   "uni-countdown.s": "秒"
 };
-const zhHant$1 = {
+const zhHant = {
   "uni-countdown.day": "天",
   "uni-countdown.h": "時",
   "uni-countdown.m": "分",
   "uni-countdown.s": "秒"
 };
-const messages$1 = {
-  en: en$1,
-  "zh-Hans": zhHans$1,
-  "zh-Hant": zhHant$1
+const messages = {
+  en,
+  "zh-Hans": zhHans,
+  "zh-Hant": zhHant
 };
 class MPAnimation {
   constructor(options, _this) {
@@ -12554,32 +12580,6 @@ function createAnimation(option, _this) {
   clearTimeout(_this.timer);
   return new MPAnimation(option, _this);
 }
-const en = {
-  "uni-popup.cancel": "cancel",
-  "uni-popup.ok": "ok",
-  "uni-popup.placeholder": "pleace enter",
-  "uni-popup.title": "Hint",
-  "uni-popup.shareTitle": "Share to"
-};
-const zhHans = {
-  "uni-popup.cancel": "取消",
-  "uni-popup.ok": "确定",
-  "uni-popup.placeholder": "请输入",
-  "uni-popup.title": "提示",
-  "uni-popup.shareTitle": "分享到"
-};
-const zhHant = {
-  "uni-popup.cancel": "取消",
-  "uni-popup.ok": "確定",
-  "uni-popup.placeholder": "請輸入",
-  "uni-popup.title": "提示",
-  "uni-popup.shareTitle": "分享到"
-};
-const messages = {
-  en,
-  "zh-Hans": zhHans,
-  "zh-Hant": zhHant
-};
 const dataPicker = {
   props: {
     localdata: {
@@ -13129,7 +13129,6 @@ exports.Ds = Ds;
 exports._export_sfc = _export_sfc;
 exports.bindIngXMixins = bindIngXMixins;
 exports.checkDate = checkDate;
-exports.computed = computed;
 exports.createAnimation = createAnimation;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;

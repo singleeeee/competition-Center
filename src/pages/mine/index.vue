@@ -225,10 +225,9 @@ const switchToPersonPage = () => {
     }
     .tagList {
       display: flex;
+      width: 60%;
+      justify-content: space-evenly;
       margin-top: 10rpx;
-      .label {
-        margin-right: 20rpx;
-      }
     }
     .dataBox {
       width: 90%;

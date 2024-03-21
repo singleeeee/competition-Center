@@ -46,7 +46,6 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           // 2.1 提取核心数据 res.data
           if ((res.data as any).code === '7') {
             console.log('请求失败，code = 7')
-
             uni.showToast({
               title: res.data.msg,
               icon: 'error',
@@ -60,6 +59,10 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           const userInfoStore = useUserInfoStore()
           userInfoStore.clearUserInfo()
           uni.switchTab({ url: '/pages/mine/index' })
+          uni.showToast({
+            title: '请先登录!',
+            icon: 'none',
+          })
           reject(res)
         } else {
           // 其他错误 -> 根据后端错误信息轻提示
