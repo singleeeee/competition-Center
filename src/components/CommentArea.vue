@@ -20,7 +20,7 @@
         <template #comment>
           <slot>
             <view>
-              <text :user-select="true" class="commentText">
+              <view class="commentText">
                 {{ item.content }}
                 <!-- 二级评论 -->
                 <view v-if="item.commentSons.length > 0">
@@ -49,7 +49,7 @@
                     </view>
                   </view>
                 </view>
-              </text>
+              </view>
             </view>
           </slot>
         </template>

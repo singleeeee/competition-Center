@@ -1,7 +1,6 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useUserInfoStore } from './userInfoStore'
-import { http } from '@/utils/http'
 
 export const useChatHistoryStore = defineStore('chatHistory', () => {
   // ws连接ID
@@ -44,7 +43,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
     const { userInfo } = storeToRefs(userInfoStore)
     // 创建一个 WebSocket 连接。
     socketTask.value = uni.connectSocket({
-      url: 'ws://47.113.177.192:8082/app/msg/ping',
+      url: 'wss://singleeeee.top/app/msg/ping',
       header: {
         Authorization: userInfo.value.token,
       },

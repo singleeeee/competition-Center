@@ -77,13 +77,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       isHeadShow.value = val;
     };
     const navigateTo = (target) => {
-      if (target === "customerService") {
-        common_vendor.index.showToast({
-          title: "暂未开放",
-          icon: "none"
-        });
-        return;
-      }
       common_vendor.index.navigateTo({
         url: `/subpackage/${target}/index`
       });

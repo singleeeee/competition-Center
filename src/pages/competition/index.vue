@@ -108,30 +108,26 @@ const navigateToSearch = () => {
 const getComType = async () => {
   comTypeList.value = []
   const res = await http({
-    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
+    url: '/app/manager/getSysDictionaryDetailListPublic',
     data: {
-      page: 1,
-      pageSize: 100,
       sysDictionaryID: 9,
     },
   })
-  for (let i = 0; i < res.data.list.length; i++) {
-    comTypeList.value.push(res.data.list[i])
+  for (let i = 0; i < res.data.length; i++) {
+    comTypeList.value.push(res.data[i])
   }
 }
 // 获取比赛进行状态
 const getComStatus = async () => {
   comStatusList.value = []
   const res = await http({
-    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
+    url: '/app/manager/getSysDictionaryDetailListPublic',
     data: {
-      page: 1,
-      pageSize: 100,
       sysDictionaryID: 12,
     },
   })
-  for (let i = 0; i < res.data.list.length; i++) {
-    comStatusList.value.push(res.data.list[i])
+  for (let i = 0; i < res.data.length; i++) {
+    comStatusList.value.push(res.data[i])
   }
   console.log(comStatusList.value, '比赛进行状态')
 }
@@ -229,15 +225,13 @@ const comSelected = ref(comSelectArray.value[0].label)
 const getSelectCom = async () => {
   comSelectArray.value = []
   const res = await http({
-    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
+    url: '/app/manager/getSysDictionaryDetailListPublic',
     data: {
-      page: 1,
-      pageSize: 100,
       sysDictionaryID: 8,
     },
   })
-  for (let i = 0; i < res.data.list.length; i++) {
-    comSelectArray.value.push(res.data.list[i])
+  for (let i = 0; i < res.data.length; i++) {
+    comSelectArray.value.push(res.data[i])
   }
 }
 // 下拉比赛种类tab栏切换

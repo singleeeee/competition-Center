@@ -574,15 +574,13 @@ let comType = ref('')
 const getComType = async () => {
   comTypeList.value = []
   const res = await http({
-    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
+    url: '/app/manager/getSysDictionaryDetailListPublic',
     data: {
-      page: 1,
-      pageSize: 100,
       sysDictionaryID: 9,
     },
   })
-  for (let i = 0; i < res.data.list.length; i++) {
-    comTypeList.value.push(res.data.list[i])
+  for (let i = 0; i < res.data.length; i++) {
+    comTypeList.value.push(res.data[i])
   }
   comType.value = comTypeList.value[comInfo.value.comType].label
 }
@@ -594,15 +592,13 @@ let comRating = ref(0)
 // 获取比赛等级列表
 const getComRating = async () => {
   const res = await http({
-    url: 'http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic',
+    url: '/app/manager/getSysDictionaryDetailListPublic',
     data: {
-      page: 1,
-      pageSize: 100,
       sysDictionaryID: 8,
     },
   })
-  for (let i = 0; i < res.data.list.length; i++) {
-    comRatingList.value.push(res.data.list[i])
+  for (let i = 0; i < res.data.length; i++) {
+    comRatingList.value.push(res.data[i])
   }
   comRating.value = comRatingList.value[comInfo.value.comModel].label
 }

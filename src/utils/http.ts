@@ -1,6 +1,6 @@
 import { useUserInfoStore } from '@/stores'
 // 接口基地址
-const baseURL = 'http://47.113.177.192:8082'
+const baseURL = 'https://singleeeee.top'
 
 // 添加拦截器
 const httpInterceptor = {

@@ -14,12 +14,14 @@
         :refresher-triggered="loadingStatus"
         @refresherrefresh="onRefresh"
       >
-        <!-- 时间 -->
-        <view class="date" v-show="index < 1">{{
-          toLocalTime(chatInfoMap[historyIndex].lastMessageTime * 1000, false)
-        }}</view>
         <!-- 聊天内容 -->
         <view v-for="(item, i) in chatInfoMap[historyIndex].chatList" :key="i" class="detail_info">
+          <!-- 时间 -->
+          <view
+            class="date"
+            v-if="item.messageTime - chatInfoMap[historyIndex].chatList[i - 1]?.messageTime > 4000"
+            >{{ toLocalTime(item.messageTime * 1000) }}
+          </view>
           <view class="chat-Box">
             <!-- 对面发的 -->
             <view v-if="!item.myWord" class="friendBox">
@@ -169,7 +171,7 @@ const getFirstLoadInfo = async () => {
       messageTime: item.messageTime,
       isImg: item.isImg,
       myWord: item.formUserId === userInfo.value.ID,
-      content: item.messageContent.replace(/\n/g, '<br>'),
+      content: item.messageContent,
       avatarUrl,
       imgUrl: item.messageContent,
     }
@@ -204,9 +206,10 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
       userAvatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
     }
     const obj = {
+      messageTime: item.messageTime,
       isImg: item.isImg,
       myWord: item.formUserId === userInfo.value.ID,
-      content: item.messageContent.replace(/\n/g, '<br>'),
+      content: item.messageContent,
       avatarUrl: userAvatarUrl,
       imgUrl: item.messageContent,
     }
@@ -373,7 +376,7 @@ const clearImgList = () => {
 .chatRoom .each_time {
   height: 93vh;
 }
-.chatRoom .each_time .date {
+.chatRoom .each_time .detail_info .date {
   height: 50rpx;
   text-align: center;
   line-height: 50rpx;

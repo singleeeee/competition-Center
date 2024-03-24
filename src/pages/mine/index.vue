@@ -81,13 +81,6 @@ const changeIsLog = (val: boolean) => {
 
 // 跳转非tabbar页面
 const navigateTo = (target: string) => {
-  if (target === 'customerService') {
-    uni.showToast({
-      title: '暂未开放',
-      icon: 'none',
-    })
-    return
-  }
   uni.navigateTo({
     url: `/subpackage/${target}/index`,
   })

@@ -40,29 +40,25 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const getComType = async () => {
       comTypeList.value = [];
       const res = await utils_http.http({
-        url: "http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic",
+        url: "/app/manager/getSysDictionaryDetailListPublic",
         data: {
-          page: 1,
-          pageSize: 100,
           sysDictionaryID: 9
         }
       });
-      for (let i = 0; i < res.data.list.length; i++) {
-        comTypeList.value.push(res.data.list[i]);
+      for (let i = 0; i < res.data.length; i++) {
+        comTypeList.value.push(res.data[i]);
       }
     };
     const getComStatus = async () => {
       comStatusList.value = [];
       const res = await utils_http.http({
-        url: "http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic",
+        url: "/app/manager/getSysDictionaryDetailListPublic",
         data: {
-          page: 1,
-          pageSize: 100,
           sysDictionaryID: 12
         }
       });
-      for (let i = 0; i < res.data.list.length; i++) {
-        comStatusList.value.push(res.data.list[i]);
+      for (let i = 0; i < res.data.length; i++) {
+        comStatusList.value.push(res.data[i]);
       }
       console.log(comStatusList.value, "比赛进行状态");
     };
@@ -141,15 +137,13 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const getSelectCom = async () => {
       comSelectArray.value = [];
       const res = await utils_http.http({
-        url: "http://jk.singleeeee.top/api/manager/getSysDictionaryDetailListPublic",
+        url: "/app/manager/getSysDictionaryDetailListPublic",
         data: {
-          page: 1,
-          pageSize: 100,
           sysDictionaryID: 8
         }
       });
-      for (let i = 0; i < res.data.list.length; i++) {
-        comSelectArray.value.push(res.data.list[i]);
+      for (let i = 0; i < res.data.length; i++) {
+        comSelectArray.value.push(res.data[i]);
       }
     };
     const comChange = (e) => {
