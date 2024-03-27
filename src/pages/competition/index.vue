@@ -42,7 +42,12 @@
     <view class="itemList">
       <view v-if="comList.length > 0">
         <!-- 比赛列表 -->
-        <view v-for="(item, index) in comList" :key="index" @tap="navigateToComDetail(item.ID)">
+        <view
+          style="text-align: justify"
+          v-for="(item, index) in comList"
+          :key="index"
+          @tap="navigateToComDetail(item.ID)"
+        >
           <!-- 卡片 -->
           <uni-card
             :title="item.comTitle"
@@ -314,7 +319,7 @@ const comChange = (e: any) => {
       .left {
         display: flex;
         flex: 1;
-        margin-right: 120rpx;
+        margin-right: 30rpx;
         overflow-x: scroll;
       }
 

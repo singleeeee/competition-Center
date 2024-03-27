@@ -5,13 +5,11 @@ import { http } from '@/utils/http'
 import type { PostList } from '@/types/global'
 import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app'
 // 下拉刷新
-onPullDownRefresh(() => {
+onPullDownRefresh(async () => {
   postList.value = []
   currentPage.value = 1
-  getPostList()
-  setTimeout(function () {
-    uni.stopPullDownRefresh()
-  }, 1000)
+  await getPostList()
+  uni.stopPullDownRefresh()
 })
 let postList = ref<PostList[]>([])
 onMounted(() => {
@@ -40,36 +38,34 @@ const getPostList = async () => {
   total.value = res.data.total
   dataList.value = (res.data as any).list
   // 处理需要的数据 用map失效？
-  setTimeout(() => {
-    for (let i = 0; i < dataList.value.length; i++) {
-      // 处理时间
-      const data = new Date((dataList.value[i] as any).CreatedAt)
-      const year = data.getFullYear()
-      const month = data.getMonth() + 1
-      const day = data.getDate()
-      const time = `${year}/${month}/${day}`
-      // 最终格式
-      const obj = {
-        ID: dataList.value[i].ID, // 帖子ID
-        isLiked: dataList.value[i].isLiked, // 帖子是否被点赞
-        isCollected: dataList.value[i].isCollected, // 帖子是否被收藏
-        disComId: dataList.value[i].disComId, // 关联的比赛ID
-        title: dataList.value[i].disTitle, // 帖子标题
-        content: dataList.value[i].disContent, // 帖子内容
-        time, // 帖子发布时间
-        collectedNum: dataList.value[i].disCollectNumber, // 帖子被收藏数量
-        likedNum: dataList.value[i].disLoveNumber, // 帖子被点赞数量
-        userInfoID: dataList.value[i].userInfo.ID, // 帖子作者的ID
-        author: dataList.value[i].userInfo.userNickname, // 帖子作者昵称
-        avatarUrl: dataList.value[i].userInfo.userAvatarUrl, // 帖子作者头像
-        imageUrl: dataList.value[i].disPicture || [], // 帖子首页展示图片，只展示第一张
-        disCommentNum: dataList.value[i].disCommentNumber, // 帖子被评论数量
-        disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
-      }
-      // 存入数组
-      postList.value.push(obj)
+  for (let i = 0; i < dataList.value.length; i++) {
+    // 处理时间
+    const data = new Date((dataList.value[i] as any).CreatedAt)
+    const year = data.getFullYear()
+    const month = data.getMonth() + 1
+    const day = data.getDate()
+    const time = `${year}/${month}/${day}`
+    // 最终格式
+    const obj = {
+      ID: dataList.value[i].ID, // 帖子ID
+      isLiked: dataList.value[i].isLiked, // 帖子是否被点赞
+      isCollected: dataList.value[i].isCollected, // 帖子是否被收藏
+      disComId: dataList.value[i].disComId, // 关联的比赛ID
+      title: dataList.value[i].disTitle, // 帖子标题
+      content: dataList.value[i].disContent, // 帖子内容
+      time, // 帖子发布时间
+      collectedNum: dataList.value[i].disCollectNumber, // 帖子被收藏数量
+      likedNum: dataList.value[i].disLoveNumber, // 帖子被点赞数量
+      userInfoID: dataList.value[i].userInfo.ID, // 帖子作者的ID
+      author: dataList.value[i].userInfo.userNickname, // 帖子作者昵称
+      avatarUrl: dataList.value[i].userInfo.userAvatarUrl, // 帖子作者头像
+      imageUrl: dataList.value[i].disPicture || [], // 帖子首页展示图片，只展示第一张
+      disCommentNum: dataList.value[i].disCommentNumber, // 帖子被评论数量
+      disLookNum: dataList.value[i].disLookNumber, // 帖子被浏览数量
     }
-  }, 1000)
+    // 存入数组
+    postList.value.push(obj)
+  }
 }
 // 点赞和取消点赞
 const likedChange = async (val: boolean, index: number) => {

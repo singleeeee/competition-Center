@@ -59,9 +59,17 @@
       </scroll-view>
     </view>
     <!-- 底部输入提示框 -->
-    <view class="inputArea">
-      <view class="input" @tap="openInput">
-        <uni-icons style="padding-right: 10rpx" type="compose" color="#ccc" size="24" />
+    <view class="inputArea" @tap="openInput">
+      <view class="input"> </view>
+      <view class="imgBox">
+        <image
+          style="width: 46rpx; height: 46rpx; margin-left: 20rpx"
+          src="@/static/Input/face.png"
+        ></image>
+        <image
+          style="width: 54rpx; height: 54rpx; margin-left: 20rpx"
+          src="@/static/Input/picture.png"
+        ></image>
       </view>
     </view>
   </view>
@@ -348,22 +356,27 @@ const clearImgList = () => {
   position: fixed;
   bottom: 0;
   z-index: 99;
-  height: 7vh;
-  background-color: #eee;
+  height: 80rpx;
+  background-color: #fff;
   display: flex;
   align-items: center;
+  box-shadow: -2rpx 0 2rpx 2rpx #eee;
   .input {
-    height: 60rpx;
     box-sizing: border-box;
-    margin: 0 40rpx;
-    padding: 0 10rpx;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 10rpx;
+    margin: 0 20rpx;
+    padding: 0 20rpx;
+    width: 70%;
+    height: 50rpx;
+    background-color: #f0f3f8;
+    border-radius: 30rpx;
     display: flex;
     align-items: center;
     color: #ccc;
     font-size: 28rpx;
+  }
+  .imgBox {
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -413,10 +426,11 @@ const clearImgList = () => {
   max-width: 60%;
   margin-left: 10rpx;
   background-color: #fff;
-  padding: 15rpx 10rpx 15rpx 20rpx;
+  padding: 15rpx 20rpx;
   border-radius: 10rpx;
   font-size: 30rpx;
   letter-spacing: 2rpx;
+  text-align: justify;
 }
 
 .chatRoom .each_time .detail_info .chat-Box .friendBox .imgBox,
@@ -443,5 +457,6 @@ const clearImgList = () => {
   margin-right: 10rpx;
   background-color: #95ec69;
   letter-spacing: 2rpx;
+  text-align: justify;
 }
 </style>

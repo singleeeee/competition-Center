@@ -95,7 +95,10 @@
         <view class="item" v-for="(item, index) in activityList" :key="index">
           <!-- 发布帖子 -->
           <template v-if="item.pageType === 1">
-            <view style="display: flex; flex-direction: column">
+            <view
+              style="display: flex; flex-direction: column"
+              @tap="switchToPostDetail(item.data?.ID)"
+            >
               <view>
                 <NameTitle
                   :avatarUrl="item.data.userInfo.userAvatarUrl"
@@ -129,7 +132,7 @@
           </template>
           <!-- 组队信息 -->
           <template v-else-if="item.pageType === 3">
-            <view class="teamBox">
+            <view class="teamBox" @tap="switchToMatchDetail(item.data?.comId)">
               <image class="avatar" :src="userInfo.userAvatarUrl"></image>
               <view class="content">
                 <view class="text"
@@ -234,21 +237,21 @@ const userInfo = ref()
 const userID = ref()
 onLoad(async (options) => {
   userID.value = options?.userID
-  // 获取用户信息
-  await getCollectList()
-  await gerUserinfo(options?.userID)
-  // 获取帖子列表
-  await getPostList()
-  // 获取用户经历
-  await getUserExperience()
-  // 获取用户动态
-  await getUserTrend()
-  // 转换标签
-  stringToTag()
   // 判断是否用户本人
   if (+options?.userID === JSON.parse(uni.getStorageSync('UserInfo')).userInfo.ID) {
     isSelf.value = true
   }
+  // 获取用户信息
+  await getCollectList()
+  await gerUserinfo(options?.userID)
+  // 获取帖子列表
+  getPostList()
+  // 获取用户经历
+  getUserExperience()
+  // 获取用户动态
+  getUserTrend()
+  // 转换标签
+  stringToTag()
 })
 
 // 用户数组
@@ -262,7 +265,6 @@ const getUserTrend = async () => {
     },
   })
   activityList.value = res.data.Activity
-  console.log(res.data.Activity, '用户动态')
 }
 // 点击图片预览
 const onClickImg = (tempFilePaths: string) => {
@@ -285,7 +287,7 @@ const getUserExperience = async () => {
       userID: UserInfoStore.userInfo.ID,
     },
   })
-  let arr: any = res.data.list.reverse().forEach((item) => {
+  res.data.list.reverse().forEach((item) => {
     const obj = {
       ID: item.ID,
       desc: item.time,
@@ -316,6 +318,19 @@ const switchToPostDetail = (disId: number) => {
   } else {
     uni.showToast({
       url: '帖子不存在!',
+      icon: 'none',
+    })
+  }
+}
+// 跳转到比赛详情页
+const switchToMatchDetail = (comId: number) => {
+  if (comId) {
+    uni.navigateTo({
+      url: `/subpackage/comDetail/index?comID=${comId}`,
+    })
+  } else {
+    uni.showToast({
+      url: '比赛不存在!',
       icon: 'none',
     })
   }
@@ -357,7 +372,6 @@ const follow = myDebounce(async () => {
     mask: true,
     duration: 500,
   })
-  console.log('关注')
   userInfo.value.fansNumber += 1
   userInfo.value.isYourFollower = true
 }, 200)
@@ -367,7 +381,6 @@ const cancelFollow = myDebounce(async () => {
     url: `/app/user/unFollowUser?unFollowUserId=${userInfo.value.ID}`,
     method: 'DELETE',
   })
-  console.log('取消关注')
   userInfo.value.fansNumber -= 1
   userInfo.value.isYourFollower = false
 }, 200)
@@ -420,7 +433,7 @@ let expList = ref([])
 .container {
   box-sizing: border-box;
   height: 100vh;
-  background-color: #eee;
+  background-color: #f5f5f5;
   overflow: scroll;
 }
 .container .header {
@@ -588,7 +601,6 @@ let expList = ref([])
           width: 110rpx;
           height: 110rpx;
           border-radius: 50%;
-          background-color: skyblue;
         }
         .content {
           height: 100rpx;
@@ -600,8 +612,9 @@ let expList = ref([])
       }
       .commentActivity {
         width: 100%;
+        padding-bottom: 20rpx;
         .comment {
-          background-color: #eee;
+          background-color: #f0f3f8;
           padding: 10rpx 20rpx;
           margin: 20rpx 30rpx;
           color: #aaa;
@@ -616,12 +629,11 @@ let expList = ref([])
         margin: 30rpx 20rpx;
         padding: 20rpx;
         align-items: center;
-        background-color: #f1f1f1;
+        background-color: #f0f3f8;
       }
       .img {
         height: 150rpx;
         width: 150rpx;
-        background-color: skyblue;
         border-radius: 10rpx;
       }
       .content {

@@ -237,15 +237,15 @@ onLoad(async (options) => {
   // 获取比赛详细信息
   await getComInfoDetail()
   // 获取比赛类别
-  await getComType()
+  getComType()
   // 获取比赛等级
-  await getComRating()
+  getComRating()
   // 获取相关帖子信息
-  await getPostList()
+  getPostList()
   // 获取好友列表
-  await getFriendList()
+  getFriendList()
   // 获取订阅信息
-  await getSubStatu()
+  getSubStatu()
   isSkeletonShow.value = false
 })
 // 订阅id
@@ -612,6 +612,7 @@ const signUp = async () => {
 <style lang="scss" scoped>
 .container {
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   align-items: center;
   padding: 10rpx 20rpx;
@@ -671,9 +672,12 @@ const signUp = async () => {
     }
   }
   .shortInfoBox {
+    box-sizing: border-box;
     align-self: flex-start;
     margin-left: 20rpx;
     margin-bottom: 30rpx;
+    text-align: justify;
+    padding-right: 50rpx;
     .comSubTitle {
       font-size: 28rpx;
       margin-left: 20rpx;
@@ -946,8 +950,12 @@ const signUp = async () => {
           font-size: 28rpx;
         }
         .introduction {
-          font-size: 24rpx;
+          width: 320rpx;
+          font-size: 22rpx;
           color: #aaa;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
       }
       .add {

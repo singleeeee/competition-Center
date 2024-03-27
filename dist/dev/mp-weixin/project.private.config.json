@@ -1,196 +1,196 @@
 {
-    "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
-    "projectname": "competition-Center",
-    "setting": {
-        "compileHotReLoad": true
-    },
-    "condition": {
-        "miniprogram": {
-            "list": [
-                {
-                    "name": "订阅",
-                    "pathName": "subpackage/subscribe/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "更多设置",
-                    "pathName": "subpackage/moreSetting/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "关于我们",
-                    "pathName": "subpackage/aboutUs/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "帖子详情页",
-                    "pathName": "subpackage/postDetail/index",
-                    "query": "disId=50",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "我的队伍",
-                    "pathName": "subpackage/myTeam/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "比赛详情",
-                    "pathName": "subpackage/comDetail/index",
-                    "query": "comID=1",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "pages/find/index",
-                    "pathName": "pages/find/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "我的经历",
-                    "pathName": "subpackage/myExperience/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "内容管理",
-                    "pathName": "subpackage/postManage/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "更多设置",
-                    "pathName": "subpackage/moreSetting/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "我的奖项",
-                    "pathName": "subpackage/myMedal/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "聊天室",
-                    "pathName": "pages/community/chatRoom/index",
-                    "query": "targetID=9",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "我的关注",
-                    "pathName": "subpackage/myFollowers/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "个人主页",
-                    "pathName": "pages/mine/personPage/index",
-                    "query": "userID=4",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "粉丝关注",
-                    "pathName": "subpackage/myFriends/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "pages/test/index",
-                    "pathName": "pages/test/index",
-                    "query": "targetID=4",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "草稿发布文章",
-                    "pathName": "subpackage/PostWriting/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "我的收藏",
-                    "pathName": "subpackage/myCollection/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "比赛",
-                    "pathName": "pages/competition/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "搜索页",
-                    "pathName": "pages/competition/searchPage/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "个人资料修改",
-                    "pathName": "subpackage/personal_data/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "比赛",
-                    "pathName": "pages/competition/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "社区",
-                    "pathName": "pages/community/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "我的",
-                    "pathName": "pages/mine/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "帖子",
-                    "pathName": "subpackage/posts/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "通告详情",
-                    "pathName": "subpackage/notification_detail/index",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                }
-            ]
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+  "projectname": "competition-Center",
+  "setting": {
+    "compileHotReLoad": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "订阅",
+          "pathName": "subpackage/subscribe/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "更多设置",
+          "pathName": "subpackage/moreSetting/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "关于我们",
+          "pathName": "subpackage/aboutUs/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "帖子详情页",
+          "pathName": "subpackage/postDetail/index",
+          "query": "disId=50",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的队伍",
+          "pathName": "subpackage/myTeam/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "比赛详情",
+          "pathName": "subpackage/comDetail/index",
+          "query": "comID=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/find/index",
+          "pathName": "pages/find/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的经历",
+          "pathName": "subpackage/myExperience/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "内容管理",
+          "pathName": "subpackage/postManage/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "更多设置",
+          "pathName": "subpackage/moreSetting/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的奖项",
+          "pathName": "subpackage/myMedal/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "聊天室",
+          "pathName": "pages/community/chatRoom/index",
+          "query": "targetID=9",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的关注",
+          "pathName": "subpackage/myFollowers/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "个人主页",
+          "pathName": "pages/mine/personPage/index",
+          "query": "userID=4",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "粉丝关注",
+          "pathName": "subpackage/myFriends/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/test/index",
+          "pathName": "pages/test/index",
+          "query": "targetID=4",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "草稿发布文章",
+          "pathName": "subpackage/PostWriting/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的收藏",
+          "pathName": "subpackage/myCollection/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "比赛",
+          "pathName": "pages/competition/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "搜索页",
+          "pathName": "pages/competition/searchPage/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "个人资料修改",
+          "pathName": "subpackage/personal_data/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "比赛",
+          "pathName": "pages/competition/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "社区",
+          "pathName": "pages/community/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的",
+          "pathName": "pages/mine/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "帖子",
+          "pathName": "subpackage/posts/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "通告详情",
+          "pathName": "subpackage/notification_detail/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
-    },
-    "libVersion": "3.2.5"
+      ]
+    }
+  },
+  "libVersion": "3.2.5"
 }

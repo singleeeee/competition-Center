@@ -3,8 +3,6 @@
     <view class="content">
       <textarea
         class="text"
-        cols="30"
-        rows="10"
         placeholder="请输入内容"
         :value="textarea"
         autofocus
@@ -93,6 +91,7 @@ const send = () => {
     height: 200rpx;
     background-color: #eee;
     border-radius: 10rpx;
+    overflow: scroll;
   }
   .img {
     display: flex;
@@ -110,8 +109,8 @@ const send = () => {
       }
       .clear {
         position: absolute;
-        top: -16rpx;
-        right: -16rpx;
+        top: -22rpx;
+        right: -20rpx;
         z-index: 99;
       }
     }
@@ -135,8 +134,11 @@ const send = () => {
     }
   }
   .text {
+    box-sizing: border-box;
+    width: 100%;
     padding: 10rpx;
     font-size: 28rpx;
+    text-align: justify;
   }
 }
 </style>

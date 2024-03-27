@@ -17,6 +17,7 @@ const _easycom_uni_popup = () => "../../node-modules/@dcloudio/uni-ui/lib/uni-po
 if (!Math) {
   (_easycom_uni_icons + _easycom_uni_card + _easycom_uni_load_more + _easycom_uni_popup)();
 }
+const comPageSize = 5;
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "index",
   setup(__props) {
@@ -63,7 +64,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       console.log(comStatusList.value, "比赛进行状态");
     };
     let currentComPage = 1;
-    const comPageSize = 5;
     const comList = common_vendor.ref([]);
     let currentComType = 0, currentComModel = 0, currentComStatus = 0;
     let loadingStatus = common_vendor.ref("loading");
@@ -236,5 +236,5 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-3e564a22"], ["__file", "E:/frontend/project/Competition-center/competition-Center/src/pages/competition/index.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__scopeId", "data-v-3e564a22"], ["__file", "E:/frontend/project/Competition-center/competition-Center/competition-Center/src/pages/competition/index.vue"]]);
 wx.createPage(MiniProgramPage);

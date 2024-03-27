@@ -92,7 +92,7 @@
 .container .headBox .tagList .left.data-v-3e564a22 {
   display: flex;
   flex: 1;
-  margin-right: 120rpx;
+  margin-right: 30rpx;
   overflow-x: scroll;
 }
 .container .headBox .tagList .tag.data-v-3e564a22 {

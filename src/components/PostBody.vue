@@ -7,7 +7,7 @@
     </text>
     <ul class="imgBox" v-if="imgList.length > 0">
       <li v-for="(item, index) in imgList" :key="index">
-        <image @tap="onClickImg(item)" class="img" :src="item" mode="scaleToFill" />
+        <image @tap="onClickImg(item)" class="img" :src="item" mode="heightFix" />
       </li>
     </ul>
     <view class="share">
@@ -171,12 +171,9 @@ const collect = myDebounce(() => {
     display: flex;
     align-items: center;
     height: 350rpx;
-    width: 100%;
     margin: 20rpx 10rpx;
     .img {
-      flex: 1;
       height: 350rpx;
-      margin-left: 0rpx;
     }
   }
   .share {
