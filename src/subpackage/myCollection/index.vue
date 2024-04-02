@@ -129,15 +129,23 @@ const bindClick = async (e, index) => {
 <style lang="scss" scoped>
 .container {
   height: 100vh;
+  background-color: #f2f2f2;
   .item {
-    height: 100rpx;
+    margin: 10rpx 20rpx;
+    min-height: 100rpx;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 20rpx;
     border-bottom: 1rpx solid #eee;
+    border-radius: 20rpx;
+    background-color: #fff;
+    box-shadow: 0rpx 4rpx 12rpx 2rpx #ddd;
     .title {
-      font-size: 28rpx;
+      font-size: 26rpx;
+      padding-bottom: 20rpx;
+      text-align: justify;
+      overflow: hidden;
     }
     .author-type {
       display: flex;
