@@ -1,10 +1,16 @@
 <template>
   <view class="container">
     <view class="configList">
-      <view class="changePersonData" @tap="navigateTo">
+      <view class="changePersonData" @tap="navigateTo('personal_data')">
         <view class="text">修改个人信息</view>
         <view class="right">
           <image class="avatar" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
+          <uni-icons type="forward" color="#000" size="18" />
+        </view>
+      </view>
+      <view class="changePersonData" @tap="navigateTo('signUpInfo')">
+        <view class="text">完善报名信息</view>
+        <view class="right">
           <uni-icons type="forward" color="#000" size="18" />
         </view>
       </view>
@@ -19,9 +25,9 @@ import { storeToRefs } from 'pinia'
 const userInfoStore = useUserInfoStore()
 const { userInfo } = storeToRefs(userInfoStore)
 // 修改个人信息
-const navigateTo = () => {
+const navigateTo = (target: string) => {
   uni.navigateTo({
-    url: '/subpackage/personal_data/index',
+    url: `/subpackage/${target}/index`,
   })
 }
 // 退出登录
@@ -44,10 +50,12 @@ const logout = async () => {
     .changePersonData {
       display: flex;
       align-items: center;
+      height: 80rpx;
       justify-content: space-between;
       background-color: #fff;
       border-radius: 20rpx;
       padding: 18rpx 30rpx;
+      margin-bottom: 20rpx;
       .text {
         font-weight: 700;
         font-size: 30rpx;

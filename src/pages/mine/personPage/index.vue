@@ -112,7 +112,11 @@
               <view class="contentBox">
                 <image
                   class="img"
-                  :src="item.data.disPicture.length > 0 ? item.data.disPicture[0] : ''"
+                  :src="
+                    item.data.disPicture.length > 0
+                      ? item.data.disPicture[0]
+                      : '/static/empty/emptyImg.png'
+                  "
                   mode="scaleToFill"
                 />
                 <view class="content">
@@ -146,7 +150,7 @@
           </template>
           <!-- 评论 -->
           <template v-else-if="item.pageType === 2">
-            <view class="commentActivity">
+            <view class="commentActivity" @tap="switchToPostDetail(item.data?.disInfo.ID)">
               <NameTitle
                 :avatarUrl="item.data.userInfo.userAvatarUrl"
                 :author="item.data.userInfo.userNickname"

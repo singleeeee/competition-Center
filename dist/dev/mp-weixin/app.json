@@ -83,12 +83,6 @@
       ]
     },
     {
-      "root": "subpackage/signUpCom",
-      "pages": [
-        "index"
-      ]
-    },
-    {
       "root": "subpackage/aboutUs",
       "pages": [
         "index"
@@ -114,6 +108,12 @@
     },
     {
       "root": "subpackage/comDetail",
+      "pages": [
+        "index"
+      ]
+    },
+    {
+      "root": "subpackage/signUpInfo",
       "pages": [
         "index"
       ]

@@ -50,6 +50,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
 import { onReachBottom } from '@dcloudio/uni-app'
+import { myThrottle } from '@/utils/myThrottle'
 onLoad(() => {
   getSwiperData()
 })
@@ -63,6 +64,7 @@ onPullDownRefresh(async () => {
     uni.stopPullDownRefresh()
   }, 1000)
 })
+
 // 上拉加载
 onReachBottom(() => {
   newsRef.value.getNotificationList()

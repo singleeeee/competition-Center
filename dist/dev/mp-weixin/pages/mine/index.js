@@ -62,9 +62,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
       console.log("刷新返回的数据", res.data.reuserData);
       userInfoStore.updateUserInfo(res.data.reuserData);
-      setTimeout(() => {
-        common_vendor.index.stopPullDownRefresh();
-      }, 1e3);
+      common_vendor.index.stopPullDownRefresh();
     });
     const navigatetoPerson = () => {
       common_vendor.index.navigateTo({

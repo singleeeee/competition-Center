@@ -8654,6 +8654,32 @@ const popup = {
     }
   }
 };
+const en$2 = {
+  "uni-popup.cancel": "cancel",
+  "uni-popup.ok": "ok",
+  "uni-popup.placeholder": "pleace enter",
+  "uni-popup.title": "Hint",
+  "uni-popup.shareTitle": "Share to"
+};
+const zhHans$2 = {
+  "uni-popup.cancel": "取消",
+  "uni-popup.ok": "确定",
+  "uni-popup.placeholder": "请输入",
+  "uni-popup.title": "提示",
+  "uni-popup.shareTitle": "分享到"
+};
+const zhHant$2 = {
+  "uni-popup.cancel": "取消",
+  "uni-popup.ok": "確定",
+  "uni-popup.placeholder": "請輸入",
+  "uni-popup.title": "提示",
+  "uni-popup.shareTitle": "分享到"
+};
+const messages$1 = {
+  en: en$2,
+  "zh-Hans": zhHans$2,
+  "zh-Hant": zhHant$2
+};
 let mpMixins = {};
 mpMixins = {
   data() {
@@ -8729,7 +8755,7 @@ const pages = [
     style: {
       navigationBarTitleText: "资讯",
       enablePullDownRefresh: true,
-      onReachBottomDistance: 20
+      onReachBottomDistance: 50
     }
   },
   {
@@ -8918,17 +8944,6 @@ const subPackages = [
     ]
   },
   {
-    root: "subpackage/signUpCom",
-    pages: [
-      {
-        path: "index",
-        style: {
-          navigationBarTitleText: "报名参赛"
-        }
-      }
-    ]
-  },
-  {
     root: "subpackage/aboutUs",
     pages: [
       {
@@ -8981,6 +8996,17 @@ const subPackages = [
         path: "index",
         style: {
           navigationBarTitleText: "比赛详情"
+        }
+      }
+    ]
+  },
+  {
+    root: "subpackage/signUpInfo",
+    pages: [
+      {
+        path: "index",
+        style: {
+          navigationBarTitleText: "报名信息"
         }
       }
     ]
@@ -11722,32 +11748,6 @@ let Bs = new class {
   } }), bs(Bs), Bs.addInterceptor = N, Bs.removeInterceptor = D, Bs.interceptObject = F;
 })();
 var Ws = Bs;
-const en$2 = {
-  "uni-popup.cancel": "cancel",
-  "uni-popup.ok": "ok",
-  "uni-popup.placeholder": "pleace enter",
-  "uni-popup.title": "Hint",
-  "uni-popup.shareTitle": "Share to"
-};
-const zhHans$2 = {
-  "uni-popup.cancel": "取消",
-  "uni-popup.ok": "确定",
-  "uni-popup.placeholder": "请输入",
-  "uni-popup.title": "提示",
-  "uni-popup.shareTitle": "分享到"
-};
-const zhHant$2 = {
-  "uni-popup.cancel": "取消",
-  "uni-popup.ok": "確定",
-  "uni-popup.placeholder": "請輸入",
-  "uni-popup.title": "提示",
-  "uni-popup.shareTitle": "分享到"
-};
-const messages$1 = {
-  en: en$2,
-  "zh-Hans": zhHans$2,
-  "zh-Hant": zhHant$2
-};
 const en$1 = {
   "uni-datetime-picker.selectDate": "select date",
   "uni-datetime-picker.selectTime": "select time",

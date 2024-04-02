@@ -61,9 +61,7 @@ onPullDownRefresh(async () => {
   console.log('刷新返回的数据', res.data.reuserData)
   // 更新本地仓库
   userInfoStore.updateUserInfo(res.data.reuserData)
-  setTimeout(() => {
-    uni.stopPullDownRefresh()
-  }, 1000)
+  uni.stopPullDownRefresh()
 })
 // 跳转到修改个人资料页面
 const navigatetoPerson = () => {

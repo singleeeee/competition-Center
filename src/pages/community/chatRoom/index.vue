@@ -14,48 +14,63 @@
         :refresher-triggered="loadingStatus"
         @refresherrefresh="onRefresh"
       >
-        <!-- 聊天内容 -->
-        <view v-for="(item, i) in chatInfoMap[historyIndex].chatList" :key="i" class="detail_info">
-          <!-- 时间 -->
+        <template v-if="chatInfoMap[historyIndex].chatList.length > 0">
+          <!-- 聊天内容 -->
           <view
-            class="date"
-            v-if="item.messageTime - chatInfoMap[historyIndex].chatList[i - 1]?.messageTime > 4000"
-            >{{ toLocalTime(item.messageTime * 1000) }}
-          </view>
-          <view class="chat-Box">
-            <!-- 对面发的 -->
-            <view v-if="!item.myWord" class="friendBox">
-              <view class="avatar">
-                <image class="avatar" :src="item.avatarUrl" />
+            v-for="(item, i) in chatInfoMap[historyIndex].chatList"
+            :key="i"
+            class="detail_info"
+          >
+            <!-- 时间 -->
+            <view
+              class="date"
+              v-if="
+                item.messageTime - chatInfoMap[historyIndex].chatList[i - 1]?.messageTime > 4000
+              "
+              >{{ toLocalTime(item.messageTime * 1000) }}
+            </view>
+            <view class="chat-Box">
+              <!-- 对面发的 -->
+              <view v-if="!item.myWord" class="friendBox">
+                <view class="avatar">
+                  <image class="avatar" :src="item.avatarUrl" />
+                </view>
+                <text :user-select="true" v-if="!item.isImg" class="content">{{
+                  item.content
+                }}</text>
+                <view v-else class="imgBox">
+                  <image
+                    @tap="onClickImg(item.imgUrl)"
+                    class="img"
+                    :src="item.imgUrl"
+                    mode="widthFix"
+                  />
+                </view>
               </view>
-              <text :user-select="true" v-if="!item.isImg" class="content">{{ item.content }}</text>
-              <view v-else class="imgBox">
-                <image
-                  @tap="onClickImg(item.imgUrl)"
-                  class="img"
-                  :src="item.imgUrl"
-                  mode="widthFix"
-                />
+              <!-- 自己发的 -->
+              <view v-else class="myBox">
+                <view class="avatar">
+                  <image class="avatar" :src="item.avatarUrl" />
+                </view>
+                <!-- 内容 -->
+                <text :user-select="true" v-if="!item.isImg" class="content">{{
+                  item.content
+                }}</text>
+                <view v-else class="imgBox">
+                  <image
+                    @tap="onClickImg(item.imgUrl)"
+                    class="img"
+                    :src="item.imgUrl"
+                    mode="widthFix"
+                  />
+                </view>
               </view>
             </view>
-            <!-- 自己发的 -->
-            <view v-else class="myBox">
-              <view class="avatar">
-                <image class="avatar" :src="item.avatarUrl" />
-              </view>
-              <!-- 内容 -->
-              <text :user-select="true" v-if="!item.isImg" class="content">{{ item.content }}</text>
-              <view v-else class="imgBox">
-                <image
-                  @tap="onClickImg(item.imgUrl)"
-                  class="img"
-                  :src="item.imgUrl"
-                  mode="widthFix"
-                />
-              </view>
-            </view>
           </view>
-        </view>
+        </template>
+        <template v-else>
+          <view style="text-align: center; color:#ccc;padding-top: 20rpx;'"> 暂无聊天记录 </view>
+        </template>
       </scroll-view>
     </view>
     <!-- 底部输入提示框 -->

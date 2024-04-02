@@ -511,12 +511,16 @@ const onDel = (teamId: number) => {
 const delTeam = async () => {
   if (teamID.value != 0) {
     try {
-      http({
+      const res = await http({
         url: '/app/group/deleteGroup?ID=' + teamID.value,
         method: 'DELETE',
       })
-      isSignUp.value = false
-      successInfo.value.open()
+      if (res.code === '0') {
+        isSignUp.value = false
+        successInfo.value.open()
+      } else {
+        errorInfo.value.open()
+      }
     } catch (error) {
       errorInfo.value.open()
     }

@@ -4,12 +4,14 @@ const utils_http = require("../../utils/http.js");
 require("../../stores/index.js");
 require("../../stores/modules/userInfoStore.js");
 if (!Array) {
+  const _easycom_uni_fab2 = common_vendor.resolveComponent("uni-fab");
   const _easycom_uni_load_more2 = common_vendor.resolveComponent("uni-load-more");
-  _easycom_uni_load_more2();
+  (_easycom_uni_fab2 + _easycom_uni_load_more2)();
 }
+const _easycom_uni_fab = () => "../../node-modules/@dcloudio/uni-ui/lib/uni-fab/uni-fab.js";
 const _easycom_uni_load_more = () => "../../node-modules/@dcloudio/uni-ui/lib/uni-load-more/uni-load-more.js";
 if (!Math) {
-  (card + _easycom_uni_load_more + friends + message)();
+  (_easycom_uni_fab + card + _easycom_uni_load_more + friends + message)();
 }
 const friends = () => "./components/friends.js";
 const message = () => "./components/message.js";
@@ -21,13 +23,43 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       const current = +(options == null ? void 0 : options.currentTab);
       currentPage.value = current || 0;
     });
+    const fab = common_vendor.ref();
+    const fabContent = [
+      {
+        iconPath: "/static/writing.png",
+        selectedIconPath: "/static/writingSelected.png",
+        text: "发布文章",
+        active: false
+      },
+      {
+        iconPath: "/static/manage.png",
+        selectedIconPath: "/static/manageSelected.png",
+        text: "内容管理",
+        active: false
+      }
+    ];
+    const trigger = (e) => {
+      if (e.index === 0) {
+        fabContent[e.index].active = !fabContent[e.index].active;
+        common_vendor.index.navigateTo({ url: "/subpackage/PostWriting/index" });
+      } else {
+        fabContent[e.index].active = !fabContent[e.index].active;
+        common_vendor.index.navigateTo({ url: "/subpackage/postManage/index" });
+      }
+    };
+    const pattern = {
+      color: "#7A7E83",
+      backgroundColor: "#fff",
+      selectedColor: "#007AFF",
+      buttonColor: "#007AFF",
+      iconColor: "#fff"
+    };
     let windowHeight = 0;
     (() => {
       const deviceInfo = common_vendor.index.getWindowInfo();
       windowHeight = deviceInfo == null ? void 0 : deviceInfo.windowHeight;
     })();
     const onReachBottom = () => {
-      console.log("触底了");
       loadingStatus.value = "loading";
       currentPageNum.value++;
       getPostList();
@@ -114,7 +146,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     const likedChange = async (val, index) => {
       if (val) {
-        console.log("点赞");
         utils_http.http({
           url: "/app/dis/userLikeDis",
           data: {
@@ -127,7 +158,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         postList.value[index].isLiked = true;
         postList.value[index].likedNum++;
       } else {
-        console.log("取消点赞");
         utils_http.http({
           url: `/app/dis/userUnLikeDis?ID=${postList.value[index].ID}&dislikeUserID=${postList.value[index].userInfoID}`,
           method: "DELETE"
@@ -138,7 +168,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     const collectedChange = async (val, index) => {
       if (val) {
-        console.log("收藏");
         utils_http.http({
           url: "/app/dis/userCollectDis",
           data: {
@@ -148,7 +177,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         postList.value[index].isCollected = true;
         postList.value[index].collectedNum++;
       } else {
-        console.log("取消收藏");
         utils_http.http({
           url: `/app/dis/userCancelCollectDis?disID=${postList.value[index].ID}`,
           method: "DELETE"
@@ -168,22 +196,33 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: common_vendor.unref(currentPage) === 0 ? 1 : "",
-        b: common_vendor.o(($event) => common_vendor.isRef(currentPage) ? currentPage.value = 0 : currentPage = 0),
-        c: common_vendor.unref(currentPage) === 1 ? 1 : "",
-        d: common_vendor.o(($event) => common_vendor.isRef(currentPage) ? currentPage.value = 1 : currentPage = 1),
-        e: common_vendor.unref(currentPage) === 2 ? 1 : "",
-        f: common_vendor.o(($event) => common_vendor.isRef(currentPage) ? currentPage.value = 2 : currentPage = 2),
-        g: common_vendor.unref(postList).length > 0
+        a: common_vendor.sr(fab, "485a05f3-0", {
+          "k": "fab"
+        }),
+        b: common_vendor.o(trigger),
+        c: common_vendor.p({
+          content: fabContent,
+          pattern,
+          horizontal: "right",
+          vertical: "bottom",
+          direction: "horizontal"
+        }),
+        d: common_vendor.unref(currentPage) === 0 ? 1 : "",
+        e: common_vendor.o(($event) => common_vendor.isRef(currentPage) ? currentPage.value = 0 : currentPage = 0),
+        f: common_vendor.unref(currentPage) === 1 ? 1 : "",
+        g: common_vendor.o(($event) => common_vendor.isRef(currentPage) ? currentPage.value = 1 : currentPage = 1),
+        h: common_vendor.unref(currentPage) === 2 ? 1 : "",
+        i: common_vendor.o(($event) => common_vendor.isRef(currentPage) ? currentPage.value = 2 : currentPage = 2),
+        j: common_vendor.unref(postList).length > 0
       }, common_vendor.unref(postList).length > 0 ? {
-        h: common_vendor.f(common_vendor.unref(postList), (item, index, i0) => {
+        k: common_vendor.f(common_vendor.unref(postList), (item, index, i0) => {
           return {
             a: index,
             b: index,
             c: common_vendor.o(likedChange, index),
             d: common_vendor.o(collectedChange, index),
             e: common_vendor.o(switchToDetail, index),
-            f: "485a05f3-0-" + i0,
+            f: "485a05f3-1-" + i0,
             g: common_vendor.p({
               author: item.author,
               title: item.title,
@@ -201,23 +240,23 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             })
           };
         }),
-        i: common_vendor.p({
+        l: common_vendor.p({
           status: common_vendor.unref(loadingStatus),
           iconType: "circle"
         })
       } : {
-        j: common_vendor.p({
+        m: common_vendor.p({
           status: "loading",
           iconType: "circle"
         })
       }, {
-        k: common_vendor.unref(windowHeight) - 50 + "px",
-        l: common_vendor.o(pulldownRefresh),
-        m: common_vendor.unref(pulldownTriggered),
-        n: common_vendor.o(onReachBottom),
-        o: common_vendor.unref(windowHeight) - 50 + "px",
-        p: common_vendor.o(swiperChange),
-        q: common_vendor.unref(currentPage)
+        n: common_vendor.unref(windowHeight) - 50 + "px",
+        o: common_vendor.o(pulldownRefresh),
+        p: common_vendor.unref(pulldownTriggered),
+        q: common_vendor.o(onReachBottom),
+        r: common_vendor.unref(windowHeight) - 50 + "px",
+        s: common_vendor.o(swiperChange),
+        t: common_vendor.unref(currentPage)
       });
     };
   }

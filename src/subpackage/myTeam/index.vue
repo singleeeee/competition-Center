@@ -100,12 +100,16 @@ const onDel = (teamId: number) => {
 const delTeam = async () => {
   if (teamID.value != 0) {
     try {
-      http({
+      const res = await http({
         url: '/app/group/deleteGroup?ID=' + teamID.value,
         method: 'DELETE',
       })
-      teamInfoList.value = teamInfoList.value.filter((item) => item.teamId != teamID.value)
-      successInfo.value.open()
+      if (res.code === '1') {
+        teamInfoList.value = teamInfoList.value.filter((item) => item.teamId != teamID.value)
+        successInfo.value.open()
+      } else if (res.code === '7') {
+        errorInfo.value.open()
+      }
     } catch (error) {
       errorInfo.value.open()
     }

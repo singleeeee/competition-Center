@@ -8,6 +8,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "报名信息",
+          "pathName": "subpackage/signUpInfo/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "订阅",
           "pathName": "subpackage/subscribe/index",
           "query": "",

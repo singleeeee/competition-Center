@@ -44,7 +44,7 @@ const loadingStatus = ref<UniLoadMoreStatus>('more')
 const loadingText = {
   contentdown: '上拉显示更多',
   contentrefresh: '正在加载...',
-  contentnomore: '没有更多数据了',
+  contentnomore: '没有更多通告了',
 }
 onLoad(() => {
   notificationListInit()
@@ -94,7 +94,7 @@ const getNotificationList = async () => {
     } else {
       loadingStatus.value = 'more'
     }
-  }, 500)
+  }, 200)
 }
 
 // 跳转到详情页

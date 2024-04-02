@@ -1,5 +1,15 @@
 <template>
   <view class="container">
+    <!-- 悬浮按钮 -->
+    <uni-fab
+      ref="fab"
+      :content="fabContent"
+      :pattern="pattern"
+      horizontal="right"
+      vertical="bottom"
+      direction="horizontal"
+      @trigger="trigger"
+    />
     <!-- tab栏切换 -->
     <view class="topTab">
       <view :class="{ item: true, active: currentPage === 0 }" @tap="currentPage = 0">大厅</view>
@@ -95,7 +105,41 @@ onLoad((options) => {
   const current = +options?.currentTab
   currentPage.value = current || 0
 })
-
+// 悬浮按钮，发布文章
+const fab = ref()
+// 悬浮按钮展开项目
+const fabContent = [
+  {
+    iconPath: '/static/writing.png',
+    selectedIconPath: '/static/writingSelected.png',
+    text: '发布文章',
+    active: false,
+  },
+  {
+    iconPath: '/static/manage.png',
+    selectedIconPath: '/static/manageSelected.png',
+    text: '内容管理',
+    active: false,
+  },
+]
+// 点击fab配置项
+const trigger = (e) => {
+  if (e.index === 0) {
+    fabContent[e.index].active = !fabContent[e.index].active
+    uni.navigateTo({ url: '/subpackage/PostWriting/index' })
+  } else {
+    fabContent[e.index].active = !fabContent[e.index].active
+    uni.navigateTo({ url: '/subpackage/postManage/index' })
+  }
+}
+// fab样式
+const pattern = {
+  color: '#7A7E83',
+  backgroundColor: '#fff',
+  selectedColor: '#007AFF',
+  buttonColor: '#007AFF',
+  iconColor: '#fff',
+}
 // 获取可用屏幕高度
 let windowHeight = 0
 ;(() => {
@@ -104,7 +148,6 @@ let windowHeight = 0
 })()
 // 上滑触底
 const onReachBottom = () => {
-  console.log('触底了')
   loadingStatus.value = 'loading'
   currentPageNum.value++
   getPostList()
@@ -193,7 +236,6 @@ const getPostList = async () => {
 // 点赞和取消点赞
 const likedChange = async (val: boolean, index: number) => {
   if (val) {
-    console.log('点赞')
     http({
       url: '/app/dis/userLikeDis',
       data: {
@@ -204,7 +246,6 @@ const likedChange = async (val: boolean, index: number) => {
     postList.value[index].isLiked = true
     postList.value[index].likedNum++
   } else {
-    console.log('取消点赞')
     http({
       url: `/app/dis/userUnLikeDis?ID=${postList.value[index].ID}&dislikeUserID=${postList.value[index].userInfoID}`,
       method: 'DELETE',
@@ -216,7 +257,6 @@ const likedChange = async (val: boolean, index: number) => {
 // 收藏
 const collectedChange = async (val: boolean, index: number) => {
   if (val) {
-    console.log('收藏')
     http({
       url: '/app/dis/userCollectDis',
       data: {
@@ -226,7 +266,6 @@ const collectedChange = async (val: boolean, index: number) => {
     postList.value[index].isCollected = true
     postList.value[index].collectedNum++
   } else {
-    console.log('取消收藏')
     http({
       url: `/app/dis/userCancelCollectDis?disID=${postList.value[index].ID}`,
       method: 'DELETE',
@@ -282,14 +321,10 @@ const swiperChange = (e) => {
     font-weight: 700;
   }
 }
-.fabButton {
+.fab {
   position: relative;
   z-index: 99;
   bottom: 400rpx;
   right: 100rpx;
-  background-color: red;
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
 }
 </style>

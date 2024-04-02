@@ -16,7 +16,7 @@
       >
       </uni-easyinput>
     </uni-section>
-
+    <view style="height: 40rpx"></view>
     <uni-section title="选择时间" type="line">
       <view class="example-body">
         <uni-datetime-picker
@@ -28,7 +28,7 @@
       </view>
     </uni-section>
     <button class="btn" @tap="confirm">确认</button>
-    <uni-section title="预览效果" type="line"></uni-section>
+    <uni-section title="当前经历" type="line"></uni-section>
     <view v-if="expList.length > 0">
       <uni-steps
         :options="expList"
@@ -165,6 +165,7 @@ let datetimerange = ref('')
 let isControl = ref(false)
 // 打开新增模式
 const add = () => {
+  canDelete.value = false
   isControl.value = true
   expValue.value = ''
   datetimerange.value = []
@@ -267,21 +268,25 @@ const confirm = async () => {
 .container {
   margin: 0 20rpx;
   .header {
+    margin-top: 30rpx;
     display: flex;
     justify-content: flex-end;
     button {
-      height: 50rpx;
-      line-height: 50rpx;
+      height: 55rpx;
+      line-height: 55rpx;
       font-size: 26rpx;
       background-color: #409eff;
       color: #fff;
       border-radius: 5rpx;
       border: 0;
       margin-top: 10rpx;
-      margin-right: 10rpx;
+      margin-right: 30rpx;
       margin-left: 0;
       &:active {
         background-color: #337ecc;
+      }
+      &:last-child {
+        margin-right: 10rpx;
       }
     }
   }
@@ -294,7 +299,7 @@ const confirm = async () => {
     color: #fff;
     border-radius: 5rpx;
     border: 0;
-    margin: 20rpx auto;
+    margin: 40rpx auto;
     &:active {
       background-color: #337ecc;
     }

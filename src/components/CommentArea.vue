@@ -109,14 +109,12 @@ import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { myThrottle } from '@/utils/myThrottle'
 onPullDownRefresh(async () => {
-  console.log('刷新')
   await getCommentList(props.disId)
   uni.stopPullDownRefresh()
 })
 // 为啥用onLoad不行？
 onMounted(async () => {
   getCommentList(props.disId)
-  console.log(commentList.value)
 })
 
 onReachBottom(

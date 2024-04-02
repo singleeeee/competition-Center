@@ -11,11 +11,10 @@
     />
   </view>
   <view v-if="!isResultShow" class="container">
-    {
     <view class="searchRecord">
       <view class="title">历史记录</view>
       <view class="icon">
-        <uni-icons type="trash" color="#ccc" size="20" @tap="deleteRecord" />
+        <uni-icons type="trash" color="#ccc" size="20" @tap="alertDialog.open('center')" />
       </view>
     </view>
     <view class="content">
@@ -80,6 +79,18 @@
       </swiper-item>
     </swiper>
   </view>
+  <!-- 确定删除弹窗 -->
+  <uni-popup ref="alertDialog" type="dialog">
+    <uni-popup-dialog
+      type="warn"
+      cancelText="取消"
+      confirmText="确认"
+      title="警告"
+      content="您确认要清空历史记录吗？"
+      @confirm="deleteRecord"
+      @close="alertDialog.close()"
+    ></uni-popup-dialog>
+  </uni-popup>
 </template>
 
 <script lang="ts" setup>
@@ -88,6 +99,8 @@ import { http } from '@/utils/http'
 import { myDebounce } from '@/utils/myDebounce'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
+// 确认删除评论弹窗ref
+const alertDialog = ref()
 // 类型列表
 const classList = ref(['全部', '比赛', '帖子', '通告', '用户'])
 //tab栏切换
@@ -272,6 +285,12 @@ const recordList = searchList
 
 // 清空历史记录
 const deleteRecord = () => {
+  if (searchList.value.length === 0) {
+    uni.showToast({
+      title: '暂无历史记录!',
+      icon: 'none',
+    })
+  }
   searchRecord.clearRecord()
 }
 // 排行榜
@@ -354,7 +373,7 @@ const rankingList = ref([
 }
 .content {
   box-sizing: border-box;
-  margin-top: 160rpx;
+  margin-top: 200rpx;
   width: 100%;
   height: auto;
   padding: 10rpx 20rpx;

@@ -13,7 +13,7 @@
 			"style": {
 				"navigationBarTitleText": "资讯",
 				"enablePullDownRefresh": true,
-				"onReachBottomDistance": 20
+				"onReachBottomDistance": 50
 			}
 		},
 		{
@@ -201,17 +201,7 @@
 				}
 			]
 		},
-		{
-			"root": "subpackage/signUpCom",
-			"pages": [
-				{
-					"path": "index",
-					"style": {
-						"navigationBarTitleText": "报名参赛"
-					}
-				}
-			]
-		},
+
 		{
 			"root": "subpackage/aboutUs",
 			"pages": [
@@ -219,8 +209,8 @@
 					"path": "index",
 					"style": {
 						"navigationBarTitleText": "关于我们",
-						"navigationBarBackgroundColor":"#12a66a",
-						"navigationBarTextStyle":"white"
+						"navigationBarBackgroundColor": "#12a66a",
+						"navigationBarTextStyle": "white"
 					}
 				}
 			]
@@ -265,6 +255,17 @@
 					"path": "index",
 					"style": {
 						"navigationBarTitleText": "比赛详情"
+					}
+				}
+			]
+		},
+		{
+			"root": "subpackage/signUpInfo",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "报名信息"
 					}
 				}
 			]

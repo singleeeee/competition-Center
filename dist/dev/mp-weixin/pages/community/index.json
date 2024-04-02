@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "社区",
   "usingComponents": {
+    "uni-fab": "../../node-modules/@dcloudio/uni-ui/lib/uni-fab/uni-fab",
     "uni-load-more": "../../node-modules/@dcloudio/uni-ui/lib/uni-load-more/uni-load-more",
     "friends": "./components/friends",
     "message": "./components/message",

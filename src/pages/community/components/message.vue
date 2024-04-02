@@ -11,9 +11,9 @@
       <view v-if="messageList.length > 0" style="padding-bottom: 100rpx">
         <!-- 比赛订阅信息 -->
         <h1 class="title">比赛订阅信息</h1>
-        <view class="friendMessageBox">
+        <view class="friendMessageBox subscribeBox">
           <view
-            class="messageBox"
+            class="messageBox subscribeMessage"
             v-for="item in messageList.filter((element) => element.userID === 9999)"
             :key="item.messageTime"
             @tap="navigateToChat(item.userID)"
@@ -146,6 +146,10 @@ const navigateToChat = (userID) => {
       box-sizing: border-box;
       border-bottom: 1px solid #ebeef5;
       background-color: #fff;
+      &:last-child {
+        border: 0;
+        padding-bottom: 0px;
+      }
       .avatar {
         width: 100rpx;
         height: 100rpx;
@@ -190,11 +194,13 @@ const navigateToChat = (userID) => {
         height: 100rpx;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-end;
         justify-content: space-around;
         width: 200rpx;
+        margin-right: 20rpx;
         font-size: 22rpx;
         color: #666;
+
         .num {
           padding-top: 10rpx;
           display: flex;
