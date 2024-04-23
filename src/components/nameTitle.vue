@@ -102,7 +102,6 @@ const props = defineProps({
 const emits = defineEmits(['tapAvatar', 'refleshComment', 'openInput'])
 // 点击评论区
 const handleTap = () => {
-  console.log('handleTap')
   emits('openInput')
 }
 // 点击头像

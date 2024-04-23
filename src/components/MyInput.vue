@@ -5,10 +5,9 @@
         class="text"
         placeholder="请输入内容"
         :value="textarea"
-        autofocus
-        focus
-        :cursor-spacing="225"
+        :cursor-spacing="textareaBottomDistance"
         @input="emit('update:textarea', ($event.target as any).value)"
+        @keyboardheightchange="keyboardheightchange"
       />
     </view>
     <view class="img">
@@ -24,7 +23,9 @@
       </view>
     </view>
     <view class="function">
-      <view><uni-icons type="image" color="#888" size="26" @tap="chooseImg" /></view>
+      <view>
+        <uni-icons type="image" color="#888" size="26" @tap="chooseImg" />
+      </view>
       <view>
         <button class="sendBtn" plain @tap="send">发送</button>
       </view>
@@ -33,6 +34,14 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
+let textareaBottomDistance = ref(0)
+// 键盘高度发生变化
+const keyboardheightchange = (e) => {
+  console.log(e.target.height, '键盘高度')
+  if (e.target.height !== 0) {
+    textareaBottomDistance.value = e.target.height
+  }
+}
 defineProps(['textarea'])
 const emit = defineEmits(['update:textarea', 'send'])
 const imgList = ref<string[]>([])
@@ -85,7 +94,6 @@ const send = () => {
 .container {
   box-sizing: border-box;
   padding: 20rpx;
-  height: 450rpx;
   background-color: #fff;
   .content {
     height: 200rpx;

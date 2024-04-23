@@ -15,7 +15,7 @@
         :candelete="item.userId === userInfo.ID"
         @tap-avatar="toUserHome(item.userId)"
         @refleshComment="refleshComment"
-        @open-input="openInput(item.commentDisId, true)"
+        @open-input="updateCurCommentId(item.commentDisId, true)"
       >
         <template #comment>
           <slot>
@@ -42,6 +42,7 @@
                         }}</view
                       >
                     </view>
+                    <!-- 删除评论 -->
                     <view class="right" @tap.stop="showTips(items.ID)">
                       <view v-if="items.userInfo.ID === userInfo.ID">
                         <uni-icons type="closeempty" color="#ccc" size="18" />
@@ -62,28 +63,27 @@
     </template>
   </view>
   <!-- 评论框 -->
-  <view class="inputArea" @tap="openInput(props.disId, false)">
+  <!-- <view class="inputArea" @tap="updateCurCommentId(props.disId, false)"> -->
+  <view class="inputArea">
     <!-- 首页或自动打开 -->
-    <view class="input"></view>
+    <view class="input">
+      <textarea
+        class="textarea"
+        :placeholder="placeholder"
+        auto-height
+        v-model="textarea"
+        :cursor-spacing="20"
+        :show-confirm-bar="false"
+        @input="onInput"
+        @blur="blur"
+        :focus="isFocus"
+        disable-default-padding
+      />
+    </view>
     <view class="imgBox">
-      <image
-        style="width: 46rpx; height: 46rpx; margin-left: 20rpx"
-        src="@/static/Input/face.png"
-      ></image>
-      <image
-        style="width: 54rpx; height: 54rpx; margin-left: 20rpx"
-        src="@/static/Input/picture.png"
-      ></image>
+      <button class="btn" @tap="send(currentCommentID, isSecondComment)">发送</button>
     </view>
   </view>
-  <!-- 评论弹窗 -->
-  <uni-popup ref="popup" type="center" @mask-click="closeInput">
-    <MyInput
-      v-model:textarea="textarea"
-      @send="send(currentCommentID, isSecondComment)"
-      @clearImgList="clearImgList"
-    ></MyInput>
-  </uni-popup>
   <!-- 确定删除弹窗 -->
   <uni-popup ref="alertDialog" type="dialog">
     <uni-popup-dialog
@@ -93,13 +93,11 @@
       title="警告"
       content="您确认要删除这条评论吗？"
       @confirm="delSecondComment(secondCommentId)"
-      @close="dialogClose"
     ></uni-popup-dialog>
   </uni-popup>
 </template>
 <script lang="ts" setup>
 import nameTitle from './nameTitle.vue'
-import MyInput from '@/components/MyInput.vue'
 import { ref } from 'vue'
 import { http } from '@/utils/http'
 import { onMounted } from 'vue'
@@ -135,12 +133,23 @@ onReachBottom(
     }
   }, 1000),
 )
+// 输入事件
+const onInput = (e) => {
+  textarea.value = e.detail.value
+}
+// 输入框是否聚焦
+const isFocus = ref(false)
 const props = defineProps({
   disId: {
     type: Number,
     default: 1,
   },
 })
+// 输入框失焦
+const blur = () => {
+  isFocus.value = false
+}
+
 // 确认删除评论弹窗ref
 const alertDialog = ref()
 let secondCommentId = 0
@@ -199,10 +208,12 @@ const toUserHome = (disId: number) => {
     url: `/pages/mine/personPage/index?userID=${disId}`,
   })
 }
+// 占位符
+const placeholder = ref('评论')
 // 发送评论 ID 帖子ID or 一级评论的ID
-const send = async (ID: number, isSecondComment: boolean) => {
+const send = async (ID: number, isSecond: boolean) => {
   if (textarea.value.trim() !== '') {
-    if (!isSecondComment) {
+    if (!isSecond) {
       uni.showLoading()
       // 一级评论
       await http({
@@ -216,9 +227,13 @@ const send = async (ID: number, isSecondComment: boolean) => {
       currentPageNum.value = 1
       await getCommentList(props.disId)
       uni.hideLoading()
-      popup.value.close()
+      // 将评论发送重置为默认一级评论
+      currentCommentID.value = props.disId
+      isSecondComment.value = false
       textarea.value = ''
+      isFocus.value = false
     } else {
+      // 发送二级评论
       uni.showLoading()
       http({
         url: '/app/comment/createCommentSonInfo',
@@ -231,8 +246,11 @@ const send = async (ID: number, isSecondComment: boolean) => {
       textarea.value = ''
       currentPageNum.value = 1
       await getCommentList(props.disId)
+      // 将评论发送重置为默认一级评论
+      currentCommentID.value = props.disId
+      isSecondComment.value = false
       uni.hideLoading()
-      popup.value.close()
+      isFocus.value = false
     }
   } else {
     uni.showToast({
@@ -242,28 +260,17 @@ const send = async (ID: number, isSecondComment: boolean) => {
   }
 }
 // 当前评论类型的ID
-const currentCommentID = ref(0)
+const currentCommentID = ref(props.disId)
 // 是否二级评论
 const isSecondComment = ref(false)
-// 输入框popup
-const popup = ref()
 // 打开输入框
-const openInput = (ID: number, SecondComment: boolean) => {
-  console.log(ID)
+const updateCurCommentId = (ID: number, SecondComment: boolean) => {
+  isFocus.value = true
   currentCommentID.value = ID
   isSecondComment.value = SecondComment
-  popup.value.open('bottom')
 }
 // 输入框绑定内容
 let textarea = ref('')
-// 关闭输入框
-const closeInput = () => {
-  console.log(textarea.value)
-}
-// 清空组件的图片列表
-const clearImgList = () => {
-  console.log('清空')
-}
 // 刷新评论区，回到顶部
 const refleshComment = () => {
   currentPageNum.value = 1
@@ -327,29 +334,48 @@ const delSecondComment = async (ID: number) => {
 .inputArea {
   width: 100%;
   position: fixed;
+  padding: 10rpx 0;
   bottom: 0;
   z-index: 99;
-  height: 80rpx;
   background-color: #fff;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  box-shadow: -2rpx 0 2rpx 2rpx #eee;
+  box-shadow: -2rpx 0 2rpx 4rpx #eee;
   .input {
     box-sizing: border-box;
-    margin: 0 20rpx;
-    padding: 0 20rpx;
+    margin: 0 0 0 20rpx;
+    padding: 10rpx 20rpx;
     width: 70%;
-    height: 50rpx;
     background-color: #f0f3f8;
     border-radius: 30rpx;
     display: flex;
+    min-height: 70rpx;
     align-items: center;
     color: #ccc;
     font-size: 28rpx;
+    .textarea {
+      box-sizing: border-box;
+      color: black;
+      width: 100%;
+      text-align: justify;
+    }
   }
   .imgBox {
     display: flex;
     align-items: center;
+    margin-right: 30rpx;
+    .btn {
+      border: 0;
+      width: 140rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      font-size: 28rpx;
+      background-color: #12a66a;
+      box-shadow: 0rpx 1rpx 12rpx 4rpx #efefef;
+      color: #eee;
+      border-radius: 30rpx;
+    }
   }
 }
 </style>

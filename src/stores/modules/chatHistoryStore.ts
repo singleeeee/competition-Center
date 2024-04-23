@@ -64,7 +64,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
       // 首次加载的有效信息
       if (data.data[0] === '{') {
         const returnMsg = JSON.parse(data.data)
-        console.log('转化后的数据', returnMsg)
+        // console.log('转化后的数据', returnMsg)
         // 返回的是未读信息 1 未读信息 2 普通信息
         if (returnMsg.type === 1) {
           // 更新用户列表 todo
@@ -258,7 +258,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
         // 未读信息数据
         chatInfoMap.value[i].unReadCount = 0
         const chatListLength = chatInfoMap.value[i].chatList.length
-        console.log('信息列表的长度', chatListLength)
+        // console.log('信息列表的长度', chatListLength)
         // 上条信息
         chatInfoMap.value[i].lastMessage =
           chatListLength > 0
@@ -267,10 +267,10 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               : chatInfoMap.value[i].chatList[chatListLength - 1].content
             : '暂无未读信息'
         // 上条时间
-        console.log(
-          '调用resetUnreadList时显示的上条时间',
-          chatInfoMap.value[i].chatList[chatListLength - 1],
-        )
+        // console.log(
+        //   '调用resetUnreadList时显示的上条时间',
+        //   chatInfoMap.value[i].chatList[chatListLength - 1],
+        // )
         chatInfoMap.value[i].lastMessageTime =
           chatListLength > 0
             ? chatInfoMap.value[i].chatList[chatListLength - 1].messageTime * 1000

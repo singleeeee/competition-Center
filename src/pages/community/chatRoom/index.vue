@@ -107,7 +107,6 @@ import { myDebounce } from '@/utils/myDebounce'
 // 点击图片预览
 const onClickImg = (tempFilePaths) => {
   let fileUrlArray = [tempFilePaths]
-  console.log('点击了图片')
   uni.previewImage({
     urls: fileUrlArray,
     success: (result) => {},
@@ -122,7 +121,6 @@ let loadingStatus = ref(false)
 // 下拉刷新
 const onRefresh = () => {
   loadingStatus.value = true
-  console.log('下拉刷新')
   getHistoryInfo(targetID.value)
 }
 // 目前对话用户的userID
@@ -137,11 +135,14 @@ const chatHistoryStore = useChatHistoryStore()
 // 消息记录数组
 let { chatInfoMap } = storeToRefs(chatHistoryStore)
 // 侦听数据刷新
-watch(chatInfoMap, (newValue, oldValue) => {
-  console.log('watch chatInfoMap')
-  console.log(newValue)
-  console.log(oldValue)
-})
+watch(
+  chatInfoMap,
+  (newValue, oldValue) => {
+    console.log('侦听到数据变化')
+    scrollToBottom()
+  },
+  { deep: true },
+)
 //滚动到最新位置
 onMounted(() => {
   scrollToBottom()
@@ -238,7 +239,6 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
     }
     return obj
   })
-  console.log('历史记录', insertData)
   if (insertData.length === 0) {
     uni.showToast({
       title: '没有更多历史信息了',
@@ -278,9 +278,7 @@ const openInput = () => {
 // 输入框绑定内容
 let textarea = ref('')
 // 关闭输入框
-const closeInput = () => {
-  console.log(textarea.value)
-}
+const closeInput = () => {}
 // ws发送信息
 const wsSend = (msg) => {
   // 如果发送是图片
@@ -298,7 +296,6 @@ const wsSend = (msg) => {
 
 // 发送信息
 const send = (imgList: string[]) => {
-  console.log(imgList, textarea.value)
   // 什么都没
   if (textarea.value === '' && imgList.length === 0) {
     uni.showToast({
@@ -347,9 +344,7 @@ const send = (imgList: string[]) => {
   }
 }
 // 清空组件的图片列表
-const clearImgList = () => {
-  console.log('清空图片列表')
-}
+const clearImgList = () => {}
 </script>
 
 <style lang="scss" scoped>

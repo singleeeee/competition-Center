@@ -7,6 +7,11 @@
     "transformPx" : false,
     "app-plus" : {
         "usingComponents" : true,
+        "softinput": {  
+             "navBar": "none",          // IOS平台软键盘上导航条的显示模式，可取值auto、none
+             "auxiliary": false,         //  是否开启辅助输入功能
+             "mode": "adjustPan"         // 弹出系统软键盘模式，可取值adjustResize、adjustPan
+            },
         "nvueStyleCompiler" : "uni-app",
         "compilerVersion" : 3,
         "splashscreen" : {

@@ -9014,9 +9014,12 @@ const subPackages = [
 ];
 const globalStyle = {
   navigationBarTextStyle: "black",
-  navigationBarTitleText: "uni-app",
+  navigationBarTitleText: "竞赛云届",
   navigationBarBackgroundColor: "#F8F8F8",
-  backgroundColor: "#F8F8F8"
+  backgroundColor: "#F8F8F8",
+  "app-plus": {
+    softinputNavBar: "none"
+  }
 };
 const tabBar = {
   color: "#333",

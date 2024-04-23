@@ -1,42 +1,50 @@
 <template>
   <div class="postManage">
     <scroll-view scroll-y class="scrollBox">
-      <view
-        class="item"
-        v-for="item in postList"
-        :key="item.ID"
-        @tap="navigateTo(item.disStatus, item.ID)"
-      >
-        <image
-          class="img"
-          :src="item.disPicture[0] || ' ../../static/empty/emptyImg.png'"
-          mode="scaleToFill"
-        />
-        <view class="content">
-          <span class="titleBox">
-            <h1 class="title">{{ item.disTitle }}</h1>
-            <p class="subTitle">{{ item.disContent }}</p>
-          </span>
-          <span class="extraBox">
-            <span class="Tag">原创</span>
-            <span class="date">{{ toLocalTime(item.CreatedAt).split(' ')[0] }}</span>
-            <span class="readedNum" v-if="item.disStatus !== 1 && item.disStatus !== 3"
-              >{{ item.disHot }}阅读</span
-            >
-            <span class="liked" v-if="item.disStatus != 1 && item.disStatus != 3"
-              >{{ item.disLoveNumber }}点赞</span
-            >
-            <span class="followed" v-if="item.disStatus !== 1 && item.disStatus !== 3"
-              >{{ item.disCollectNumber }}收藏</span
-            >
-          </span>
+      <template v-if="postList.length > 0">
+        <view
+          class="item"
+          v-for="item in postList"
+          :key="item.ID"
+          @tap="navigateTo(item.disStatus, item.ID)"
+        >
+          <image
+            class="img"
+            :src="item.disPicture[0] || ' ../../static/empty/emptyImg.png'"
+            mode="scaleToFill"
+          />
+          <view class="content">
+            <span class="titleBox">
+              <h1 class="title">{{ item.disTitle }}</h1>
+              <p class="subTitle">{{ item.disContent }}</p>
+            </span>
+            <span class="extraBox">
+              <span class="Tag">原创</span>
+              <span class="date">{{ toLocalTime(item.CreatedAt).split(' ')[0] }}</span>
+              <span class="readedNum" v-if="item.disStatus !== 1 && item.disStatus !== 3"
+                >{{ item.disHot }}阅读</span
+              >
+              <span class="liked" v-if="item.disStatus != 1 && item.disStatus != 3"
+                >{{ item.disLoveNumber }}点赞</span
+              >
+              <span class="followed" v-if="item.disStatus !== 1 && item.disStatus !== 3"
+                >{{ item.disCollectNumber }}收藏</span
+              >
+            </span>
+          </view>
+          <view class="postStatus">
+            <span class="statusTag checked" v-if="item.disStatus === 1">待审核</span>
+            <span class="statusTag error" v-else-if="item.disStatus === 3">未通过</span>
+            <span class="statusTag success" v-else>展示中</span>
+          </view>
         </view>
-        <view class="postStatus">
-          <span class="statusTag checked" v-if="item.disStatus === 1">待审核</span>
-          <span class="statusTag error" v-else-if="item.disStatus === 3">未通过</span>
-          <span class="statusTag success" v-else>展示中</span>
+      </template>
+      <template v-else>
+        <view class="empty">
+          <image src="@/static/empty/emptyBox.png" mode="scaleToFill" />
+          暂无发布文章
         </view>
-      </view>
+      </template>
     </scroll-view>
   </div>
 </template>
@@ -181,5 +189,12 @@ const navigateTo = (status: number, disId: number) => {
       color: rgb(29, 148, 35);
     }
   }
+}
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #aaa;
 }
 </style>
