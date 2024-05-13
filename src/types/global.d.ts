@@ -81,3 +81,9 @@ export type CollectList = {
   // 作者姓名
   disUserName: string
 }
+
+// 固定时间格式
+export interface TimeFormat {
+  CreatedAt: string
+  UpdatedAt: string
+}

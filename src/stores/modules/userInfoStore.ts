@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import type { UserInfo } from '@/types/global'
 import { ref } from 'vue'
 import { http } from '@/utils/http'
+import { updateUserInfo } from '@/api/user/userInfo.ts'
 
 // 定义 Store
 export const useUserInfoStore = defineStore(
@@ -27,7 +28,7 @@ export const useUserInfoStore = defineStore(
       //年级
       userGrade: 0, //1900-2100
       //专业
-      userProfession: '考古学',
+      userProfession: '',
       // 获赞个数
       loveNumber: 0,
       // 关注个数

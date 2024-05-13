@@ -1528,7 +1528,7 @@ function populateParameters(fromRes, toRes) {
   const hostLanguage = language.replace(/_/g, "-");
   const parameters = {
     appId: "",
-    appName: "",
+    appName: "singleeeee",
     appVersion: "1.0.0",
     appVersionCode: "100",
     appLanguage: getAppLanguage(hostLanguage),
@@ -1672,7 +1672,7 @@ const getAppBaseInfo = {
       hostSDKVersion: SDKVersion,
       hostTheme: theme,
       appId: "",
-      appName: "",
+      appName: "singleeeee",
       appVersion: "1.0.0",
       appVersionCode: "100",
       appLanguage: getAppLanguage(hostLanguage)
@@ -1928,13 +1928,6 @@ function recordEffectScope(effect, scope = activeEffectScope) {
 }
 function getCurrentScope() {
   return activeEffectScope;
-}
-function onScopeDispose(fn) {
-  if (activeEffectScope) {
-    activeEffectScope.cleanups.push(fn);
-  } else {
-    warn$1(`onScopeDispose() is called when there is no active effect scope to be associated with.`);
-  }
 }
 const createDep = (effects) => {
   const dep = new Set(effects);
@@ -7210,8 +7203,8 @@ function del(target, key) {
   delete target[key];
 }
 /*!
-  * pinia v2.0.33
-  * (c) 2023 Eduardo San Martin Morote
+  * pinia v2.0.3
+  * (c) 2021 Eduardo San Martin Morote
   * @license MIT
   */
 let activePinia;
@@ -7227,7 +7220,6 @@ var MutationType;
   MutationType2["patchFunction"] = "patch function";
 })(MutationType || (MutationType = {}));
 const IS_CLIENT = typeof window !== "undefined";
-const USE_DEVTOOLS = IS_CLIENT;
 const componentStateTypes = [];
 const getStoreType = (id) => "🍍 " + id;
 function addStoreToDevtools(app, store) {
@@ -7258,9 +7250,6 @@ function devtoolsPlugin({ app, store, options }) {
   if (store.$id.startsWith("__hot:")) {
     return;
   }
-  if (options.state) {
-    store._isOptionsAPI = true;
-  }
   if (typeof options.state === "function") {
     patchActionForGrouping(
       // @ts-expect-error: can cast the store...
@@ -7274,6 +7263,7 @@ function devtoolsPlugin({ app, store, options }) {
     };
   }
   addStoreToDevtools(
+    // @ts-expect-error: should be of type App from vue
     app,
     // FIXME: is there a way to allow the assignment from Store<Id, S, G, A> to StoreGeneric?
     store
@@ -7311,7 +7301,7 @@ function createPinia() {
     _s: /* @__PURE__ */ new Map(),
     state
   });
-  if (USE_DEVTOOLS && typeof Proxy !== "undefined") {
+  if (IS_CLIENT) {
     pinia.use(devtoolsPlugin);
   }
   return pinia;
@@ -7333,40 +7323,29 @@ function patchObject(newState, oldState) {
   }
   return newState;
 }
-const noop = () => {
-};
-function addSubscription(subscriptions, callback, detached, onCleanup = noop) {
+function addSubscription(subscriptions, callback, detached) {
   subscriptions.push(callback);
   const removeSubscription = () => {
     const idx = subscriptions.indexOf(callback);
     if (idx > -1) {
       subscriptions.splice(idx, 1);
-      onCleanup();
     }
   };
-  if (!detached && getCurrentScope()) {
-    onScopeDispose(removeSubscription);
+  if (!detached && getCurrentInstance()) {
+    onUnmounted(removeSubscription);
   }
   return removeSubscription;
 }
 function triggerSubscriptions(subscriptions, ...args) {
-  subscriptions.slice().forEach((callback) => {
+  subscriptions.forEach((callback) => {
     callback(...args);
   });
 }
 function mergeReactiveObjects(target, patchToApply) {
-  if (target instanceof Map && patchToApply instanceof Map) {
-    patchToApply.forEach((value, key) => target.set(key, value));
-  }
-  if (target instanceof Set && patchToApply instanceof Set) {
-    patchToApply.forEach(target.add, target);
-  }
   for (const key in patchToApply) {
-    if (!patchToApply.hasOwnProperty(key))
-      continue;
     const subPatch = patchToApply[key];
     const targetValue = target[key];
-    if (isPlainObject(targetValue) && isPlainObject(subPatch) && target.hasOwnProperty(key) && !isRef(subPatch) && !isReactive(subPatch)) {
+    if (isPlainObject(targetValue) && isPlainObject(subPatch) && !isRef(subPatch) && !isReactive(subPatch)) {
       target[key] = mergeReactiveObjects(targetValue, subPatch);
     } else {
       target[key] = subPatch;
@@ -7397,9 +7376,6 @@ function createOptionsStore(id, options, pinia, hot) {
       toRefs(ref(state ? state() : {}).value)
     ) : toRefs(pinia.state.value[id]);
     return assign(localState, actions, Object.keys(getters || {}).reduce((computedGetters, name) => {
-      if (name in localState) {
-        console.warn(`[🍍]: A getter cannot have the same name as another state property. Rename one of them. Found with "${name}" in store "${id}".`);
-      }
       computedGetters[name] = markRaw(computed(() => {
         setActivePinia(pinia);
         const store2 = pinia._s.get(id);
@@ -7408,11 +7384,20 @@ function createOptionsStore(id, options, pinia, hot) {
       return computedGetters;
     }, {}));
   }
-  store = createSetupStore(id, setup, options, pinia, hot, true);
+  store = createSetupStore(id, setup, options, pinia, hot);
+  store.$reset = function $reset() {
+    const newState = state ? state() : {};
+    this.$patch(($state) => {
+      assign($state, newState);
+    });
+  };
   return store;
 }
-function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) {
+const noop = () => {
+};
+function createSetupStore($id, setup, options = {}, pinia, hot) {
   let scope;
+  const buildState = options.state;
   const optionsForPlugin = assign({ actions: {} }, options);
   if (!pinia._e.active) {
     throw new Error("Pinia destroyed");
@@ -7435,21 +7420,19 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
     };
   }
   let isListening;
-  let isSyncListening;
   let subscriptions = markRaw([]);
   let actionSubscriptions = markRaw([]);
   let debuggerEvents;
   const initialState = pinia.state.value[$id];
-  if (!isOptionsStore && !initialState && !hot) {
+  if (!buildState && !initialState && !hot) {
     {
       pinia.state.value[$id] = {};
     }
   }
   const hotState = ref({});
-  let activeListener;
   function $patch(partialStateOrMutator) {
     let subscriptionMutation;
-    isListening = isSyncListening = false;
+    isListening = false;
     {
       debuggerEvents = [];
     }
@@ -7469,27 +7452,12 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
         events: debuggerEvents
       };
     }
-    const myListenerId = activeListener = Symbol();
-    nextTick$1().then(() => {
-      if (activeListener === myListenerId) {
-        isListening = true;
-      }
-    });
-    isSyncListening = true;
+    isListening = true;
     triggerSubscriptions(subscriptions, subscriptionMutation, pinia.state.value[$id]);
   }
-  const $reset = isOptionsStore ? function $reset2() {
-    const { state } = options;
-    const newState = state ? state() : {};
-    this.$patch(($state) => {
-      assign($state, newState);
-    });
-  } : (
-    /* istanbul ignore next */
-    () => {
-      throw new Error(`🍍: Store "${$id}" is built using the setup syntax and does not implement $reset().`);
-    }
-  );
+  const $reset = () => {
+    throw new Error(`🍍: Store "${$id}" is build using the setup syntax and does not implement $reset().`);
+  };
   function $dispose() {
     scope.stop();
     subscriptions = [];
@@ -7500,13 +7468,13 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
     return function() {
       setActivePinia(pinia);
       const args = Array.from(arguments);
-      const afterCallbackList = [];
-      const onErrorCallbackList = [];
+      let afterCallback = noop;
+      let onErrorCallback = noop;
       function after(callback) {
-        afterCallbackList.push(callback);
+        afterCallback = callback;
       }
       function onError(callback) {
-        onErrorCallbackList.push(callback);
+        onErrorCallback = callback;
       }
       triggerSubscriptions(actionSubscriptions, {
         args,
@@ -7519,20 +7487,22 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
       try {
         ret = action.apply(this && this.$id === $id ? this : store, args);
       } catch (error) {
-        triggerSubscriptions(onErrorCallbackList, error);
-        throw error;
+        if (onErrorCallback(error) !== false) {
+          throw error;
+        }
       }
       if (ret instanceof Promise) {
         return ret.then((value) => {
-          triggerSubscriptions(afterCallbackList, value);
-          return value;
+          const newRet2 = afterCallback(value);
+          return newRet2 === void 0 ? value : newRet2;
         }).catch((error) => {
-          triggerSubscriptions(onErrorCallbackList, error);
-          return Promise.reject(error);
+          if (onErrorCallback(error) !== false) {
+            return Promise.reject(error);
+          }
         });
       }
-      triggerSubscriptions(afterCallbackList, ret);
-      return ret;
+      const newRet = afterCallback(ret);
+      return newRet === void 0 ? ret : newRet;
     };
   }
   const _hmrPayload = /* @__PURE__ */ markRaw({
@@ -7549,9 +7519,9 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
     $patch,
     $reset,
     $subscribe(callback, options2 = {}) {
-      const removeSubscription = addSubscription(subscriptions, callback, options2.detached, () => stopWatcher());
+      const _removeSubscription = addSubscription(subscriptions, callback, options2.detached);
       const stopWatcher = scope.run(() => watch(() => pinia.state.value[$id], (state) => {
-        if (options2.flush === "sync" ? isSyncListening : isListening) {
+        if (isListening) {
           callback({
             storeId: $id,
             type: MutationType.direct,
@@ -7559,22 +7529,26 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
           }, state);
         }
       }, assign({}, $subscribeOptions, options2)));
+      const removeSubscription = () => {
+        stopWatcher();
+        _removeSubscription();
+      };
       return removeSubscription;
     },
     $dispose
   };
-  const store = reactive(
-    assign(
+  const store = reactive(assign(
+    IS_CLIENT ? (
+      // devtools custom properties
       {
-        _hmrPayload,
-        _customProperties: markRaw(/* @__PURE__ */ new Set())
-        // devtools custom properties
-      },
-      partialStore
-      // must be added later
-      // setupStore
-    )
-  );
+        _customProperties: markRaw(/* @__PURE__ */ new Set()),
+        _hmrPayload
+      }
+    ) : {},
+    partialStore
+    // must be added later
+    // setupStore
+  ));
   pinia._s.set($id, store);
   const setupStore = pinia._e.run(() => {
     scope = effectScope();
@@ -7585,7 +7559,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
     if (isRef(prop) && !isComputed(prop) || isReactive(prop)) {
       if (hot) {
         set$1(hotState.value, key, toRef(setupStore, key));
-      } else if (!isOptionsStore) {
+      } else if (!buildState) {
         if (initialState && shouldHydrate(prop)) {
           if (isRef(prop)) {
             prop.value = initialState[key];
@@ -7611,13 +7585,15 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
       optionsForPlugin.actions[key] = prop;
     } else {
       if (isComputed(prop)) {
-        _hmrPayload.getters[key] = isOptionsStore ? (
+        _hmrPayload.getters[key] = buildState ? (
           // @ts-expect-error
           options.getters[key]
         ) : prop;
         if (IS_CLIENT) {
-          const getters = setupStore._getters || // @ts-expect-error: same
-          (setupStore._getters = markRaw([]));
+          const getters = (
+            // @ts-expect-error: it should be on the store
+            setupStore._getters || (setupStore._getters = markRaw([]))
+          );
           getters.push(key);
         }
       }
@@ -7625,7 +7601,6 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
   }
   {
     assign(store, setupStore);
-    assign(toRaw(store), setupStore);
   }
   Object.defineProperty(store, "$state", {
     get: () => hot ? hotState.value : pinia.state.value[$id],
@@ -7659,19 +7634,15 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
         }
       });
       isListening = false;
-      isSyncListening = false;
       pinia.state.value[$id] = toRef(newStore._hmrPayload, "hotState");
-      isSyncListening = true;
-      nextTick$1().then(() => {
-        isListening = true;
-      });
+      isListening = true;
       for (const actionName in newStore._hmrPayload.actions) {
         const action = newStore[actionName];
         set$1(store, actionName, wrapAction(actionName, action));
       }
       for (const getterName in newStore._hmrPayload.getters) {
         const getter = newStore._hmrPayload.getters[getterName];
-        const getterValue = isOptionsStore ? (
+        const getterValue = buildState ? (
           // special handling of options api
           computed(() => {
             setActivePinia(pinia);
@@ -7694,20 +7665,23 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
       store._getters = newStore._getters;
       store._hotUpdating = false;
     });
-  }
-  if (USE_DEVTOOLS) {
     const nonEnumerable = {
       writable: true,
       configurable: true,
       // avoid warning on devtools trying to display this property
       enumerable: false
     };
-    ["_p", "_hmrPayload", "_getters", "_customProperties"].forEach((p2) => {
-      Object.defineProperty(store, p2, assign({ value: store[p2] }, nonEnumerable));
-    });
+    if (IS_CLIENT) {
+      ["_p", "_hmrPayload", "_getters", "_customProperties"].forEach((p2) => {
+        Object.defineProperty(store, p2, {
+          value: store[p2],
+          ...nonEnumerable
+        });
+      });
+    }
   }
   pinia._p.forEach((extender) => {
-    if (USE_DEVTOOLS) {
+    if (IS_CLIENT) {
       const extensions = scope.run(() => extender({
         store,
         app: pinia._a,
@@ -7730,11 +7704,10 @@ function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) 
 	state: () => new MyClass()
 Found in store "${store.$id}".`);
   }
-  if (initialState && isOptionsStore && options.hydrate) {
+  if (initialState && buildState && options.hydrate) {
     options.hydrate(store.$state, initialState);
   }
   isListening = true;
-  isSyncListening = true;
   return store;
 }
 function defineStore(idOrOptions, setup, setupOptions) {
@@ -7752,7 +7725,7 @@ function defineStore(idOrOptions, setup, setupOptions) {
     const currentInstance2 = getCurrentInstance();
     pinia = // in test mode, ignore the argument provided as we can always retrieve a
     // pinia instance with getActivePinia()
-    pinia || currentInstance2 && inject(piniaSymbol, null);
+    pinia || currentInstance2 && inject(piniaSymbol);
     if (pinia)
       setActivePinia(pinia);
     if (!activePinia) {
@@ -7792,18 +7765,16 @@ This will fail in production.`);
   return useStore;
 }
 function storeToRefs(store) {
-  {
-    store = toRaw(store);
-    const refs = {};
-    for (const key in store) {
-      const value = store[key];
-      if (isRef(value) || isReactive(value)) {
-        refs[key] = // ---
-        toRef(store, key);
-      }
+  store = toRaw(store);
+  const refs = {};
+  for (const key in store) {
+    const value = store[key];
+    if (isRef(value) || isReactive(value)) {
+      refs[key] = // ---
+      toRef(store, key);
     }
-    return refs;
   }
+  return refs;
 }
 function isObject(v2) {
   return typeof v2 === "object" && v2 !== null;
@@ -8680,69 +8651,6 @@ const messages$1 = {
   "zh-Hans": zhHans$2,
   "zh-Hant": zhHant$2
 };
-let mpMixins = {};
-mpMixins = {
-  data() {
-    return {
-      is_show: "none"
-    };
-  },
-  watch: {
-    show(newVal) {
-      this.is_show = this.show;
-    }
-  },
-  created() {
-    this.swipeaction = this.getSwipeAction();
-    if (this.swipeaction && Array.isArray(this.swipeaction.children)) {
-      this.swipeaction.children.push(this);
-    }
-  },
-  mounted() {
-    this.is_show = this.show;
-  },
-  methods: {
-    // wxs 中调用
-    closeSwipe(e2) {
-      if (this.autoClose && this.swipeaction) {
-        this.swipeaction.closeOther(this);
-      }
-    },
-    change(e2) {
-      this.$emit("change", e2.open);
-      if (this.is_show !== e2.open) {
-        this.is_show = e2.open;
-      }
-    },
-    appTouchStart(e2) {
-      const {
-        clientX
-      } = e2.changedTouches[0];
-      this.clientX = clientX;
-      this.timestamp = (/* @__PURE__ */ new Date()).getTime();
-    },
-    appTouchEnd(e2, index2, item, position) {
-      const {
-        clientX
-      } = e2.changedTouches[0];
-      let diff2 = Math.abs(this.clientX - clientX);
-      let time = (/* @__PURE__ */ new Date()).getTime() - this.timestamp;
-      if (diff2 < 40 && time < 300) {
-        this.$emit("click", {
-          content: item,
-          index: index2,
-          position
-        });
-      }
-    },
-    onClickForPC(index2, item, position) {
-      return;
-    }
-  }
-};
-const mpwxs = mpMixins;
-let bindIngXMixins = {};
-let otherMixins = {};
 const easycom = {
   autoscan: true,
   custom: {
@@ -11751,6 +11659,353 @@ let Bs = new class {
   } }), bs(Bs), Bs.addInterceptor = N, Bs.removeInterceptor = D, Bs.interceptObject = F;
 })();
 var Ws = Bs;
+const ERR_MSG_OK = "chooseAndUploadFile:ok";
+const ERR_MSG_FAIL = "chooseAndUploadFile:fail";
+function chooseImage(opts) {
+  const {
+    count,
+    sizeType = ["original", "compressed"],
+    sourceType,
+    extension
+  } = opts;
+  return new Promise((resolve2, reject) => {
+    index.chooseMedia({
+      count,
+      sizeType,
+      sourceType,
+      mediaType: ["image"],
+      extension,
+      success(res) {
+        res.tempFiles.forEach((item) => {
+          item.path = item.tempFilePath;
+        });
+        resolve2(normalizeChooseAndUploadFileRes(res, "image"));
+      },
+      fail(res) {
+        reject({
+          errMsg: res.errMsg.replace("chooseImage:fail", ERR_MSG_FAIL)
+        });
+      }
+    });
+  });
+}
+function chooseVideo(opts) {
+  const {
+    count,
+    camera,
+    compressed,
+    maxDuration,
+    sourceType,
+    extension
+  } = opts;
+  return new Promise((resolve2, reject) => {
+    index.chooseMedia({
+      count,
+      compressed,
+      maxDuration,
+      sourceType,
+      extension,
+      mediaType: ["video"],
+      success(res) {
+        const {
+          tempFiles
+        } = res;
+        resolve2(normalizeChooseAndUploadFileRes({
+          errMsg: "chooseVideo:ok",
+          tempFiles: tempFiles.map((item) => {
+            return {
+              name: item.name || "",
+              path: item.tempFilePath,
+              thumbTempFilePath: item.thumbTempFilePath,
+              size: item.size,
+              type: res.tempFile && res.tempFile.type || "",
+              width: item.width,
+              height: item.height,
+              duration: item.duration,
+              fileType: "video",
+              cloudPath: ""
+            };
+          })
+        }, "video"));
+      },
+      fail(res) {
+        reject({
+          errMsg: res.errMsg.replace("chooseVideo:fail", ERR_MSG_FAIL)
+        });
+      }
+    });
+  });
+}
+function chooseAll(opts) {
+  const {
+    count,
+    extension
+  } = opts;
+  return new Promise((resolve2, reject) => {
+    let chooseFile = index.chooseFile;
+    if (typeof wx$1 !== "undefined" && typeof wx$1.chooseMessageFile === "function") {
+      chooseFile = wx$1.chooseMessageFile;
+    }
+    if (typeof chooseFile !== "function") {
+      return reject({
+        errMsg: ERR_MSG_FAIL + " 请指定 type 类型，该平台仅支持选择 image 或 video。"
+      });
+    }
+    chooseFile({
+      type: "all",
+      count,
+      extension,
+      success(res) {
+        resolve2(normalizeChooseAndUploadFileRes(res));
+      },
+      fail(res) {
+        reject({
+          errMsg: res.errMsg.replace("chooseFile:fail", ERR_MSG_FAIL)
+        });
+      }
+    });
+  });
+}
+function normalizeChooseAndUploadFileRes(res, fileType) {
+  res.tempFiles.forEach((item, index2) => {
+    if (!item.name) {
+      item.name = item.path.substring(item.path.lastIndexOf("/") + 1);
+    }
+    if (fileType) {
+      item.fileType = fileType;
+    }
+    item.cloudPath = Date.now() + "_" + index2 + item.name.substring(item.name.lastIndexOf("."));
+  });
+  if (!res.tempFilePaths) {
+    res.tempFilePaths = res.tempFiles.map((file) => file.path);
+  }
+  return res;
+}
+function uploadCloudFiles(files, max = 5, onUploadProgress) {
+  files = JSON.parse(JSON.stringify(files));
+  const len = files.length;
+  let count = 0;
+  let self = this;
+  return new Promise((resolve2) => {
+    while (count < max) {
+      next();
+    }
+    function next() {
+      let cur = count++;
+      if (cur >= len) {
+        !files.find((item) => !item.url && !item.errMsg) && resolve2(files);
+        return;
+      }
+      const fileItem = files[cur];
+      const index2 = self.files.findIndex((v2) => v2.uuid === fileItem.uuid);
+      fileItem.url = "";
+      delete fileItem.errMsg;
+      Ws.uploadFile({
+        filePath: fileItem.path,
+        cloudPath: fileItem.cloudPath,
+        fileType: fileItem.fileType,
+        onUploadProgress: (res) => {
+          res.index = index2;
+          onUploadProgress && onUploadProgress(res);
+        }
+      }).then((res) => {
+        fileItem.url = res.fileID;
+        fileItem.index = index2;
+        if (cur < len) {
+          next();
+        }
+      }).catch((res) => {
+        fileItem.errMsg = res.errMsg || res.message;
+        fileItem.index = index2;
+        if (cur < len) {
+          next();
+        }
+      });
+    }
+  });
+}
+function uploadFiles(choosePromise, {
+  onChooseFile,
+  onUploadProgress
+}) {
+  return choosePromise.then((res) => {
+    if (onChooseFile) {
+      const customChooseRes = onChooseFile(res);
+      if (typeof customChooseRes !== "undefined") {
+        return Promise.resolve(customChooseRes).then((chooseRes) => typeof chooseRes === "undefined" ? res : chooseRes);
+      }
+    }
+    return res;
+  }).then((res) => {
+    if (res === false) {
+      return {
+        errMsg: ERR_MSG_OK,
+        tempFilePaths: [],
+        tempFiles: []
+      };
+    }
+    return res;
+  });
+}
+function chooseAndUploadFile(opts = {
+  type: "all"
+}) {
+  if (opts.type === "image") {
+    return uploadFiles(chooseImage(opts), opts);
+  } else if (opts.type === "video") {
+    return uploadFiles(chooseVideo(opts), opts);
+  }
+  return uploadFiles(chooseAll(opts), opts);
+}
+const get_file_ext = (name) => {
+  const last_len = name.lastIndexOf(".");
+  const len = name.length;
+  return {
+    name: name.substring(0, last_len),
+    ext: name.substring(last_len + 1, len)
+  };
+};
+const get_extname = (fileExtname) => {
+  if (!Array.isArray(fileExtname)) {
+    let extname = fileExtname.replace(/(\[|\])/g, "");
+    return extname.split(",");
+  } else {
+    return fileExtname;
+  }
+};
+const get_files_and_is_max = (res, _extname) => {
+  let filePaths = [];
+  let files = [];
+  if (!_extname || _extname.length === 0) {
+    return {
+      filePaths,
+      files
+    };
+  }
+  res.tempFiles.forEach((v2) => {
+    let fileFullName = get_file_ext(v2.name);
+    const extname = fileFullName.ext.toLowerCase();
+    if (_extname.indexOf(extname) !== -1) {
+      files.push(v2);
+      filePaths.push(v2.path);
+    }
+  });
+  if (files.length !== res.tempFiles.length) {
+    index.showToast({
+      title: `当前选择了${res.tempFiles.length}个文件 ，${res.tempFiles.length - files.length} 个文件格式不正确`,
+      icon: "none",
+      duration: 5e3
+    });
+  }
+  return {
+    filePaths,
+    files
+  };
+};
+const get_file_info = (filepath) => {
+  return new Promise((resolve2, reject) => {
+    index.getImageInfo({
+      src: filepath,
+      success(res) {
+        resolve2(res);
+      },
+      fail(err) {
+        reject(err);
+      }
+    });
+  });
+};
+const get_file_data = async (files, type = "image") => {
+  let fileFullName = get_file_ext(files.name);
+  const extname = fileFullName.ext.toLowerCase();
+  let filedata = {
+    name: files.name,
+    uuid: files.uuid,
+    extname: extname || "",
+    cloudPath: files.cloudPath,
+    fileType: files.fileType,
+    thumbTempFilePath: files.thumbTempFilePath,
+    url: files.path || files.path,
+    size: files.size,
+    //单位是字节
+    image: {},
+    path: files.path,
+    video: {}
+  };
+  if (type === "image") {
+    const imageinfo = await get_file_info(files.path);
+    delete filedata.video;
+    filedata.image.width = imageinfo.width;
+    filedata.image.height = imageinfo.height;
+    filedata.image.location = imageinfo.path;
+  } else {
+    delete filedata.image;
+  }
+  return filedata;
+};
+let mpMixins = {};
+mpMixins = {
+  data() {
+    return {
+      is_show: "none"
+    };
+  },
+  watch: {
+    show(newVal) {
+      this.is_show = this.show;
+    }
+  },
+  created() {
+    this.swipeaction = this.getSwipeAction();
+    if (this.swipeaction && Array.isArray(this.swipeaction.children)) {
+      this.swipeaction.children.push(this);
+    }
+  },
+  mounted() {
+    this.is_show = this.show;
+  },
+  methods: {
+    // wxs 中调用
+    closeSwipe(e2) {
+      if (this.autoClose && this.swipeaction) {
+        this.swipeaction.closeOther(this);
+      }
+    },
+    change(e2) {
+      this.$emit("change", e2.open);
+      if (this.is_show !== e2.open) {
+        this.is_show = e2.open;
+      }
+    },
+    appTouchStart(e2) {
+      const {
+        clientX
+      } = e2.changedTouches[0];
+      this.clientX = clientX;
+      this.timestamp = (/* @__PURE__ */ new Date()).getTime();
+    },
+    appTouchEnd(e2, index2, item, position) {
+      const {
+        clientX
+      } = e2.changedTouches[0];
+      let diff2 = Math.abs(this.clientX - clientX);
+      let time = (/* @__PURE__ */ new Date()).getTime() - this.timestamp;
+      if (diff2 < 40 && time < 300) {
+        this.$emit("click", {
+          content: item,
+          index: index2,
+          position
+        });
+      }
+    },
+    onClickForPC(index2, item, position) {
+      return;
+    }
+  }
+};
+const mpwxs = mpMixins;
+let bindIngXMixins = {};
+let otherMixins = {};
 const en$1 = {
   "uni-datetime-picker.selectDate": "select date",
   "uni-datetime-picker.selectTime": "select time",
@@ -12861,6 +13116,7 @@ exports.Ws = Ws;
 exports._export_sfc = _export_sfc;
 exports.bindIngXMixins = bindIngXMixins;
 exports.checkDate = checkDate;
+exports.chooseAndUploadFile = chooseAndUploadFile;
 exports.createAnimation = createAnimation;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;
@@ -12876,6 +13132,9 @@ exports.getDate = getDate;
 exports.getDateTime = getDateTime;
 exports.getDefaultSecond = getDefaultSecond;
 exports.getTime = getTime;
+exports.get_extname = get_extname;
+exports.get_file_data = get_file_data;
+exports.get_files_and_is_max = get_files_and_is_max;
 exports.i18nMessages = i18nMessages;
 exports.index = index;
 exports.initVueI18n = initVueI18n;
@@ -12908,4 +13167,5 @@ exports.src_default = src_default;
 exports.storeToRefs = storeToRefs;
 exports.t = t$1;
 exports.unref = unref;
+exports.uploadCloudFiles = uploadCloudFiles;
 exports.watch = watch;

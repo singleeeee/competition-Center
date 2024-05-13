@@ -1,25 +1,39 @@
 <template>
-  <view class="scroll">
-    <button @tap="tap">刷新</button>
-    <view>
-      <uni-load-more iconType="circle" :status="status" iconSize="24" :contentText="loadingText" />
-    </view>
-  </view>
+  <uni-file-picker v-model="imageValue" fileMediatype="image" mode="grid" @select="select" @progress="progress"
+    @success="success" @fail="fail" />
+  <button @tap="send">关注</button>
 </template>
 <script setup>
-import { ref, reactive } from 'vue'
-const status = ref('loading')
-const loadingText = ref({
-  contentdown: '展示更多内容',
-  contentrefresh: '正在加载...',
-  contentnomore: '已经到底了',
-})
-const tap = () => {
-  if (status.value === 'loading') {
-    status.value = 'more'
-  } else {
-    status.value = 'loading'
-  }
+import { ref } from 'vue'
+import { upLoadFile } from '@/api/user/upLoadFile'
+import { followUser, unfollowUser, getUserFollowers, getUserFans } from '@/api/user/follow'
+// api 测试
+async function send() {
+  const res = await getUserFans(10000)
+  console.log(res)
+}
+
+// 选择文件
+const imageValue = ref([])
+// 获取上传状态
+async function select(e) {
+  const file = e.tempFiles[0].file
+  const res = await upLoadFile(file)
+  console.log('上传结果：', res.data.url)
+}
+// 获取上传进度
+function progress(e) {
+  console.log('上传进度：', e)
+}
+
+// 上传成功
+function success(e) {
+  console.log('上传成功')
+}
+
+// 上传失败
+function fail(e) {
+  console.log('上传失败：', e)
 }
 </script>
 <style scoped></style>

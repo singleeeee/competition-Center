@@ -5,26 +5,11 @@
         <view>我的关注({{ userList.length }}人)</view>
         <view class="sort">排序</view>
       </view>
-      <!-- <view class="group">
-        <view
-          v-for="(item, index) in groupList"
-          :key="index"
-          :data-id="index"
-          @tap="changeGroup"
-          :class="{ button: true, active: index === currentGroup }"
-          >{{ item }}</view
-        >
-      </view> -->
       <view class="list">
         <view class="item" v-for="(item, index) in userList" :key="index">
           <view class="friendBox">
             <view>
-              <image
-                class="avatar"
-                @tap="toPersonPage(item.userID)"
-                :src="item.userAvatarUrl"
-                mode="scaleToFill"
-              />
+              <image class="avatar" @tap="toPersonPage(item.userID)" :src="item.userAvatarUrl" mode="scaleToFill" />
             </view>
             <view class="ContentBox" @tap="toPersonPage(item.userID)">
               <view class="nickname">{{ item.userNickname }}</view>
@@ -49,82 +34,83 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { http } from '@/utils/http'
+import { getUserFollowers, followUser, unfollowUser } from '@/api/user/follow'
 import { onLoad } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
-const followed = ref(true)
-const userInfoStore = useUserInfoStore()
-const { userInfo } = storeToRefs(userInfoStore)
 
 onLoad(() => {
   getUserList()
 })
+const userInfoStore = useUserInfoStore()
+const { userInfo } = storeToRefs(userInfoStore)
+
+const userList = ref([])
+
 // 点击头像
 const toPersonPage = (userID: number) => {
   uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userID}` })
 }
 // 关注
-const Follow = (userID: number, index: number) => {
-  const res = http({
-    url: '/app/user/followUser',
-    data: {
-      followUserId: userID,
-    },
-  })
-  userList.value[index].followed = true
-  uni.showToast({
-    title: '关注成功',
-    icon: 'none',
-    mask: true,
-    duration: 500,
-  })
+const Follow = async (userID: number, index: number) => {
+  const res = await followUser(userID)
+  if (res.msg === '关注用户成功') {
+    userList.value[index].followed = true
+    uni.showToast({
+      title: '关注成功',
+      icon: 'none',
+      mask: true,
+      duration: 500,
+    })
+  } else {
+    uni.showToast({
+      title: res.msg,
+      icon: 'none',
+      mask: true,
+      duration: 500,
+    })
+  }
 }
-// 取消关注
-const cancelFollow = (targetID: number, index: number) => {
-  console.log(typeof index, index)
 
-  const res = http({
-    url: '/app/user/unFollowUser?unFollowUserId=' + targetID,
-    method: 'DELETE',
-  })
-  userList.value[index].followed = false
-  uni.showToast({
-    title: '取消关注成功!',
-    icon: 'none',
-    mask: true,
-    duration: 500,
-  })
+// 取消关注
+const cancelFollow = async (targetID: number, index: number) => {
+  console.log(typeof index, index)
+  const res = await unfollowUser(targetID)
+  if (res.msg === '取消关注成功') {
+    userList.value[index].followed = false
+    uni.showToast({
+      title: '取消关注成功!',
+      icon: 'none',
+      mask: true,
+      duration: 500,
+    })
+  } else {
+    uni.showToast({
+      title: res.msg,
+      icon: 'none',
+      mask: true,
+      duration: 500,
+    })
+  }
 }
 
 // 当前分组
 const currentGroup = ref(0)
-const groupList = ref(['全部', '关注', '粉丝'])
-// 改变分组
-const changeGroup = (e) => {
-  currentGroup.value = e.currentTarget.dataset.id
-}
+
 // 获取关注列表
 const getUserList = async () => {
-  const res = await http({
-    url: '/app/user/showUserFollower',
-    data: {
-      userID: userInfo.value.ID,
-    },
-  })
+  const res = await getUserFollowers(userInfo.value.ID)
   for (let i = 0; i < res.data.length; i++) {
     res.data[i].followed = true
     userList.value.push(res.data[i])
   }
-  console.log(userList.value)
 }
-
-const userList = ref([])
 </script>
 
 <style lang="scss" scoped>
 .container {
   margin: 0 20rpx;
+
   .UserList {
     .title {
       display: flex;
@@ -135,21 +121,25 @@ const userList = ref([])
       font-family: '楷体';
       font-weight: 700;
     }
+
     .list {
       .item {
         height: 120rpx;
         margin: 20rpx 0;
+
         .friendBox {
           height: 120rpx;
           display: flex;
           align-items: center;
           justify-content: space-between;
+
           .avatar {
             width: 110rpx;
             height: 110rpx;
             background-color: skyblue;
             border-radius: 50%;
           }
+
           .ContentBox {
             padding-left: 18rpx;
             display: flex;
@@ -157,11 +147,13 @@ const userList = ref([])
             height: 100rpx;
             flex: 1;
             flex-direction: column;
+
             .nickname {
               font-size: 30rpx;
               font-weight: 700;
               color: #000;
             }
+
             .introduction {
               color: #ccc;
               font-size: 24rpx;
@@ -173,16 +165,19 @@ const userList = ref([])
               -webkit-box-orient: vertical;
             }
           }
+
           .chat {
             height: 100rpx;
             display: flex;
             flex-direction: column;
             align-items: center;
+
             .online {
               color: #ccc;
               font-size: 24rpx;
               margin-bottom: 10rpx;
             }
+
             button {
               display: flex;
               align-items: center;
@@ -198,9 +193,11 @@ const userList = ref([])
         }
       }
     }
+
     .group {
       display: flex;
       flex-wrap: wrap;
+
       .button {
         background-color: #eee;
         font-size: 22rpx;
@@ -208,6 +205,7 @@ const userList = ref([])
         margin-right: 30rpx;
         color: #aaa;
       }
+
       .active {
         color: #000;
       }

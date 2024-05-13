@@ -1,23 +1,11 @@
 <template>
   <view class="container">
     <view class="content">
-      <textarea
-        class="text"
-        placeholder="请输入内容"
-        :value="textarea"
-        :cursor-spacing="textareaBottomDistance"
-        @input="emit('update:textarea', ($event.target as any).value)"
-        @keyboardheightchange="keyboardheightchange"
-      />
+      <textarea class="text" placeholder="请输入内容" :value="textarea" :cursor-spacing="textareaBottomDistance"
+        @input="emit('update:textarea', ($event.target as any).value)" @keyboardheightchange="keyboardheightchange" />
     </view>
     <view class="img">
-      <view
-        class="imageItem"
-        v-for="(item, index) in imgList"
-        :key="index"
-        :data-id="index"
-        @tap="deleteImg"
-      >
+      <view class="imageItem" v-for="(item, index) in imgList" :key="index" :data-id="index" @tap="deleteImg">
         <image class="image" :src="item" mode="scaleToFill" />
         <uni-icons class="clear" type="clear" color="" size="20" />
       </view>
@@ -34,6 +22,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { upLoadFile } from '@/api/user/upLoadFile'
 let textareaBottomDistance = ref(0)
 // 键盘高度发生变化
 const keyboardheightchange = (e) => {
@@ -95,26 +84,31 @@ const send = () => {
   box-sizing: border-box;
   padding: 20rpx;
   background-color: #fff;
+
   .content {
     height: 200rpx;
     background-color: #eee;
     border-radius: 10rpx;
     overflow: scroll;
   }
+
   .img {
     display: flex;
     align-items: center;
     height: 150rpx;
+
     .imageItem {
       position: relative;
       width: 120rpx;
       height: 120rpx;
       background-color: pink;
       margin: 0 20rpx;
+
       .image {
         height: 120rpx;
         width: 120rpx;
       }
+
       .clear {
         position: absolute;
         top: -22rpx;
@@ -123,12 +117,14 @@ const send = () => {
       }
     }
   }
+
   .function {
     padding: 0 20rpx;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 80rpx;
+
     .sendBtn {
       border: 0;
       width: 200rpx;
@@ -141,6 +137,7 @@ const send = () => {
       border-radius: 30rpx;
     }
   }
+
   .text {
     box-sizing: border-box;
     width: 100%;

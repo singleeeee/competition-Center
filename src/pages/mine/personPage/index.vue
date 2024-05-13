@@ -232,6 +232,7 @@ import skeleton from '../components/skeleton.vue'
 import type { CollectList } from '@/types/global'
 import { useUserInfoStore } from '@/stores'
 import NameTitle from '@/components/nameTitle.vue'
+import { getUserExperience } from '@/api/user/userInfo'
 const UserInfoStore = useUserInfoStore()
 // 是否用户本人
 const isSelf = ref(false)
@@ -251,7 +252,7 @@ onLoad(async (options) => {
   // 获取帖子列表
   getPostList()
   // 获取用户经历
-  getUserExperience()
+  getExperience()
   // 获取用户动态
   getUserTrend()
   // 转换标签
@@ -284,12 +285,9 @@ const onClickImg = (tempFilePaths: string) => {
 // 当前经历步骤
 let active = ref(1)
 // 获取用户经历
-const getUserExperience = async () => {
-  const res = await http({
-    url: '/app/user/showUserHistory',
-    data: {
-      userID: UserInfoStore.userInfo.ID,
-    },
+const getExperience = async () => {
+  const res = await getUserExperience({
+    userID: UserInfoStore.userInfo.ID,
   })
   res.data.list.reverse().forEach((item) => {
     const obj = {

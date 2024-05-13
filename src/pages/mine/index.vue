@@ -85,7 +85,8 @@ const navigateTo = (target: string) => {
 }
 // 跳转到个人主页
 const switchToPersonPage = () => {
-  uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` })
+  // uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` })
+  uni.navigateTo({ url: `/pages/test/index?userID=${userInfo.value.ID}` })
 }
 </script>
 
@@ -93,27 +94,15 @@ const switchToPersonPage = () => {
   <view class="container">
     <view class="header" v-if="isHeadShow">
       <!-- 头像 -->
-      <image
-        class="avatar"
-        @tap="navigatetoPerson"
-        :src="userInfo.userAvatarUrl"
-        mode="scaleToFill"
-      />
+      <image class="avatar" @tap="navigatetoPerson" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
       <!-- 昵称 -->
       <view class="nickname">
         {{ userInfo.userNickname }}
       </view>
       <!-- 标签栏 -->
       <view class="tagList">
-        <uni-tag
-          v-for="(item, index) in tagList"
-          :key="index"
-          class="label"
-          :text="item"
-          :circle="true"
-          type="primary"
-          size="small"
-        ></uni-tag>
+        <uni-tag v-for="(item, index) in tagList" :key="index" class="label" :text="item" :circle="true" type="primary"
+          size="small"></uni-tag>
       </view>
       <!-- 粉丝数量等 -->
       <view class="dataBox">
@@ -179,6 +168,7 @@ const switchToPersonPage = () => {
         更多设置
       </view>
     </view>
+    <button @tap="switchToPersonPage()">跳转</button>
   </view>
 </template>
 
@@ -188,6 +178,7 @@ const switchToPersonPage = () => {
   flex-direction: column;
   background-color: #f5f5f5;
   padding-bottom: 100rpx;
+
   .header {
     display: flex;
     flex-direction: column;
@@ -198,6 +189,7 @@ const switchToPersonPage = () => {
     margin: 30rpx 40rpx;
     margin-top: 90rpx;
     border-radius: 100rpx;
+
     .avatar {
       position: absolute;
       top: -80rpx;
@@ -208,31 +200,37 @@ const switchToPersonPage = () => {
       border-radius: 50%;
       border: 6rpx solid #fff;
     }
+
     .nickname {
       margin-top: 100rpx;
       font-weight: 700;
       font-size: 36rpx;
       color: #fff;
     }
+
     .tagList {
       display: flex;
       width: 60%;
       justify-content: space-evenly;
       margin-top: 10rpx;
     }
+
     .dataBox {
       width: 90%;
       margin-top: 30rpx;
       display: flex;
       justify-content: space-evenly;
       color: #fff;
+
       .itemBox {
         display: flex;
         flex-direction: column;
         align-items: center;
+
         .num {
           font-size: 56rpx;
         }
+
         .text {
           color: #eee;
           font-size: 28rpx;
@@ -240,6 +238,7 @@ const switchToPersonPage = () => {
       }
     }
   }
+
   .configBox {
     margin: 0rpx 30rpx;
     margin-top: 20rpx;
@@ -247,16 +246,19 @@ const switchToPersonPage = () => {
     padding: 10rpx 30rpx;
     border-radius: 20rpx;
     box-shadow: 0rpx 4rpx 12rpx 2rpx #ddd;
+
     .itemBox {
       display: flex;
       align-items: center;
       padding: 20rpx 0;
       border-bottom: 2rpx solid #eee;
       font-size: 28rpx;
+
       &:active {
         background-color: #fdfdfd;
       }
     }
+
     .noneBorder {
       border: 0;
     }

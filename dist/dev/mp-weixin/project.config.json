@@ -20,9 +20,9 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "2.0",
+  "libVersion": "3.2.5",
   "appid": "wxa554745366849234",
-  "projectname": "",
+  "projectname": "singleeeee",
   "condition": {
     "search": {
       "current": -1,

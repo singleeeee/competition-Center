@@ -80,7 +80,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
     };
     const switchToPersonPage = () => {
-      common_vendor.index.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` });
+      common_vendor.index.navigateTo({ url: `/pages/test/index?userID=${userInfo.value.ID}` });
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
@@ -153,7 +153,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           type: "gear",
           size: "26"
         }),
-        D: common_vendor.o(($event) => navigateTo("moreSetting"))
+        D: common_vendor.o(($event) => navigateTo("moreSetting")),
+        E: common_vendor.o(($event) => switchToPersonPage())
       });
     };
   }

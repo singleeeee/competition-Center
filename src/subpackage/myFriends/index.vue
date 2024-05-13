@@ -19,12 +19,7 @@
         <view class="item" v-for="(item, index) in userList" :key="index">
           <view class="friendBox">
             <view>
-              <image
-                class="avatar"
-                @tap="toPersonPage(item.userID)"
-                :src="item.userAvatarUrl"
-                mode="scaleToFill"
-              />
+              <image class="avatar" @tap="toPersonPage(item.userID)" :src="item.userAvatarUrl" mode="scaleToFill" />
             </view>
             <view class="ContentBox" @tap="toPersonPage(item.userID)">
               <view class="nickname">{{ item.userNickname }}</view>
@@ -44,7 +39,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { http } from '@/utils/http'
+import { getUserFans } from '@/api/user/follow'
 import { onLoad } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
@@ -69,12 +64,7 @@ const changeGroup = (e) => {
 }
 // 获取粉丝列表
 const getUserList = async () => {
-  const res = await http({
-    url: '/app/user/showUserFans',
-    data: {
-      userID: userInfo.value.ID,
-    },
-  })
+  const res = await getUserFans(userInfo.value.ID)
   for (let i = 0; i < res.data.length; i++) {
     userList.value.push(res.data[i])
   }
@@ -91,6 +81,7 @@ const userList = ref([])
 <style lang="scss" scoped>
 .container {
   margin: 0 20rpx;
+
   .UserList {
     .title {
       display: flex;
@@ -101,21 +92,25 @@ const userList = ref([])
       font-family: '楷体';
       font-weight: 700;
     }
+
     .list {
       .item {
         height: 120rpx;
         margin: 20rpx 0;
+
         .friendBox {
           height: 120rpx;
           display: flex;
           align-items: center;
           justify-content: space-between;
+
           .avatar {
             width: 110rpx;
             height: 110rpx;
             background-color: skyblue;
             border-radius: 50%;
           }
+
           .ContentBox {
             padding-left: 18rpx;
             display: flex;
@@ -123,11 +118,13 @@ const userList = ref([])
             height: 100rpx;
             flex: 1;
             flex-direction: column;
+
             .nickname {
               font-size: 30rpx;
               font-weight: 700;
               color: #000;
             }
+
             .introduction {
               color: #ccc;
               font-size: 24rpx;
@@ -139,16 +136,19 @@ const userList = ref([])
               -webkit-box-orient: vertical;
             }
           }
+
           .chat {
             height: 100rpx;
             display: flex;
             flex-direction: column;
             align-items: center;
+
             .online {
               color: #ccc;
               font-size: 24rpx;
               margin-bottom: 10rpx;
             }
+
             button {
               display: flex;
               align-items: center;
@@ -165,9 +165,11 @@ const userList = ref([])
         }
       }
     }
+
     .group {
       display: flex;
       flex-wrap: wrap;
+
       .button {
         background-color: #eee;
         font-size: 22rpx;
@@ -175,6 +177,7 @@ const userList = ref([])
         margin-right: 30rpx;
         color: #aaa;
       }
+
       .active {
         color: #000;
       }

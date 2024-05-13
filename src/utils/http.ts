@@ -2,6 +2,13 @@ import { useUserInfoStore } from '@/stores'
 // 接口基地址
 const baseURL = 'https://singleeeee.top'
 
+// 添加类型，支持泛型
+export interface Data<T> {
+  code: string
+  data: T
+  msg: string
+}
+
 // 添加拦截器
 const httpInterceptor = {
   //拦截前触发
@@ -17,6 +24,7 @@ const httpInterceptor = {
     const userInfoStore = useUserInfoStore()
     options.header = {
       ...options.header,
+      // 一键添加token
       ['Authorization']: userInfoStore.userInfo.token || '',
     }
   },
@@ -24,15 +32,6 @@ const httpInterceptor = {
 
 // 拦截 request 请求
 uni.addInterceptor('request', httpInterceptor)
-// 拦截 uploadFile 文件上传
-// uni.addInterceptor('uploadFile', httpInterceptor)
-
-// 添加类型，支持泛型
-export interface Data<T> {
-  code: string
-  data: T
-  msg: string
-}
 
 // 添加请求拦截器
 export const http = <T>(options: UniApp.RequestOptions) => {
@@ -45,9 +44,8 @@ export const http = <T>(options: UniApp.RequestOptions) => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           // 2.1 提取核心数据 res.data
           if ((res.data as any).code === '7') {
-            console.log('请求失败，code = 7')
             uni.showToast({
-              title: res.data.msg,
+              title: (res.data as Data<T>).msg,
               icon: 'error',
               duration: 1000,
             })
