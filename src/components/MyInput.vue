@@ -1,11 +1,23 @@
 <template>
   <view class="container">
     <view class="content">
-      <textarea class="text" placeholder="请输入内容" :value="textarea" :cursor-spacing="textareaBottomDistance"
-        @input="emit('update:textarea', ($event.target as any).value)" @keyboardheightchange="keyboardheightchange" />
+      <textarea
+        class="text"
+        placeholder="请输入内容"
+        :value="textarea"
+        :cursor-spacing="textareaBottomDistance"
+        @input="emit('update:textarea', ($event.target as any).value)"
+        @keyboardheightchange="keyboardheightchange"
+      />
     </view>
     <view class="img">
-      <view class="imageItem" v-for="(item, index) in imgList" :key="index" :data-id="index" @tap="deleteImg">
+      <view
+        class="imageItem"
+        v-for="(item, index) in imgList"
+        :key="index"
+        :data-id="index"
+        @tap="deleteImg"
+      >
         <image class="image" :src="item" mode="scaleToFill" />
         <uni-icons class="clear" type="clear" color="" size="20" />
       </view>

@@ -1,6 +1,13 @@
 <template>
-  <uni-file-picker v-model="imageValue" fileMediatype="image" mode="grid" @select="select" @progress="progress"
-    @success="success" @fail="fail" />
+  <uni-file-picker
+    v-model="imageValue"
+    fileMediatype="image"
+    mode="grid"
+    @select="select"
+    @progress="progress"
+    @success="success"
+    @fail="fail"
+  />
   <button @tap="send">关注</button>
 </template>
 <script setup>

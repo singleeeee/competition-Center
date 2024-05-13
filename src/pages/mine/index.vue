@@ -94,15 +94,27 @@ const switchToPersonPage = () => {
   <view class="container">
     <view class="header" v-if="isHeadShow">
       <!-- 头像 -->
-      <image class="avatar" @tap="navigatetoPerson" :src="userInfo.userAvatarUrl" mode="scaleToFill" />
+      <image
+        class="avatar"
+        @tap="navigatetoPerson"
+        :src="userInfo.userAvatarUrl"
+        mode="scaleToFill"
+      />
       <!-- 昵称 -->
       <view class="nickname">
         {{ userInfo.userNickname }}
       </view>
       <!-- 标签栏 -->
       <view class="tagList">
-        <uni-tag v-for="(item, index) in tagList" :key="index" class="label" :text="item" :circle="true" type="primary"
-          size="small"></uni-tag>
+        <uni-tag
+          v-for="(item, index) in tagList"
+          :key="index"
+          class="label"
+          :text="item"
+          :circle="true"
+          type="primary"
+          size="small"
+        ></uni-tag>
       </view>
       <!-- 粉丝数量等 -->
       <view class="dataBox">

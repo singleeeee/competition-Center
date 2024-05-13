@@ -9,7 +9,12 @@
         <view class="item" v-for="(item, index) in userList" :key="index">
           <view class="friendBox">
             <view>
-              <image class="avatar" @tap="toPersonPage(item.userID)" :src="item.userAvatarUrl" mode="scaleToFill" />
+              <image
+                class="avatar"
+                @tap="toPersonPage(item.userID)"
+                :src="item.userAvatarUrl"
+                mode="scaleToFill"
+              />
             </view>
             <view class="ContentBox" @tap="toPersonPage(item.userID)">
               <view class="nickname">{{ item.userNickname }}</view>
