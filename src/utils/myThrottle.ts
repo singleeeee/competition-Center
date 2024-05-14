@@ -1,4 +1,4 @@
-export const myThrottle = (fn: Function, delay: number = 1000) => {
+export const myThrottle = (fn: Function, delay: number = 300) => {
   let flag = false
   return (...args: any[]) => {
     if (flag) return

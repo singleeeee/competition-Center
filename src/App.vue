@@ -3,6 +3,7 @@ import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import { useUserInfoStore } from './stores'
 import { useChatHistoryStore } from './stores/modules/chatHistoryStore'
 import { storeToRefs } from 'pinia'
+
 // 获取ws仓库
 const chatHistoryStore = useChatHistoryStore()
 const userInfoStore = useUserInfoStore()

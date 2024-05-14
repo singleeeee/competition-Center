@@ -1,6 +1,9 @@
 <template>
   <view class="container">
     <view class="chatRoom" v-if="historyIndex !== -1">
+      <view class="ball1"></view>
+      <view class="ball2"></view>
+      <view class="ball3"></view>
       <!-- 一个时间段 -->
       <!-- {{ chatInfoMap[historyIndex].chatList }} -->
       <scroll-view
@@ -22,22 +25,24 @@
             class="detail_info"
           >
             <!-- 时间 -->
-            <view
+            <!-- <view
               class="date"
               v-if="
                 item.messageTime - chatInfoMap[historyIndex].chatList[i - 1]?.messageTime > 4000
               "
-              >{{ toLocalTime(item.messageTime * 1000) }}
-            </view>
+              >{{ dayjs(item.messageTime * 1000).format('M/D HH:mm') }}
+            </view> -->
             <view class="chat-Box">
               <!-- 对面发的 -->
               <view v-if="!item.myWord" class="friendBox">
-                <view class="avatar">
+                <view class="avatar" @click="toUserInfo(targetID)">
                   <image class="avatar" :src="item.avatarUrl" />
                 </view>
-                <text :user-select="true" v-if="!item.isImg" class="content">{{
-                  item.content
-                }}</text>
+                <div v-if="!item.isImg" style="max-width: 60%">
+                  <text :user-select="true" class="content">{{ item.content }}</text>
+                  <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                </div>
+
                 <view v-else class="imgBox">
                   <image
                     @tap="onClickImg(item.imgUrl)"
@@ -45,6 +50,7 @@
                     :src="item.imgUrl"
                     mode="widthFix"
                   />
+                  <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
                 </view>
               </view>
               <!-- 自己发的 -->
@@ -52,10 +58,19 @@
                 <view class="avatar">
                   <image class="avatar" :src="item.avatarUrl" />
                 </view>
-                <!-- 内容 -->
-                <text :user-select="true" v-if="!item.isImg" class="content">{{
-                  item.content
-                }}</text>
+                <view
+                  v-if="!item.isImg"
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    max-width: 60%;
+                  "
+                >
+                  <!-- 内容 -->
+                  <text :user-select="true" class="content">{{ item.content }} </text>
+                  <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                </view>
                 <view v-else class="imgBox">
                   <image
                     @tap="onClickImg(item.imgUrl)"
@@ -63,6 +78,7 @@
                     :src="item.imgUrl"
                     mode="widthFix"
                   />
+                  <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
                 </view>
               </view>
             </view>
@@ -74,38 +90,56 @@
       </scroll-view>
     </view>
     <!-- 底部输入提示框 -->
-    <view class="inputArea" @tap="openInput">
-      <view class="input"> </view>
-      <view class="imgBox">
-        <image
-          style="width: 46rpx; height: 46rpx; margin-left: 20rpx"
-          src="@/static/Input/face.png"
-        ></image>
-        <image
-          style="width: 54rpx; height: 54rpx; margin-left: 20rpx"
-          src="@/static/Input/picture.png"
-        ></image>
+    <!-- @tap="openInput" -->
+    <view class="inputArea">
+      <image
+        style="width: 54rpx; height: 54rpx; margin-left: 20rpx"
+        src="@/static/Input/camera.png"
+        @tap="chooseImg"
+      ></image>
+      <view class="input">
+        <textarea
+          class="textarea"
+          v-model="textareaValue"
+          auto-height
+          placeholder="输入您的消息"
+          :cursor-spacing="textareaBottomDistance"
+          @keyboardheightchange="keyboardheightchange"
+        />
+      </view>
+      <view
+        style="
+          height: 62rpx;
+          width: 62rpx;
+          background-color: #33b8ff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16rpx;
+        "
+        @tap="send()"
+      >
+        <image style="width: 28rpx; height: 28rpx" src="@/static/Input/send.png"></image>
       </view>
     </view>
+    <!-- 小球背景 -->
   </view>
-  <uni-popup ref="popup" type="center" @mask-click="closeInput">
-    <MyInput v-model:textarea="textarea" @send="send" @clearImgList="clearImgList"></MyInput>
-  </uni-popup>
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, onMounted, getCurrentInstance, watch } from 'vue'
-import MyInput from '@/components/MyInput.vue'
+import { ref, onMounted, watch } from 'vue'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { useUserInfoStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { http } from '@/utils/http'
 import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
-import { toLocalTime } from '@/utils/toLocalTime'
 import { myDebounce } from '@/utils/myDebounce'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
 // 点击图片预览
-const onClickImg = (tempFilePaths) => {
+const onClickImg = (tempFilePaths: any) => {
   let fileUrlArray = [tempFilePaths]
   uni.previewImage({
     urls: fileUrlArray,
@@ -134,11 +168,17 @@ const { userInfo } = storeToRefs(userInfoStore)
 const chatHistoryStore = useChatHistoryStore()
 // 消息记录数组
 let { chatInfoMap } = storeToRefs(chatHistoryStore)
+// 去用户主页
+const toUserInfo = (userId: number) => {
+  uni.navigateTo({
+    url: `/pages/mine/personPage/index?userID=${userId}`,
+  })
+}
+
 // 侦听数据刷新
 watch(
   chatInfoMap,
   (newValue, oldValue) => {
-    console.log('侦听到数据变化')
     scrollToBottom()
   },
   { deep: true },
@@ -153,6 +193,9 @@ onLoad(async (options) => {
   // 直接使用小程序打开是没有chatInfoMap的，因为还没加载好
   historyIndex.value = chatInfoMap.value.findIndex((user) => {
     return user.userID === targetID.value
+  })
+  uni.setNavigationBarTitle({
+    title: chatInfoMap.value[historyIndex.value].userName,
   })
   // 重置历史记录
   await chatHistoryStore.clearChatList(targetID.value)
@@ -253,34 +296,31 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
     currentPageNum++
   }
   loadingStatus.value = false
-  scrollTop = bottomPx
+  scrollTop.value = bottomPx
 })
 
 // 距离顶部位置
 let bottomPx = 0
-// 获取当前组件实例
-const instance = getCurrentInstance()
+
+let scrollDistance = 1000000 // 必须变动，不然可能会不生效
 // 滚动条位置
-let scrollTop = 0
+let scrollTop = ref(10000)
 // 滚动到底部
 const scrollToBottom = () => {
-  nextTick(() => {
-    scrollTop = 100000
-  })
+  scrollTop.value = ++scrollDistance
 }
 
-// 输入框popup
-const popup = ref()
-// 打开输入框
-const openInput = () => {
-  popup.value.open('bottom')
-}
 // 输入框绑定内容
-let textarea = ref('')
-// 关闭输入框
-const closeInput = () => {}
+let textareaValue = ref('')
+type messageType = {
+  isImg: boolean
+  myWord: boolean
+  content: string
+  avatarUrl: string
+  imgUrl: string
+}
 // ws发送信息
-const wsSend = (msg) => {
+const wsSend = (msg: messageType) => {
   // 如果发送是图片
   if (msg.isImg) {
     msg.content = msg.imgUrl
@@ -295,64 +335,129 @@ const wsSend = (msg) => {
 }
 
 // 发送信息
-const send = (imgList: string[]) => {
+const send = () => {
+  console.log(textareaValue.value)
   // 什么都没
-  if (textarea.value === '' && imgList.length === 0) {
+  if (textareaValue.value === '') {
     uni.showToast({
       title: '消息不能为空！',
       icon: 'none',
     })
     return
-  } else if (imgList.length !== 0) {
-    // 发送 信息（也许没有）+图片
-    if (textarea.value !== '') {
-      const sendArr = {
-        isImg: false,
-        myWord: true,
-        content: textarea.value,
-        avatarUrl: userInfo.value.userAvatarUrl,
-        imgUrl: '',
-      }
-      // 塞入数组。同时需要发ws
-      wsSend(sendArr)
-    }
-    // 如果有图片，则发送图片
-    for (let i = 0; i < imgList.length; i++) {
-      const sendArr = {
-        isImg: true,
-        myWord: true,
-        content: '',
-        avatarUrl: userInfo.value.userAvatarUrl,
-        imgUrl: imgList[i],
-      }
-      wsSend(sendArr)
-    }
-    textarea.value = ''
-    popup.value.close()
-  } else {
-    // 发送文字
-    const sendArr = {
-      isImg: false,
-      myWord: true,
-      content: textarea.value,
-      avatarUrl: userInfo.value.userAvatarUrl,
-      imgUrl: '',
-    }
-    wsSend(sendArr)
-    textarea.value = ''
-    popup.value.close()
+  }
+  const sendArr: messageType = {
+    isImg: false,
+    myWord: true,
+    content: textareaValue.value,
+    avatarUrl: userInfo.value.userAvatarUrl,
+    imgUrl: '',
+  }
+  // 塞入数组。同时需要发ws
+  wsSend(sendArr)
+  textareaValue.value = ''
+}
+
+let textareaBottomDistance = ref(0)
+// 键盘高度发生变化
+const keyboardheightchange = (e) => {
+  console.log(e.target.height, '键盘高度')
+  if (e.target.height !== 0) {
+    textareaBottomDistance.value = e.target.height
   }
 }
-// 清空组件的图片列表
-const clearImgList = () => {}
+
+// 发送图片
+const chooseImg = () => {
+  uni.chooseImage({
+    count: 1,
+    success: (success) => {
+      const fileurl = success.tempFilePaths[0]
+      uni.uploadFile({
+        url: 'http://47.113.177.192:8082/app/upload/file',
+        filePath: fileurl,
+        name: 'file',
+        success: (success) => {
+          const {
+            data: { url },
+          } = JSON.parse(success.data)
+          const msg: messageType = {
+            isImg: true,
+            myWord: true,
+            content: '',
+            avatarUrl: userInfo.value.userAvatarUrl,
+            imgUrl: url,
+          }
+          wsSend(msg)
+        },
+        fail: (fail) => {
+          uni.showToast({
+            title: fail.errMsg,
+            mask: true,
+            duration: 1000,
+          })
+        },
+      })
+    },
+  })
+}
 </script>
 
 <style lang="scss" scoped>
+#myTime {
+  font-size: 24rpx;
+  text-align: end;
+  margin: 10rpx 20rpx 0 0;
+  color: #9cacbd;
+}
+#yourTime {
+  font-size: 24rpx;
+  text-align: start;
+  margin: 10rpx 0rpx 0 20rpx;
+  color: #9cacbd;
+}
 .container {
+  position: relative;
   min-height: 100vh;
   overflow-y: scroll;
   background-color: #f5f5f5;
 }
+
+.chatRoom .ball1 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #aaf2f5;
+  border-radius: 50%;
+  opacity: 0.5;
+  box-shadow: 0px 0px 200px 300px #a3e2eb;
+}
+
+.chatRoom .ball2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #aeeaec;
+  border-radius: 50%;
+  opacity: 0.5;
+  box-shadow: 0px 0px 200px 200px #a3e2eb;
+}
+
+.chatRoom .ball3 {
+  position: absolute;
+  bottom: 50vh;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #fad8d8;
+  border-radius: 50%;
+  opacity: 0.5;
+  box-shadow: 0px 0px 100px 100px #fadcdc;
+}
+
 .container::-webkit-scrollbar {
   display: none;
   width: 0;
@@ -361,29 +466,40 @@ const clearImgList = () => {}
   background-color: transparent;
   opacity: 0;
 }
+
 .inputArea {
-  width: 100%;
+  width: 92vw;
   position: fixed;
-  bottom: 0;
+  bottom: 40rpx;
   z-index: 99;
-  height: 80rpx;
-  background-color: #fff;
+  padding: 10rpx 0;
+  min-height: 70rpx;
   display: flex;
   align-items: center;
-  box-shadow: -2rpx 0 2rpx 2rpx #eee;
+  box-shadow: -2rpx 0 12rpx 2rpx #a3e2eb;
+  margin: 0 4vw;
+  border-radius: 30rpx;
+  background-color: #fff;
   .input {
     box-sizing: border-box;
     margin: 0 20rpx;
-    padding: 0 20rpx;
+    min-height: 60rpx;
+    padding: 10rpx 20rpx;
+    height: auto;
     width: 70%;
-    height: 50rpx;
     background-color: #f0f3f8;
     border-radius: 30rpx;
-    display: flex;
-    align-items: center;
-    color: #ccc;
-    font-size: 28rpx;
+    overflow: hidden;
+    .textarea {
+      width: 100%;
+      color: #000;
+      font-size: 28rpx;
+      text-align: justify;
+      resize: none; /* 禁止调整大小 */
+      overflow: hidden; /* 隐藏溢出内容 */
+    }
   }
+
   .imgBox {
     display: flex;
     align-items: center;
@@ -391,14 +507,16 @@ const clearImgList = () => {}
 }
 
 .chatRoom {
+  position: relative;
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
-  padding-bottom: 7vh;
 }
+
 .chatRoom .each_time {
-  height: 93vh;
+  height: 100vh;
 }
+
 .chatRoom .each_time .detail_info .date {
   height: 50rpx;
   text-align: center;
@@ -407,49 +525,62 @@ const clearImgList = () => {}
   color: #aaa;
   margin-top: 20rpx;
 }
+
 .chatRoom .each_time .detail_info {
   width: 100vw;
 }
+
 .chatRoom .each_time .detail_info .chat-Box {
   width: 100%;
 }
+.chatRoom .each_time .detail_info:nth-last-child(1) {
+  padding-bottom: 10vh;
+}
+
 .chatRoom .each_time .detail_info .chat-Box .friendBox,
 .chatRoom .each_time .detail_info .chat-Box .myBox {
   width: 100%;
   box-sizing: border-box;
   padding: 10rpx;
   display: flex;
-  min-width: 20%;
   margin-top: 20rpx;
+  margin-right: 20rpx;
 }
+
 .chatRoom .each_time .detail_info .chat-Box .friendBox .avatar,
 .chatRoom .each_time .detail_info .chat-Box .myBox .avatar {
-  width: 80rpx;
+  width: 90rpx;
   min-width: 80rpx;
-  height: 80rpx;
+  height: 90rpx;
   border-radius: 10rpx;
 }
+
 .chatRoom .each_time .detail_info .chat-Box .friendBox .content,
 .chatRoom .each_time .detail_info .chat-Box .myBox .content {
-  display: flex;
-  align-items: center;
-  max-width: 60%;
-  margin-left: 10rpx;
-  background-color: #fff;
-  padding: 15rpx 20rpx;
-  border-radius: 10rpx;
-  font-size: 30rpx;
-  letter-spacing: 2rpx;
+  display: inline-block;
+  word-break: break-word;
   text-align: justify;
+  background-color: #fff;
+  padding: 30rpx 20rpx;
+  border-radius: 0 35rpx 35rpx 35rpx;
+  font-size: 26rpx;
+  letter-spacing: 2rpx;
+  box-shadow: 2px 2px 20rpx 4rpx #bcecf3;
+  color: #647288;
+  font-weight: bold;
+  margin-left: 20rpx;
+  overflow-wrap: break-word;
 }
 
 .chatRoom .each_time .detail_info .chat-Box .friendBox .imgBox,
 .chatRoom .each_time .detail_info .chat-Box .myBox .imgBox {
-  max-width: 50%;
+  max-width: 60%;
   width: 42%;
   margin-right: 30rpx;
   border-radius: 10rpx;
+  margin-top: 20rpx;
 }
+
 .chatRoom .each_time .detail_info .chat-Box .friendBox .img,
 .chatRoom .each_time .detail_info .chat-Box .myBox .img {
   width: 100%;
@@ -457,16 +588,19 @@ const clearImgList = () => {}
   // max-height: 300rpx;
   border-radius: 10rpx;
 }
+
 .chatRoom .each_time .detail_info .chat-Box .myBox {
   display: flex;
   flex-direction: row-reverse;
-  border-radius: 4rpx;
 }
+
 .chatRoom .each_time .detail_info .chat-Box .myBox .content {
   margin-left: 0;
-  margin-right: 10rpx;
-  background-color: #95ec69;
+  margin-right: 20rpx;
+  background-color: #33b8ff;
   letter-spacing: 2rpx;
+  color: #f1f1f1;
+  border-radius: 35rpx 35rpx 0 35rpx;
   text-align: justify;
 }
 </style>

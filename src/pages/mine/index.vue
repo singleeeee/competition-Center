@@ -180,7 +180,6 @@ const switchToPersonPage = () => {
         更多设置
       </view>
     </view>
-    <button @tap="switchToPersonPage()">跳转</button>
   </view>
 </template>
 

@@ -153,8 +153,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
           type: "gear",
           size: "26"
         }),
-        D: common_vendor.o(($event) => navigateTo("moreSetting")),
-        E: common_vendor.o(($event) => switchToPersonPage())
+        D: common_vendor.o(($event) => navigateTo("moreSetting"))
       });
     };
   }

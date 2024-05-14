@@ -1,6 +1,6 @@
 import { http } from '@/utils/http'
 import type { Data } from '@/utils/http'
-import type { otherUserInfo } from '@/api/user/upLoadFile'
+import type { otherUserInfo } from '@/api/user/follow'
 
 // 更新用户信息的请求参数
 export type UndateRequest = {
@@ -138,7 +138,7 @@ export const getUserExperience: (
 }
 
 // 获取用户所有朋友的信息
-export const getUserFriends: (userID: string) => Promise<Data<otherUserInfo>> = (
+export const getUserFriends: (userID: string) => Promise<Data<otherUserInfo[]>> = (
   userID: string,
 ) => {
   return http<otherUserInfo[]>({
@@ -226,6 +226,7 @@ export const getUserList: (data: GetUserListRequest) => Promise<Data<UserInfoLis
 ) => {
   return http<UserInfoListResponse>({
     url: '/app/user/getUserInfoList',
+    method: 'GET',
     data,
   })
 }

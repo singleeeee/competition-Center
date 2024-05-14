@@ -4,6 +4,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "我的队伍",
+          "pathName": "subpackage/myTeam/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "社区",
+          "pathName": "pages/community/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "测试",
           "pathName": "pages/test/index",
           "query": "userID=8",
@@ -19,5 +33,8 @@
         }
       ]
     }
+  },
+  "setting": {
+    "compileHotReLoad": true
   }
 }

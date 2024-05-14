@@ -34,7 +34,6 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { upLoadFile } from '@/api/user/upLoadFile'
 let textareaBottomDistance = ref(0)
 // 键盘高度发生变化
 const keyboardheightchange = (e) => {
