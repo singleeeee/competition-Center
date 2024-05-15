@@ -1,7 +1,7 @@
 <template>
   <view class="containerBox">
     <uni-collapse>
-      <uni-collapse-item titleBorder="none">
+      <uni-collapse-item titleBorder="none" v-for="(item, index) in teamInfoList" :key="index">
         <template v-slot:title>
           <view class="titleBox">
             <view class="container">
@@ -11,12 +11,12 @@
                 mode="scaleToFill"
               />
               <view class="titleContent">
-                <view class="TeamName">你说的都队</view>
-                <view class="title">蓝桥杯</view>
+                <view class="TeamName">{{ item.groupName }}</view>
+                <view class="title">{{ item.comTitle }}</view>
               </view>
               <view class="titleTime">
-                <view>2024.04.01</view>
-                <view>2024.04.24</view>
+                <view>{{ item.comStart }}</view>
+                <view>{{ item.comEnd }}</view>
               </view>
             </view>
           </view>
@@ -24,13 +24,16 @@
         <view class="contentBox">
           <view class="teamerBox">
             <image
-              v-for="(item, index) in 4"
-              :key="index"
+              v-for="(teamer, teamerIndex) in item.userInfoList"
+              :key="teamerIndex"
               class="item"
-              src="https://jk-competition.oss-cn-guangzhou.aliyuncs.com/picture/uploads/2024-03-17/djy.jpg"
+              :src="teamer.userAvatarUrl"
             ></image>
           </view>
-          <view class="btn">删除队伍</view>
+          <view class="btnBox">
+            <view class="btn">进入比赛</view>
+            <view class="btn" style="border-color: #e96f6f; color: #e96f6f">删除队伍</view>
+          </view>
         </view>
       </uni-collapse-item>
     </uni-collapse>
@@ -41,13 +44,15 @@
 .containerBox {
   background-color: #f1f1f1;
   min-height: 100vh;
+  padding: 0 20rpx;
 }
 .titleBox {
   background-color: #fff;
   width: calc(100% - 40rpx);
   margin: 10rpx 20rpx;
   border-radius: 20rpx;
-  padding: 20rpx 20rpx;
+  padding: 10rpx 20rpx;
+  overflow: hidden;
   .container {
     display: flex;
     align-items: center;
@@ -58,7 +63,7 @@
       height: 100rpx;
       border-radius: 20rpx;
       margin-right: 20rpx;
-      box-shadow: 0rpx 0rpx 4rpx 2rpx #eee;
+      box-shadow: 0rpx 0rpx 4rpx 2rpx #ccc;
     }
     .titleContent {
       flex: 1;
@@ -99,6 +104,12 @@
     border-radius: 4rpx;
     text-align: center;
     line-height: 60rpx;
+    margin-bottom: 20rpx;
+  }
+  .btnBox {
+    width: 150rpx;
+    display: flex;
+    flex-direction: column;
   }
   .btn:active {
     background: #eee;

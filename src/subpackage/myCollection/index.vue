@@ -131,7 +131,7 @@ const bindClick = async (e, index) => {
   height: 100vh;
   background-color: #f2f2f2;
   .item {
-    margin: 10rpx 20rpx;
+    margin: 20rpx 20rpx;
     min-height: 100rpx;
     display: flex;
     flex-direction: column;

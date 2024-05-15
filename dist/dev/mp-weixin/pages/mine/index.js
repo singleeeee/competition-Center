@@ -80,7 +80,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       });
     };
     const switchToPersonPage = () => {
-      common_vendor.index.navigateTo({ url: `/pages/test/index?userID=${userInfo.value.ID}` });
+      common_vendor.index.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` });
     };
     return (_ctx, _cache) => {
       return common_vendor.e({

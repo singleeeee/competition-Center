@@ -85,8 +85,8 @@ const navigateTo = (target: string) => {
 }
 // 跳转到个人主页
 const switchToPersonPage = () => {
-  // uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` })
-  uni.navigateTo({ url: `/pages/test/index?userID=${userInfo.value.ID}` })
+  uni.navigateTo({ url: `/pages/mine/personPage/index?userID=${userInfo.value.ID}` })
+  // uni.navigateTo({ url: `/pages/test/index?userID=${userInfo.value.ID}` })
 }
 </script>
 

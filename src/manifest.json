@@ -1,5 +1,5 @@
 {
-    "name" : "singleeeee",
+    "name" : "竞赛云界",
     "appid" : "",
     "description" : "",
     "versionName" : "1.0.0",
@@ -7,11 +7,11 @@
     "transformPx" : false,
     "app-plus" : {
         "usingComponents" : true,
-        "softinput": {  
-             "navBar": "none",          // IOS平台软键盘上导航条的显示模式，可取值auto、none
-             "auxiliary": false,         //  是否开启辅助输入功能
-             "mode": "adjustPan"         // 弹出系统软键盘模式，可取值adjustResize、adjustPan
-            },
+        "softinput" : {
+            "navBar" : "none", // IOS平台软键盘上导航条的显示模式，可取值auto、none
+            "auxiliary" : false, //  是否开启辅助输入功能
+            "mode" : "adjustPan" // 弹出系统软键盘模式，可取值adjustResize、adjustPan
+        },
         "nvueStyleCompiler" : "uni-app",
         "compilerVersion" : 3,
         "splashscreen" : {
@@ -50,8 +50,8 @@
         "appid" : "wxa554745366849234",
         "setting" : {
             "urlCheck" : false,
-            "ignoreDevUnusedFiles": false , 
-            "ignoreUploadUnusedFiles": false
+            "ignoreDevUnusedFiles" : false,
+            "ignoreUploadUnusedFiles" : false
         },
         "usingComponents" : true
     },
@@ -64,8 +64,21 @@
     "mp-toutiao" : {
         "usingComponents" : true
     },
-    "uniStatistics": {  
-        "enable": false
+    "h5": {
+       "devServer": {
+              "port": 8885,
+              "disableHostCheck":true,
+              "proxy": {
+                "/app": {
+                  "target": "https://singleeeee.top",
+                  "changeOrigin": true,
+                  "secure": false
+                }
+              }
+            }
+    },
+    "uniStatistics" : {
+        "enable" : false
     },
     "vueVersion" : "3"
 }

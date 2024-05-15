@@ -1,49 +1,42 @@
 <template>
-  <view class="container">
+  <view class="containerBox">
     <template v-if="teamInfoList.length > 0">
-      <view class="groupBox" v-for="(item, index) in teamInfoList" :key="index">
-        <!-- 队伍名称 -->
-        <view class="teamName">{{ item.groupName }}</view>
-        <!-- 组队信息 -->
-        <view class="teamInfo">
-          <!-- 比赛信息 -->
-          <view class="comBox">
-            <img class="comImg" :src="item.comPicture" />
-            <h1>{{ item.comTitle }}</h1>
-          </view>
+      <uni-collapse>
+        <uni-collapse-item titleBorder="none" v-for="(item, index) in teamInfoList" :key="index">
+          <template v-slot:title>
+            <view class="titleBox">
+              <view class="container">
+                <image class="comImg" :src="item.comPicture" mode="scaleToFill" />
+                <view class="titleContent">
+                  <view class="TeamName">{{ item.groupName }}</view>
+                  <view class="title">{{ item.comTitle }}</view>
+                </view>
+                <view class="titleTime">
+                  <view> {{ dayjs(item.comStart).format('YYYY.MM.DD') }}</view>
 
-          <!-- 队伍信息 -->
-          <view class="teamerBox">
-            <view
-              class="teamItem"
-              v-for="(teamer, teamerIndex) in item.userInfoList"
-              :key="teamerIndex"
-            >
-              <i class="head" v-if="teamerIndex === 0">队长</i>
-              <i class="head" v-else>队员{{ teamerIndex }}</i>
-
-              <img class="tearmerAvatar" :src="teamer.userAvatarUrl" />
-              <h1 class="teamerNickname">{{ teamer.userNickname }}</h1>
+                  <view>{{ dayjs(item.comEnd).format('YYYY.MM.DD') }}</view>
+                </view>
+              </view>
+            </view>
+          </template>
+          <view class="contentBox">
+            <view class="teamerBox">
+              <image
+                v-for="(teamer, teamerIndex) in item.userInfoList"
+                :key="teamerIndex"
+                class="item"
+                :src="teamer.userAvatarUrl"
+              ></image>
+            </view>
+            <view class="btnBox">
+              <view class="btn" @tap="toComIndex(item.comID)">进入比赛</view>
+              <view class="btn" style="border-color: #e96f6f; color: #e96f6f" @tap="onDel(item.ID)"
+                >解散队伍</view
+              >
             </view>
           </view>
-        </view>
-        <!-- 比赛信息 -->
-        <view class="comDetailBox">
-          <view>
-            <view class="timeItem">
-              <span>比赛开始时间：</span>
-              <p class="time">{{ item.comStart }}</p>
-            </view>
-            <view class="timeItem">
-              <span>比赛结束时间：</span>
-              <p class="time">{{ item.comEnd }}</p>
-            </view>
-          </view>
-          <view>
-            <button class="btn" @tap="onDel(item.teamId)">删除队伍</button>
-          </view>
-        </view>
-      </view>
+        </uni-collapse-item>
+      </uni-collapse>
     </template>
     <template v-else>
       <view class="empty">
@@ -59,17 +52,17 @@
       cancelText="取消"
       confirmText="确认"
       title="警告"
-      content="您确认要删除这个队伍吗"
+      content="您确认要解散这个队伍吗"
       @confirm="delTeam()"
     ></uni-popup-dialog>
   </uni-popup>
   <!-- 成功提示 -->
   <uni-popup ref="successInfo" type="message">
-    <uni-popup-message type="success" message="删除成功" :duration="500"></uni-popup-message>
+    <uni-popup-message type="success" message="删除成功" :duration="1000"></uni-popup-message>
   </uni-popup>
   <!-- 失败提示 -->
   <uni-popup ref="errorInfo" type="message">
-    <uni-popup-message type="error" message="删除失败" :duration="500"></uni-popup-message>
+    <uni-popup-message type="error" message="删除失败" :duration="1000"></uni-popup-message>
   </uni-popup>
 </template>
 
@@ -79,6 +72,7 @@ import { http } from '@/utils/http'
 import { useUserInfoStore } from '@/stores/index'
 import { ref } from 'vue'
 import { toLocalTime } from '@/utils/toLocalTime'
+import dayjs from 'dayjs'
 const { userInfo } = useUserInfoStore()
 onLoad(() => {
   getTeamInfo()
@@ -183,109 +177,85 @@ const getTeamerInfo = async (userID: number) => {
   }
   return obj
 }
+// 进入比赛
+const toComIndex = (comID: number) => {
+  uni.navigateTo({
+    url: `/subpackage/comDetail/index?comID=${comID}`,
+  })
+}
 </script>
 
 <style lang="scss" scoped>
-.container {
+.containerBox {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   padding: 10rpx 20rpx;
   min-height: 100vh;
   background-color: #f5f5f5;
-  .groupBox {
-    display: flex;
-    flex-direction: column;
-    border-radius: 30rpx;
+  .titleBox {
+    width: calc(100% - 40rpx);
+    margin: 10rpx 20rpx;
+    padding: 10rpx 20rpx;
     overflow: hidden;
-    margin: 20rpx 0;
-    background: #c9d6ff;
-    background: -webkit-linear-gradient(to right, #e2e2e2, #c9d6ff);
-    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
-    box-shadow: 0rpx 4rpx 12rpx 2rpx #ddd;
-
-    .teamName {
+    .container {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 36rpx;
-      font-weight: bold;
-      padding: 10rpx 0;
-    }
-    .teamInfo {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      margin: 30rpx 0;
-    }
-    .comDetailBox {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 700;
-      margin-bottom: 20rpx;
-      .timeItem {
-        display: flex;
-        padding-left: 20rpx;
-        font-size: 28rpx;
-        margin: 10rpx 0;
+      border-bottom: 2rpx solid #eee;
+      padding-bottom: 20rpx;
+      .comImg {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 20rpx;
+        margin-right: 20rpx;
+        box-shadow: 0rpx 0rpx 4rpx 2rpx #ccc;
       }
-      .btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 70rpx;
-        background-color: #2979ff;
-        color: #fff;
-        margin-top: 20rpx;
-        margin-right: 40rpx;
-        font-size: 24rpx;
-        &:active {
-          background-color: #0553a7;
-          transform: scale(0.99);
+      .titleContent {
+        flex: 1;
+        .TeamName {
+          margin-bottom: 10rpx;
+          font-weight: bold;
+        }
+        .title {
+          font-size: 28rpx;
+          color: #333;
         }
       }
-    }
-    .comBox {
-      text-align: center;
-      width: 140rpx;
-      padding: 20rpx 10rpx;
-      .comImg {
-        width: 120rpx;
-        height: 120rpx;
-        border-radius: 20rpx;
+      .titleTime {
+        font-size: 28rpx;
+        width: 200rpx;
       }
     }
-    .comTimeBox {
+  }
+  .contentBox {
+    display: flex;
+    align-items: center;
+    margin: 10rpx 20rpx;
+    padding: 20rpx 20rpx;
+    background-color: #fff;
+    .teamerBox {
+      flex: 1;
+      .item {
+        width: 70rpx;
+        height: 70rpx;
+        border-radius: 50%;
+        margin-right: 10rpx;
+      }
+    }
+    .btn {
+      width: 150rpx;
+      height: 60rpx;
+      border: 1rpx solid #000;
+      border-radius: 4rpx;
+      text-align: center;
+      line-height: 60rpx;
+      margin-bottom: 20rpx;
+    }
+    .btnBox {
+      width: 150rpx;
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
-      font-size: 26rpx;
-      color: #666;
-      .time {
-        font-size: 24rpx;
-      }
     }
-    .teamerBox {
-      display: flex;
-      .teamItem {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        .head {
-          font-size: 28rpx;
-        }
-        .tearmerAvatar {
-          width: 100rpx;
-          height: 100rpx;
-          border-radius: 50%;
-          background-color: skyblue;
-          margin: 10rpx 10rpx;
-        }
-        .teamerNickname {
-          font-size: 28rpx;
-          color: #aaa;
-        }
-      }
+    .btn:active {
+      background: #eee;
     }
   }
 }

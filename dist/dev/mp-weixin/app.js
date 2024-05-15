@@ -4,7 +4,6 @@ const common_vendor = require("./common/vendor.js");
 const stores_index = require("./stores/index.js");
 const stores_modules_chatHistoryStore = require("./stores/modules/chatHistoryStore.js");
 const stores_modules_userInfoStore = require("./stores/modules/userInfoStore.js");
-require("./utils/http.js");
 if (!Math) {
   "./pages/find/index.js";
   "./pages/competition/index.js";

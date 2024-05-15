@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "订阅比赛",
+          "pathName": "subpackage/subscribe/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "我的队伍",
           "pathName": "subpackage/myTeam/index",
           "query": "",
