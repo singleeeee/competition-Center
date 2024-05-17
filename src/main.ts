@@ -5,6 +5,10 @@ import App from './App.vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
+
+// 引入 Windi CSS 的产物
+import 'virtual:windi.css'
+
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
 

@@ -1,3 +1,6 @@
+<template>
+  <div></div>
+</template>
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import { useUserInfoStore } from './stores'

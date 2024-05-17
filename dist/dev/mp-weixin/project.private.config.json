@@ -4,44 +4,20 @@
     "miniprogram": {
       "list": [
         {
-          "name": "订阅比赛",
-          "pathName": "subpackage/subscribe/index",
-          "query": "",
+          "name": "比赛详情",
+          "pathName": "subpackage/comDetail/index",
+          "query": "comID=1",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "我的队伍",
-          "pathName": "subpackage/myTeam/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "社区",
-          "pathName": "pages/community/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "测试",
+          "name": "pages/test/index",
           "pathName": "pages/test/index",
-          "query": "userID=8",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "我的页面",
-          "pathName": "pages/mine/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         }
       ]
     }
-  },
-  "setting": {
-    "compileHotReLoad": true
   }
 }

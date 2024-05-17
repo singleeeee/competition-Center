@@ -9906,7 +9906,7 @@ const pages = [
   {
     path: "pages/test/index",
     style: {
-      navigationBarTitleText: "测试页面"
+      navigationBarTitleText: "test"
     }
   }
 ];
