@@ -59,3 +59,88 @@ export const getGroupInfoList: (data: ApifoxModel) => Promise<Data<resData>> = (
     data,
   })
 }
+
+// 踢人
+type delTeamerRequest = {
+  userId: number
+  groupId: number
+}
+
+export const deleteGroupUser: (data: delTeamerRequest) => Promise<Data<resData>> = (
+  data: delTeamerRequest,
+) => {
+  return http({
+    url: `/app/groupInvite/deleteGroupUser?userId=${data.userId}?groupId=${data.groupId}`,
+    method: 'DELETE',
+    data,
+  })
+}
+
+export const deleteGroup: (ID: number) => Promise<Data<resData>> = (ID: number) => {
+  return http({
+    url: `/app/group/deleteGroup?ID={ID}`,
+    method: 'DELETE',
+  })
+}
+
+// 邀请好友
+type inviteTeamerRequest = {
+  userId: number
+  grougroupId: number
+}
+export const inviteUser: (ID: inviteTeamerRequest) => Promise<Data<resData>> = (
+  data: inviteTeamerRequest,
+) => {
+  return http({
+    url: `/app/groupInvite/inviteUser`,
+    method: 'POST',
+    data,
+  })
+}
+
+// 查询邀请情况
+type invitationRequest = {
+  /**
+   * 非必填 查询这个比赛邀请的队伍
+   */
+  comId?: number
+  /**
+   * 非必填 查询这个队伍邀请的人
+   */
+  groupId?: number
+  page?: string
+  pageSize?: string
+  /**
+   * 非必填 邀请状态 1待邀请 2邀请成功 3 邀请失败
+   */
+  status?: number
+  /**
+   * 非必填 查询邀请这个人的队伍
+   */
+  userId?: number
+  [property: string]: any
+}
+export const getInvitation: (data: invitationRequest) => Promise<Data<resData>> = (
+  data: invitationRequest,
+) => {
+  return http({
+    url: '/app/groupInvite/getGroupInviteInfoList',
+    data,
+  })
+}
+
+// 同意邀请
+export const acceptInvitation: (id: string) => Promise<Data<resData>> = (id: string) => {
+  return http({
+    url: '/app/groupInvite/agreeInvite',
+    method: 'POST',
+  })
+}
+// 拒绝邀请
+
+export const refuseInvitation: (id: string) => Promise<Data<resData>> = (id: string) => {
+  return http({
+    url: '/app/groupInvite/agreeInvite',
+    method: 'POST',
+  })
+}

@@ -24,9 +24,18 @@
         item.userIntroduction
       }}</text>
       <button
-        class="btn rouded-lg h-[24px] rounded-xl bg-red-500 px-4 py-2 text-xs leading-[11px] justify-items-end text-gray-100 shadow-sm"
+        class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
+        @tap="deleteTeam"
+        v-if="index === 0"
       >
-        {{ index === 0 ? '解散队伍' : '移出队伍' }}
+        解散队伍
+      </button>
+      <button
+        class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
+        @tap="deleteTeamer"
+        v-else
+      >
+        移出队伍
       </button>
     </view>
   </view>
@@ -38,7 +47,7 @@
       cancelText="取消"
       confirmText="确认"
       title="警告"
-      content="您确认要解散这个队伍吗"
+      :content="alertContent"
       @confirm="delTeam()"
     ></uni-popup-dialog>
   </uni-popup>
@@ -71,27 +80,17 @@ const alertDialog = ref()
 const successInfo = ref()
 // 失败ref
 const errorInfo = ref()
+const alertContent = ref('您确定要解散这支队伍吗?')
 
 // 踢出队伍
-
+const deleteTeamer = () => {
+  alertContent.value = '您确定要移出该队员吗?'
+  alertDialog.value.open()
+}
 // 解散队伍
-const delTeam = async () => {
-  if (teamID.value != 0) {
-    try {
-      const res = await http({
-        url: '/app/group/deleteGroup?ID=' + teamID.value,
-        method: 'DELETE',
-      })
-      if (res.code === '1') {
-        teamInfoList.value = teamInfoList.value.filter((item) => item.teamId != teamID.value)
-        successInfo.value.open()
-      } else if (res.code === '7') {
-        errorInfo.value.open()
-      }
-    } catch (error) {
-      errorInfo.value.open()
-    }
-  }
+const deleteTeam = () => {
+  alertContent.value = '您确定要解散这支队伍吗?'
+  alertDialog.value.open()
 }
 </script>
 <style scoped>

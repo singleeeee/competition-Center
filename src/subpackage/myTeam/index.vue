@@ -79,6 +79,7 @@ const getTeamInfo = async () => {
       teamId: res.data.list[j].ID,
       groupCaptainId: res.data.list[j].groupCaptainId,
       groupName: res.data.list[j].groupName,
+      groupStatus: res.data.list[j].groupStatus,
     }
     // 获取比赛信息
     const comDetail = await getComInfo(res.data.list[j].comId)
