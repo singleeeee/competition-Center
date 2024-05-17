@@ -72,7 +72,31 @@
     <!-- 参赛报名 -->
     <view class="enter" v-if="timeRest !== -1">
       <view class="line">比赛报名</view>
-      <button class="btn" v-if="!isSignUp" @tap="signUp">立即报名</button>
+      <button class="btn" v-if="!isSignUp" @tap="signUp">创建队伍</button>
+      <!-- 组队邀请面板 -->
+      <view
+        class="flex flex-col relative justify-center message h-24 bg-slate-200 py-2 px-4 rounded-xl text-sm"
+      >
+        <view class="text-center">
+          <text class="text-orange-400">代金宇</text>
+          <text> 邀请你加入队伍</text>
+          <text class="text-blue-400"> 无敌是多么寂寞</text>
+        </view>
+        <view class="flex justify-around mt-3">
+          <button
+            class="w-1/3 h-8 leading-8 text-sm rounded-2xl bg-[#bababa] border-0 text-white active:scale-101"
+          >
+            拒绝
+          </button>
+          <button
+            class="w-1/3 h-8 leading-8 text-sm rounded-2xl bg-[#2a82e4] border-0 text-white active:scale-101"
+          >
+            接受
+          </button>
+        </view>
+        <uni-icons class="absolute top-2 right-3" type="closeempty" size="20" />
+      </view>
+      <!-- 队伍面板 -->
       <view class="teamInfo" v-if="isSignUp">
         <view class="teamName">{{ teamInfo.groupName }}</view>
         <view class="teamers">
@@ -83,7 +107,7 @@
             }}</view>
             <view class="nickname" v-else>{{ item.userNickname }}</view>
           </view>
-          <button class="btn" @tap="onDel(teamInfo.ID)">删除队伍</button>
+          <!-- <button class="btn" @tap="onDel(teamInfo.ID)">删除队伍</button> -->
         </view>
         <!-- 队伍状态 -->
         <view class="status" v-if="teamInfo.groupStatus === 2">待审核</view>
@@ -96,40 +120,10 @@
         <view class="status" v-else style="background-color: lightcyan; color: red">报名失败</view>
       </view>
     </view>
+    <!-- 比赛通告 -->
+    <RelatetivePost :disComid="comID" disModel="2" />
     <!-- 相关帖子 -->
-    <view class="grade">
-      <view class="line">相关帖子</view>
-      <view class="postBox" v-if="postList.length > 0">
-        <view class="item" v-for="item in postList" :key="item.ID" @tap="navigateTo(item.ID)">
-          <image
-            class="img"
-            :src="
-              item.disPicture.length > 0 ? item.disPicture[0] : ' ../../static/empty/emptyImg.png'
-            "
-            mode="scaleToFill"
-          />
-          <view class="content">
-            <span class="titleBox">
-              <h1 class="title">{{ item.disTitle }}</h1>
-              <p class="subTitle">{{ item.disContent }}</p>
-            </span>
-            <span class="extraBox">
-              <span class="Tag">原创</span>
-              <!-- <span class="date">{{ toLocalTime(item.CreatedAt).split(' ')[0] }}</span> -->
-              <span class="readedNum">{{ item.disHot }}阅读</span>
-              <span class="liked">{{ item.disLoveNumber }}点赞</span>
-              <span class="followed">{{ item.disCollectNumber }}收藏</span>
-            </span>
-          </view>
-          <view class="postStatus">
-            <span class="statusTag error">热门</span>
-          </view>
-        </view>
-      </view>
-      <view v-else>
-        <image src="../../static/empty/emptyPost.png" mode="scaleToFill" />
-      </view>
-    </view>
+    <RelatetivePost :disComid="comID" disModel="1" />
     <!-- 抽屉 -->
     <uni-drawer ref="showLeft" mode="left" :width="320">
       <scroll-view scroll-y class="drawerBox">
@@ -226,6 +220,7 @@ import { toLocalTime } from '@/utils/toLocalTime'
 import { useUserInfoStore } from '@/stores'
 import skeleton from './components/skeleton.vue'
 import { getTimeDifference } from '@/utils/getTimeDifference'
+import RelatetivePost from './components/relatetivePost.vue'
 const { userInfo } = useUserInfoStore()
 const isSkeletonShow = ref(true)
 let comID = ref(0)
@@ -240,8 +235,6 @@ onLoad(async (options) => {
   getComType()
   // 获取比赛等级
   getComRating()
-  // 获取相关帖子信息
-  getPostList()
   // 获取好友列表
   getFriendList()
   // 获取订阅信息
@@ -348,19 +341,7 @@ const getFriendList = async () => {
     friendList.value.push(res.data[i])
   }
 }
-// 获取帖子列表
-const getPostList = async () => {
-  const res = await http({
-    url: '/app/dis/getDisInfoList',
-    data: {
-      disComId: comID.value,
-      disStatus: 2,
-    },
-  })
-  res.data.list.forEach((element) => {
-    postList.value.push(element)
-  })
-}
+
 // 最大组队人数和最小组队人数
 let maxTeamNum = ref(0)
 let minTeamNum = ref(0)
@@ -438,14 +419,6 @@ const createTeam = async () => {
 // 删除队员
 const deleteTeamer = (index: number) => {
   chosedTeamer.value.splice(index, 1)
-}
-// 帖子列表
-const postList = ref([])
-// 跳转到相应页面
-const navigateTo = (disId: number) => {
-  uni.navigateTo({
-    url: `/subpackage/postDetail/index?disId=${disId}`,
-  })
 }
 
 let comInfo = ref(null)

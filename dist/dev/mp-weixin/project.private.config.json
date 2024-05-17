@@ -4,6 +4,27 @@
     "miniprogram": {
       "list": [
         {
+          "name": "队伍详情",
+          "pathName": "subpackage/teamDetail/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的队伍",
+          "pathName": "subpackage/myTeam/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "比赛详情",
+          "pathName": "subpackage/comDetail/index",
+          "query": "comID=1",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "比赛详情",
           "pathName": "subpackage/comDetail/index",
           "query": "comID=1",
@@ -19,5 +40,9 @@
         }
       ]
     }
+  },
+  "projectname": "%E7%AB%9E%E8%B5%9B%E4%BA%91%E7%95%8C",
+  "setting": {
+    "compileHotReLoad": true
   }
 }

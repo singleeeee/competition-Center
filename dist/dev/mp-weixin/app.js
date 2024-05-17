@@ -31,6 +31,7 @@ if (!Math) {
   "./subpackage/postManage/index.js";
   "./subpackage/comDetail/index.js";
   "./subpackage/signUpInfo/index.js";
+  "./subpackage/teamDetail/index.js";
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",
@@ -55,7 +56,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
   }
 });
-const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "E:/frontend/project/Competition-center/competition-Center/competition-Center/src/App.vue"]]);
+const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "E:/frontend/project/Competition-center/competition-Center/src/App.vue"]]);
 common_vendor.dayjs.extend(common_vendor.relativeTime);
 common_vendor.dayjs.extend(common_vendor.updateLocale);
 common_vendor.dayjs.updateLocale("en", {

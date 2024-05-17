@@ -36,6 +36,9 @@ export type UserInfo = {
   userPhone: string
   // 身份证号码
   userPersonalId: string
+  // 创建时间
+  CreatedAt?: string
+  [property: string]: any
 }
 // 帖子列表
 export type PostList = {
@@ -82,8 +85,24 @@ export type CollectList = {
   disUserName: string
 }
 
-// 固定时间格式
-export interface TimeFormat {
+// 比赛列表
+export type CompetitionInfo = {
+  comEnd: string
+  comHot: number
+  comIntroduction: string
+  comMaxNumber: number
+  comMinNumber: number
+  comModel: number
+  comNumber: number
+  comPicture: string
+  comStart: string
+  comStatus: number
+  comSubTitle: string
+  comTitle: string
+  comType: number
   CreatedAt: string
+  extra: string
+  ID: number
   UpdatedAt: string
+  [property: string]: any
 }

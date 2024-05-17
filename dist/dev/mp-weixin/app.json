@@ -117,6 +117,12 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "subpackage/teamDetail",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {

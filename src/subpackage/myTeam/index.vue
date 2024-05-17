@@ -29,9 +29,12 @@
               ></image>
             </view>
             <view class="btnBox">
-              <view class="btn" @tap="toComIndex(item.comID)">进入比赛</view>
-              <view class="btn" style="border-color: #e96f6f; color: #e96f6f" @tap="onDel(item.ID)"
-                >解散队伍</view
+              <view class="btn" @tap="toComIndex(item.comID)">比赛详情</view>
+              <view
+                class="btn"
+                style="border-color: #e96f6f; color: #e96f6f"
+                @tap="toTeamDetail(item)"
+                >队伍详情</view
               >
             </view>
           </view>
@@ -45,81 +48,30 @@
       </view>
     </template>
   </view>
-  <!-- 确定删除弹窗 -->
-  <uni-popup ref="alertDialog" type="dialog">
-    <uni-popup-dialog
-      type="warn"
-      cancelText="取消"
-      confirmText="确认"
-      title="警告"
-      content="您确认要解散这个队伍吗"
-      @confirm="delTeam()"
-    ></uni-popup-dialog>
-  </uni-popup>
-  <!-- 成功提示 -->
-  <uni-popup ref="successInfo" type="message">
-    <uni-popup-message type="success" message="删除成功" :duration="1000"></uni-popup-message>
-  </uni-popup>
-  <!-- 失败提示 -->
-  <uni-popup ref="errorInfo" type="message">
-    <uni-popup-message type="error" message="删除失败" :duration="1000"></uni-popup-message>
-  </uni-popup>
 </template>
 
 <script lang="ts" setup>
 import { onLoad } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { useUserInfoStore } from '@/stores/index'
+import { getGroupInfoList } from '@/api/group/group'
+import { toTeamList } from '@/utils/idToTeamList'
+import type { UserInfo } from '@/types/global'
+
 import { ref } from 'vue'
-import { toLocalTime } from '@/utils/toLocalTime'
 import dayjs from 'dayjs'
 const { userInfo } = useUserInfoStore()
 onLoad(() => {
   getTeamInfo()
 })
-// 当前要删除的队伍的ID
-let teamID = ref(0)
-// 弹窗ref
-const alertDialog = ref()
-// 成功ref
-const successInfo = ref()
-// 失败ref
-const errorInfo = ref()
-// 点击删除按钮
-const onDel = (teamId: number) => {
-  alertDialog.value.open()
-  teamID.value = teamId
-}
-// 删除队伍
-const delTeam = async () => {
-  if (teamID.value != 0) {
-    try {
-      const res = await http({
-        url: '/app/group/deleteGroup?ID=' + teamID.value,
-        method: 'DELETE',
-      })
-      if (res.code === '1') {
-        teamInfoList.value = teamInfoList.value.filter((item) => item.teamId != teamID.value)
-        successInfo.value.open()
-      } else if (res.code === '7') {
-        errorInfo.value.open()
-      }
-    } catch (error) {
-      errorInfo.value.open()
-    }
-  }
-}
 // 队伍信息数组
 let teamInfoList = ref([])
 // 获取组队信息
 const getTeamInfo = async () => {
   teamInfoList.value = []
   // 获取队伍信息
-  const res = await http({
-    url: '/app/group/getGroupInfoList',
-    data: {
-      groupUsersId: userInfo.ID,
-    },
+  const res = await getGroupInfoList({
+    groupUsersId: userInfo.ID.toString(),
   })
   for (let j = 0; j < res.data.list.length; j++) {
     // 获取队伍信息
@@ -130,14 +82,8 @@ const getTeamInfo = async () => {
     }
     // 获取比赛信息
     const comDetail = await getComInfo(res.data.list[j].comId)
-    // 提取队员信息
-    let arr = res.data.list[j].groupUsersId.split('-')
-    arr.pop()
-    arr.shift()
-    let userInfoList = []
-    for (let i = 0; i < arr.length; i++) {
-      userInfoList.push(await getTeamerInfo(arr[i]))
-    }
+    let userInfoList: UserInfo[] = []
+    userInfoList = (await toTeamList(res.data.list[j].groupUsersId)) as any
     const result = Object.assign(comDetail, { userInfoList }, teamInfo)
     teamInfoList.value.push(result)
   }
@@ -155,32 +101,26 @@ const getComInfo = async (comID: number) => {
     comID: ID,
     comTitle,
     comPicture,
-    comStart: toLocalTime(comStart),
-    comEnd: toLocalTime(comEnd),
+    comStart,
+    comEnd,
   }
   return obj
 }
-// 根据用户ID获取队员信息
-const getTeamerInfo = async (userID: number) => {
-  const res = await http({
-    url: '/app/user/getUserInfoByid',
-    data: {
-      ID: userID,
-    },
-  })
 
-  const { ID, userNickname, userAvatarUrl } = res.data.reuserData
-  const obj = {
-    ID,
-    userNickname,
-    userAvatarUrl,
-  }
-  return obj
-}
 // 进入比赛
 const toComIndex = (comID: number) => {
   uni.navigateTo({
     url: `/subpackage/comDetail/index?comID=${comID}`,
+  })
+}
+
+// 进入比赛详情
+const toTeamDetail = (data) => {
+  uni.navigateTo({
+    url: `/subpackage/teamDetail/index`,
+    success: (res) => {
+      res.eventChannel.emit('acceptDataFromTeam', data)
+    },
   })
 }
 </script>

@@ -20,10 +20,27 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.2.5",
+  "libVersion": "3.4.3",
   "appid": "wxa554745366849234",
   "projectname": "竞赛云界",
-  "condition": {},
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": []
+    }
+  },
   "editorSetting": {
     "tabIndent": "auto",
     "tabSize": 2
