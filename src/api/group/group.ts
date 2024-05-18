@@ -62,15 +62,15 @@ export const getGroupInfoList: (data: ApifoxModel) => Promise<Data<resData>> = (
 
 // 踢人
 type delTeamerRequest = {
-  userId: number
-  groupId: number
+  userId: string
+  groupId: string
 }
 
 export const deleteGroupUser: (data: delTeamerRequest) => Promise<Data<resData>> = (
   data: delTeamerRequest,
 ) => {
   return http({
-    url: `/app/groupInvite/deleteGroupUser?userId=${data.userId}?groupId=${data.groupId}`,
+    url: `/app/groupInvite/deleteGroupUser?userId=${data.userId}&groupId=${data.groupId}`,
     method: 'DELETE',
     data,
   })

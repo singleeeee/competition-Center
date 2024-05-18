@@ -6,21 +6,26 @@
           <template v-slot:title>
             <view class="titleBox">
               <view class="container">
-                <image class="comImg" :src="item.comPicture" mode="scaleToFill" />
-                <view class="titleContent">
-                  <view class="TeamName">{{ item.groupName }}</view>
-                  <view class="title">{{ item.comTitle }}</view>
-                </view>
-                <view class="titleTime">
-                  <view> {{ dayjs(item.comStart).format('YYYY.MM.DD') }}</view>
-
-                  <view>{{ dayjs(item.comEnd).format('YYYY.MM.DD') }}</view>
+                <view class="flex items-center mb-4">
+                  <image class="comImg" :src="item.comPicture" mode="scaleToFill" />
+                  <view class="titleContent ml-2">
+                    <view class="TeamName">{{ item.groupName }}</view>
+                    <view class="title">{{ item.comTitle }}</view>
+                  </view></view
+                >
+                <view class="flex text-[#7d8592]">
+                  <uni-icons class="mx-2" type="calendar" color="#7d8592" size="24" />
+                  <view>
+                    <view>Start date {{ dayjs(item.comStart).format('MMM D，YYYY') }}</view>
+                    <view>Over data {{ dayjs(item.comEnd).format('MMM D，YYYY') }}</view>
+                  </view>
                 </view>
               </view>
             </view>
           </template>
           <view class="contentBox">
             <view class="teamerBox">
+              <view class="font-bold mb-2 text-lg">队伍成员</view>
               <image
                 v-for="(teamer, teamerIndex) in item.userInfoList"
                 :key="teamerIndex"
@@ -29,10 +34,15 @@
               ></image>
             </view>
             <view class="btnBox">
-              <view class="btn" @tap="toComIndex(item.comID)">比赛详情</view>
               <view
-                class="btn"
-                style="border-color: #e96f6f; color: #e96f6f"
+                class="btn bg-[#f4f4f5] text-gray-600"
+                style="border-color: #c8c9cc"
+                @tap="toComIndex(item.comID)"
+                >比赛详情</view
+              >
+              <view
+                class="btn bg-[#fef0f0]"
+                style="border-color: #fab6b6; color: #f56c6c"
                 @tap="toTeamDetail(item)"
                 >队伍详情</view
               >
@@ -138,8 +148,6 @@ const toTeamDetail = (data) => {
     padding: 10rpx 20rpx;
     overflow: hidden;
     .container {
-      display: flex;
-      align-items: center;
       border-bottom: 2rpx solid #eee;
       padding-bottom: 20rpx;
       .comImg {
@@ -150,7 +158,6 @@ const toTeamDetail = (data) => {
         box-shadow: 0rpx 0rpx 4rpx 2rpx #ccc;
       }
       .titleContent {
-        flex: 1;
         .TeamName {
           margin-bottom: 10rpx;
           font-weight: bold;
@@ -159,10 +166,6 @@ const toTeamDetail = (data) => {
           font-size: 28rpx;
           color: #333;
         }
-      }
-      .titleTime {
-        font-size: 28rpx;
-        width: 200rpx;
       }
     }
   }
@@ -178,7 +181,10 @@ const toTeamDetail = (data) => {
         width: 70rpx;
         height: 70rpx;
         border-radius: 50%;
-        margin-right: 10rpx;
+        &:not(:nth-child(2)) {
+          margin-left: -10rpx;
+          border: 2rpx solid #fff;
+        }
       }
     }
     .btn {

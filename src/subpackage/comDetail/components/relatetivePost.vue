@@ -1,14 +1,12 @@
 <template>
   <!-- 相关通告 -->
   <view class="grade">
-    <view class="line">相关帖子</view>
+    <view class="line">{{ title }}</view>
     <view class="postBox" v-if="postList.length > 0">
       <view class="item" v-for="item in postList" :key="item.ID" @tap="navigateTo(item.ID)">
         <image
           class="img"
-          :src="
-            item.disPicture.length > 0 ? item.disPicture[0] : ' ../../static/empty/emptyImg.png'
-          "
+          :src="item.disPicture.length > 0 ? item.disPicture[0] : '/static/empty/emptyImg.png'"
           mode="scaleToFill"
         />
         <view class="content">
@@ -34,13 +32,16 @@
     </view>
   </view>
 </template>
-<script setup>
+<script lang="ts" setup>
 import { ref } from 'vue'
 import { getDisInfoList } from '@/api/post/post'
-import { onLoad } from '@dcloudio/uni-app'
-onLoad(() => {
-  getPostList()
-  console.log('组件加载了')
+import { onMounted } from 'vue'
+// 帖子列表
+const postList = ref([])
+
+onMounted(async () => {
+  console.log('onload')
+  await getPostList()
 })
 const props = defineProps({
   disComid: {
@@ -53,9 +54,13 @@ const props = defineProps({
     default: '2',
     require: true,
   },
+  title: {
+    type: String,
+    default: '相关帖子',
+    require: true,
+  },
 })
-// 帖子列表
-const postList = ref([])
+
 // 跳转到相应页面
 const navigateTo = (disId) => {
   uni.navigateTo({
@@ -65,17 +70,15 @@ const navigateTo = (disId) => {
 // 获取帖子列表
 const getPostList = async () => {
   const res = await getDisInfoList({
-    data: {
-      disComid: props.disComid,
-      disModel: props.disModel,
-      page: 1,
-      pageSize: 5,
-    },
+    disComid: props.disComid,
+    disModel: props.disModel,
+    page: 1,
+    pageSize: 4,
   })
+  console.log(postList.value)
   res.data.list.forEach((element) => {
     postList.value.push(element)
   })
-  console.log(postList.value)
 }
 </script>
 <style lang="scss" scoped>
@@ -88,7 +91,6 @@ const getPostList = async () => {
 }
 .grade {
   align-self: flex-start;
-  margin-left: 20rpx;
   margin-bottom: 30rpx;
   width: 100%;
   .postBox {
@@ -100,7 +102,7 @@ const getPostList = async () => {
       margin: 0 10rpx;
       height: 180rpx;
       border-radius: 20rpx;
-      background-color: #f1f1f1;
+      background-color: #e2e8f0;
       margin-bottom: 20rpx;
       padding: 20rpx;
       overflow: hidden;
@@ -132,6 +134,7 @@ const getPostList = async () => {
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+            margin-top: 10rpx;
           }
         }
       }
@@ -161,7 +164,7 @@ const getPostList = async () => {
       }
       .postStatus {
         position: absolute;
-        transform: translateX(20px) translateY(16px) rotate(45deg);
+        transform: translateX(22px) translateY(12px) rotate(45deg);
         top: 0;
         right: 0;
         font-size: 26rpx;

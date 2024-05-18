@@ -22,7 +22,6 @@
     <!-- 比赛订阅 -->
     <button class="subscribe" v-if="!isSubscribe" plain @tap="comSubscribe">比赛订阅</button>
     <button class="subscribe subscribed" v-else plain @tap="cancelSubscribe">取消订阅</button>
-
     <!-- 比赛信息 -->
     <view class="detailBox">
       <view class="line">比赛信息 </view>
@@ -121,9 +120,13 @@
       </view>
     </view>
     <!-- 比赛通告 -->
-    <RelatetivePost :disComid="comID" disModel="2" />
-    <!-- 相关帖子 -->
-    <RelatetivePost :disComid="comID" disModel="1" />
+    <view style="align-self: flex-start; margin-left: 20rpx; width: calc(100% - 40rpx)">
+      <RelatetivePost :disComid="comID" disModel="2" title="比赛通告" />
+    </view>
+    <view style="align-self: flex-start; margin-left: 20rpx; width: calc(100% - 40rpx)">
+      <!-- 相关帖子 -->
+      <RelatetivePost :disComid="comID" disModel="1" title="相关帖子" />
+    </view>
     <!-- 抽屉 -->
     <uni-drawer ref="showLeft" mode="left" :width="320">
       <scroll-view scroll-y class="drawerBox">
@@ -199,7 +202,6 @@
   <uni-popup ref="errorInfo" type="message">
     <uni-popup-message type="error" :message="errorMsg" :duration="500"></uni-popup-message>
   </uni-popup>
-  <!-- 确定删除弹窗 -->
   <uni-popup ref="alertDialog" type="dialog">
     <uni-popup-dialog
       type="warn"
@@ -592,6 +594,7 @@ const signUp = async () => {
   box-sizing: border-box;
   flex-direction: column;
   align-items: center;
+  justify-content: start;
   padding: 10rpx 20rpx;
   .subscribe {
     display: flex;
@@ -764,9 +767,10 @@ const signUp = async () => {
     }
   }
   .enter {
-    align-items: center;
+    align-self: flex-start;
     margin-left: 20rpx;
-    width: 100%;
+    margin-bottom: 30rpx;
+    width: calc(100% - 40rpx);
     .btn {
       display: flex;
       align-items: center;
@@ -961,7 +965,6 @@ const signUp = async () => {
       }
     }
   }
-
   .line {
     display: block;
     padding-left: 20rpx;

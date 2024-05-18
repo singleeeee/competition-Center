@@ -7,14 +7,10 @@
           teamStatus
         }}</view>
       </view>
-      <view
-        class="flex justify-center items-center bg-white rounded-full w-10 h-10 addShowdow mr-4 activeBtn"
-      >
-        <uni-icons type="plusempty" size="24" />
-      </view>
+      <invite />
     </view>
     <view class="body flex">
-      <card :userInfoList="userInfoList" :teamID="+teamID" />
+      <card :userInfoList="userInfoList" :teamID="+teamID" :captainId="captainId" />
     </view>
   </view>
 </template>
@@ -23,10 +19,13 @@
 import { ref, getCurrentInstance } from 'vue'
 import card from './components/card.vue'
 import { onLoad } from '@dcloudio/uni-app'
+import invite from './components/invite.vue'
+
 const teamID = ref('')
 const userInfoList = ref([])
 const teamStatus = ref('')
 const groupName = ref('')
+const captainId = ref(0)
 onLoad(() => {
   // 页面通信（复杂数据）
   const instance = getCurrentInstance()?.proxy
@@ -52,15 +51,9 @@ onLoad(() => {
     }
     teamStatus.value = data.groupStatus
     groupName.value = data.groupName
+    captainId.value = data.groupCaptainId
     console.log(data)
   })
 })
 </script>
-<style lang="scss" scoped>
-.addShowdow {
-  box-shadow: 2rpx 4rpx 8rpx 4rpx rgb(206, 230, 240);
-}
-.activeBtn:active {
-  background-color: #eee;
-}
-</style>
+<style lang="scss" scoped></style>
