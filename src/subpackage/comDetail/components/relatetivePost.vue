@@ -75,7 +75,6 @@ const getPostList = async () => {
     page: 1,
     pageSize: 4,
   })
-  console.log(postList.value)
   res.data.list.forEach((element) => {
     postList.value.push(element)
   })

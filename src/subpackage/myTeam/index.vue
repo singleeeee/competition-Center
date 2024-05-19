@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onLoad } from '@dcloudio/uni-app'
+import { onShow } from '@dcloudio/uni-app'
 import { http } from '@/utils/http'
 import { useUserInfoStore } from '@/stores/index'
 import { getGroupInfoList } from '@/api/group/group'
@@ -71,7 +71,7 @@ import type { UserInfo } from '@/types/global'
 import { ref } from 'vue'
 import dayjs from 'dayjs'
 const { userInfo } = useUserInfoStore()
-onLoad(() => {
+onShow(() => {
   getTeamInfo()
 })
 // 队伍信息数组

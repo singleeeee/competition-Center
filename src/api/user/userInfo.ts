@@ -46,13 +46,14 @@ export type ReuserData = {
   userNickname: string
   userProfession: string
   userWxopenid: string
+  userName: string
 }
 
 export type userDataByID = {
   reuserData: ReuserData
 }
 
-export const getUserInfoByID: (ID: string) => Promise<Data<userDataByID>> = (ID: string) => {
+export const getUserInfoByID: (ID: number) => Promise<Data<userDataByID>> = (ID: number) => {
   return http<userDataByID>({
     url: '/app/user/getUserInfoByid',
     data: {

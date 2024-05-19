@@ -4,6 +4,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/community/index",
+          "pathName": "pages/community/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "队伍详情",
           "pathName": "subpackage/teamDetail/index",
           "query": "",

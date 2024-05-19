@@ -157,6 +157,8 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
           }
           chatInfoMap.value[targetIndex].lastMessage = message.isImg ? '[图片]' : message.content
           chatInfoMap.value[targetIndex].lastMessageTime = returnMsg.messageTime * 1000
+        } else if (returnMsg.type === 3) {
+          console.log('收到组队邀请')
         } else {
           // console.log('未知返回信息')
         }

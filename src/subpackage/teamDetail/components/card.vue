@@ -1,16 +1,26 @@
 <template>
+  <button @tap="getTeamInfo">刷新</button>
   <!-- 队员信息面板 -->
-  <view class="flex flex-wrap justify-evenly w-100vw">
+  <view class="flex flex-wrap justify-evenly w-98vw">
     <view
-      class="flex w-3/7 flex-col items-center rounded-2xl bg-red-200 px-2 py-3 mt-2 mx-1"
+      class="flex w-40vw flex-col items-center rounded-2xl bg-red-200 px-2 py-3 mt-2 mx-1"
       :class="{ 'bg-blue-300': item.ID === userInfo.ID }"
-      v-for="(item, index) in userInfoList"
+      v-for="(item, index) in userInfoListRender"
       :key="index"
     >
+      <view class="font-bold mt-2 text-lg" v-if="item.status === 1">邀请中...</view>
+      <view
+        class="flex justify-center items-center font-bold mt-2 text-lg text-red-700"
+        v-else-if="item.status === 3"
+      >
+        <uni-icons class="mr-1 mt-1" type="info" color="red" size="28" />
+        <view>拒绝加入</view>
+      </view>
+
       <!-- 身份 -->
       <view class="flex items-center">
         <uni-icons class="mr-1 mt-1" type="flag-filled" color="" size="24" />
-        {{ index === 0 ? '队长' : '队员' }}
+        {{ item.ID === captainId ? '队长' : '队员' }}
       </view>
       <!-- 头像 -->
       <view
@@ -74,11 +84,15 @@
 </template>
 <script lang="ts" setup>
 import type { UserInfo } from '@/types/global'
-import { ref } from 'vue'
-import { deleteGroupUser, deleteGroup } from '@/api/group/group'
-import { idToTeamList } from '@/utils/idToTeamList'
+import { ref, onMounted } from 'vue'
+import { deleteGroupUser, deleteGroup, getInvitation } from '@/api/group/group'
+import { getUserInfoByID } from '@/api/user/userInfo'
+// import { idToTeamList } from '@/utils/idToTeamList'
 import { useUserInfoStore } from '@/stores'
 const { userInfo } = useUserInfoStore()
+onMounted(() => {
+  userInfoListRender.value = [...props.userInfoList]
+})
 
 const props = defineProps({
   userInfoList: {
@@ -148,6 +162,26 @@ const del = async () => {
 const deleteTeam = () => {
   alertContent.value = '您确定要解散这支队伍吗?'
   alertDialog.value.open()
+}
+
+const userInfoListRender = ref([])
+const getTeamInfo = async () => {
+  userInfoListRender.value = []
+  const resGroup = await getInvitation({
+    groupId: props.teamID,
+  })
+  for (const item of resGroup.data.list) {
+    const res = await getUserInfoByID(item.userId)
+    const { userAvatarUrl, userName, userIntroduction, ID } = res.data.reuserData
+    const msg = {
+      status: item.status,
+      userAvatarUrl,
+      userName,
+      userIntroduction,
+      ID,
+    }
+    userInfoListRender.value.push(msg)
+  }
 }
 </script>
 <style scoped>

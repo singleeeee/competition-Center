@@ -35,14 +35,16 @@
             <view class="chat-Box">
               <!-- 对面发的 -->
               <view v-if="!item.myWord" class="friendBox">
+                <!-- 头像 -->
                 <view class="avatar" @click="toUserInfo(targetID)">
                   <image class="avatar" :src="item.avatarUrl" />
                 </view>
+                <!-- 普通内容 -->
                 <div v-if="!item.isImg" style="max-width: 60%">
                   <text :user-select="true" class="content">{{ item.content }}</text>
                   <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
                 </div>
-
+                <!-- 图片 -->
                 <view v-else class="imgBox">
                   <image
                     @tap="onClickImg(item.imgUrl)"

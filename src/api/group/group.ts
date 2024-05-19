@@ -78,7 +78,7 @@ export const deleteGroupUser: (data: delTeamerRequest) => Promise<Data<resData>>
 
 export const deleteGroup: (ID: number) => Promise<Data<resData>> = (ID: number) => {
   return http({
-    url: `/app/group/deleteGroup?ID={ID}`,
+    url: `/app/group/deleteGroup?ID=${ID}`,
     method: 'DELETE',
   })
 }
@@ -120,7 +120,23 @@ type invitationRequest = {
   userId?: number
   [property: string]: any
 }
-export const getInvitation: (data: invitationRequest) => Promise<Data<resData>> = (
+type invitationResponse = {
+  list: invitationData[]
+  total: number
+  page: number
+  pageSize: number
+}
+
+type invitationData = {
+  ID: number
+  userId: number
+  groupId: number
+  comId: number
+  status: number
+  CreatedAt: string
+  UpdatedAt: string
+}
+export const getInvitation: (data: invitationRequest) => Promise<Data<invitationResponse>> = (
   data: invitationRequest,
 ) => {
   return http({
@@ -128,11 +144,41 @@ export const getInvitation: (data: invitationRequest) => Promise<Data<resData>> 
     data,
   })
 }
+// 根据队伍id获取队伍信息
+
+/**
+ * Request
+ */
+
+export type responsebById = {
+  regroupInfo: RegroupInfo
+  [property: string]: any
+}
+
+export type RegroupInfo = {
+  comId: number
+  CreatedAt: string
+  groupCaptainId: number
+  groupName: string
+  groupStatus: number
+  groupUsersId: string
+  ID: number
+  UpdatedAt: string
+  [property: string]: any
+}
+export const getGroupInfoByID: (id: string) => Promise<Data<responsebById>> = (id: string) => {
+  return http({
+    url: '/app/group/getGroupInfoByid',
+    data: {
+      ID: id,
+    },
+  })
+}
 
 // 同意邀请
 export const acceptInvitation: (id: string) => Promise<Data<resData>> = (id: string) => {
   return http({
-    url: '/app/groupInvite/agreeInvite',
+    url: `/app/groupInvite/agreeInvite?groupId=${id}`,
     method: 'POST',
   })
 }
@@ -140,7 +186,10 @@ export const acceptInvitation: (id: string) => Promise<Data<resData>> = (id: str
 
 export const refuseInvitation: (id: string) => Promise<Data<resData>> = (id: string) => {
   return http({
-    url: '/app/groupInvite/agreeInvite',
+    url: `/app/groupInvite/refuseInvite?groupId=${id}`,
     method: 'POST',
+    data: {
+      groupId: id,
+    },
   })
 }

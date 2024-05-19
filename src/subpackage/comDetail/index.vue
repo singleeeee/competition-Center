@@ -71,32 +71,11 @@
     <!-- 参赛报名 -->
     <view class="enter" v-if="timeRest !== -1">
       <view class="line">比赛报名</view>
-      <button class="btn" v-if="!isSignUp" @tap="signUp">创建队伍</button>
       <!-- 组队邀请面板 -->
-      <view
-        class="flex flex-col relative justify-center message h-24 bg-slate-200 py-2 px-4 rounded-xl text-sm"
-      >
-        <view class="text-center">
-          <text class="text-orange-400">代金宇</text>
-          <text> 邀请你加入队伍</text>
-          <text class="text-blue-400"> 无敌是多么寂寞</text>
-        </view>
-        <view class="flex justify-around mt-3">
-          <button
-            class="w-1/3 h-8 leading-8 text-sm rounded-2xl bg-[#bababa] border-0 text-white active:scale-101"
-          >
-            拒绝
-          </button>
-          <button
-            class="w-1/3 h-8 leading-8 text-sm rounded-2xl bg-[#2a82e4] border-0 text-white active:scale-101"
-          >
-            接受
-          </button>
-        </view>
-        <uni-icons class="absolute top-2 right-3" type="closeempty" size="20" />
-      </view>
+      <teamInvite :userID="userInfo.ID" :comID="+comID" />
+      <button class="btn" v-if="!isSignUp" @tap="signUp">创建队伍</button>
       <!-- 队伍面板 -->
-      <view class="teamInfo" v-if="isSignUp">
+      <view class="teamInfo" v-if="isSignUp" @tap="toTeam">
         <view class="teamName">{{ teamInfo.groupName }}</view>
         <view class="teamers">
           <view class="teamItem" v-for="(item, index) in teamInfo.userInfoList" :key="index">
@@ -139,7 +118,7 @@
           placeholder="请输入队伍名称"
           style="margin-bottom: 20rpx"
         ></uni-easyinput>
-        <view style="margin: 20rpx 0; color: #666; font-size: 26rpx"
+        <view style="margin: 20rpx 0; color: #666; font-size: 24rpx"
           ><span style="color: red">*</span> 比赛限制人数:{{ minTeamNum }}-{{
             maxTeamNum
           }}，默认第一位为队长</view
@@ -147,7 +126,7 @@
         <!-- 队伍 -->
         <view class="teamBox">
           <view class="teamerItem" v-for="(item, index) in chosedTeamer" :key="index">
-            <image class="avatar" :src="item.userAvatarUrl"></image>
+            <image class="avatar mt-1" :src="item.userAvatarUrl"></image>
             <view class="nickname">{{ item.userNickname }}</view>
             <uni-icons
               class="clear"
@@ -159,13 +138,15 @@
           </view>
           <!-- 提示添加 -->
           <view class="teamerItem" v-if="chosedTeamer.length < maxTeamNum">
-            <image class="avatar" src="../../static/myExperience/add.png"></image>
+            <view class="flex justify-center items-center w-14 h-14 rounded-full bg-blue-400 mt-1"
+              ><uni-icons type="plusempty" size="32" color="#fff"> </uni-icons>
+            </view>
             <view class="nickname">继续添加</view>
           </view>
         </view>
         <!-- 确认报名 -->
         <view class="confirm">
-          <button class="btn" v-if="!isSignUp" @tap="createTeam">创建队伍并报名</button>
+          <button class="btn" v-if="!isSignUp" @tap="createTeam">创建队伍</button>
         </view>
         <!-- 选择好友 -->
         <view class="line">选择好友</view>
@@ -181,11 +162,11 @@
               <view class="nickName">{{ item.userNickname }}</view>
               <view class="introduction">{{ item.userIntroduction }}</view>
             </view>
-            <image
-              class="add"
-              src="../../static/myExperience/add.png"
+            <view
+              class="flex justify-center items-center w-10 h-10 rounded-full bg-orange-400 btn-active"
               @tap="addToChosedTeamer(item)"
-            ></image>
+              ><uni-icons type="plusempty" size="24" color="#fff"> </uni-icons>
+            </view>
           </view>
         </view>
       </scroll-view>
@@ -223,6 +204,7 @@ import { useUserInfoStore } from '@/stores'
 import skeleton from './components/skeleton.vue'
 import { getTimeDifference } from '@/utils/getTimeDifference'
 import RelatetivePost from './components/relatetivePost.vue'
+import teamInvite from './components/teamInvite.vue'
 const { userInfo } = useUserInfoStore()
 const isSkeletonShow = ref(true)
 let comID = ref(0)
@@ -582,6 +564,11 @@ const getComRating = async () => {
   comRating.value = comRatingList.value[comInfo.value.comModel].label
 }
 
+const toTeam = () => {
+  uni.navigateTo({
+    url: '/subpackage/myTeam/index',
+  })
+}
 // 报名
 const signUp = async () => {
   showLeft.value.open()
@@ -912,7 +899,6 @@ const signUp = async () => {
       align-items: center;
       justify-content: space-around;
       height: 140rpx;
-      margin: 10rpx 10rpx;
       border-bottom: 2rpx solid #eee;
       .avatar {
         width: 100rpx;
@@ -973,5 +959,8 @@ const signUp = async () => {
     font-weight: 700;
     margin-bottom: 40rpx;
   }
+}
+.btn-active:active {
+  background-color: #696767;
 }
 </style>
