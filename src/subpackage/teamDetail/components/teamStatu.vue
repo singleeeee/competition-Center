@@ -25,8 +25,7 @@
   >
 </template>
 <script setup>
-import { ref, reactive } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
 const content = ref('')
 const props = defineProps({
   teamStatus: {

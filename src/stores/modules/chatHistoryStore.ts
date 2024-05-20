@@ -74,7 +74,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               userName: returnMsg.userList[key].userName,
               userAvatarUrl: returnMsg.userList[key].userAvatarUrl,
               lastMessage: '暂无未读信息', // 默认没有消息
-              lastMessageTime: Math.floor(new Date().getTime()), // 默认值，后面再改
+              lastMessageTime: Math.floor(new Date().getTime()), // 默认当前时间
               unReadCount: 0,
               chatList: [],
             }
@@ -103,6 +103,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               for (let i = 0; i < returnMsg.unReadMessageList[key].length; i++) {
                 // 提取所需数据
                 const messageNeed = {
+                  type: returnMsg.unReadMessageList[key][i].type, // 3 表示通知，2 是群聊 1是私聊
                   messageTime: returnMsg.unReadMessageList[key][i].messageTime,
                   isImg: returnMsg.unReadMessageList[key][i].isImg,
                   myWord: returnMsg.unReadMessageList[key][i].toUserId === userInfo.value.ID,
@@ -130,7 +131,6 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
               (item) => item.userID === returnMsg.formUserId,
             )
           }
-
           // 修改头像
           let avatarUrl
           if (returnMsg.toUserId !== userInfo.value.ID) {
@@ -142,6 +142,7 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
           }
           // 处理返回的数据
           const message = {
+            type: returnMsg.type, // 3 表示通知，2 是群聊 1是私聊
             isImg: returnMsg.isImg,
             myWord: returnMsg.formUserId === userInfo.value.ID,
             content: returnMsg.messageContent,
@@ -155,10 +156,12 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
             // 更新未读记录
             chatInfoMap.value[targetIndex].unReadCount++
           }
-          chatInfoMap.value[targetIndex].lastMessage = message.isImg ? '[图片]' : message.content
+          chatInfoMap.value[targetIndex].lastMessage =
+            message.type === 3 ? '组队邀请' : message.isImg ? '[图片]' : message.content
           chatInfoMap.value[targetIndex].lastMessageTime = returnMsg.messageTime * 1000
         } else if (returnMsg.type === 3) {
-          console.log('收到组队邀请')
+          const content = JSON.parse(returnMsg.messageContent)
+          console.log('收到组队邀请', content)
         } else {
           // console.log('未知返回信息')
         }
@@ -264,9 +267,11 @@ export const useChatHistoryStore = defineStore('chatHistory', () => {
         // 上条信息
         chatInfoMap.value[i].lastMessage =
           chatListLength > 0
-            ? chatInfoMap.value[i].chatList[chatListLength - 1].isImg
-              ? '[图片]'
-              : chatInfoMap.value[i].chatList[chatListLength - 1].content
+            ? chatInfoMap.value[i].chatList[chatListLength - 1].type === 3
+              ? '[组队邀请]'
+              : chatInfoMap.value[i].chatList[chatListLength - 1].isImg
+                ? '[图片]'
+                : chatInfoMap.value[i].chatList[chatListLength - 1].content
             : '暂无未读信息'
         // 上条时间
         // console.log(

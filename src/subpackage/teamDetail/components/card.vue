@@ -3,19 +3,27 @@
   <!-- 队员信息面板 -->
   <view class="flex flex-wrap justify-evenly w-98vw">
     <view
-      class="flex w-40vw flex-col items-center rounded-2xl bg-red-200 px-2 py-3 mt-2 mx-1"
+      class="flex w-40vw flex-col items-center rounded-2xl mt-2 bg-red-200 px-2 py-3 mx-1"
       :class="{ 'bg-blue-300': item.ID === userInfo.ID }"
       v-for="(item, index) in userInfoListRender"
       :key="index"
     >
-      <view class="font-bold mt-2 text-lg" v-if="item.status === 1">邀请中...</view>
+      <view class="font-bold text-lg text-green-600 h-6" v-if="item.status === 1">邀请中...</view>
       <view
-        class="flex justify-center items-center font-bold mt-2 text-lg text-red-700"
+        class="flex h-6 justify-center items-center font-bold text-lg text-red-600"
         v-else-if="item.status === 3"
       >
-        <uni-icons class="mr-1 mt-1" type="info" color="red" size="28" />
+        <uni-icons class="mr-1 mt-1" type="info" color="rgb(220 38 38)" size="28" />
         <view>拒绝加入</view>
       </view>
+      <view
+        class="flex h-6 justify-center items-center font-bold text-lg text-red-600"
+        v-else-if="item.status === 4"
+      >
+        <uni-icons class="mr-1 mt-1" type="info" color="rgb(220 38 38)" size="28" />
+        <view>已在其它队伍</view>
+      </view>
+      <view v-else class="h-6"></view>
 
       <!-- 身份 -->
       <view class="flex items-center">
@@ -61,7 +69,6 @@
       </button>
     </view>
   </view>
-  <!-- 信息提示面板 -->
   <!-- 确定删除弹窗 -->
   <uni-popup ref="alertDialog" type="dialog">
     <uni-popup-dialog
@@ -83,7 +90,6 @@
   </uni-popup>
 </template>
 <script lang="ts" setup>
-import type { UserInfo } from '@/types/global'
 import { ref, onMounted } from 'vue'
 import { deleteGroupUser, deleteGroup, getInvitation } from '@/api/group/group'
 import { getUserInfoByID } from '@/api/user/userInfo'
@@ -91,15 +97,11 @@ import { getUserInfoByID } from '@/api/user/userInfo'
 import { useUserInfoStore } from '@/stores'
 const { userInfo } = useUserInfoStore()
 onMounted(() => {
-  userInfoListRender.value = [...props.userInfoList]
+  console.log('组件加载')
+  getTeamInfo()
 })
 
 const props = defineProps({
-  userInfoList: {
-    type: Array<UserInfo>,
-    default: null,
-    require: true,
-  },
   teamID: {
     type: Number,
     require: true,
@@ -121,13 +123,13 @@ const curUserID = ref(0)
 // 踢出队伍或退出队伍
 const deleteTeamer = (userID: number) => {
   if (userID === userInfo.ID) {
+    curUserID.value = userID
     alertContent.value = '您确定要退出队伍吗?'
     alertDialog.value.open()
-    curUserID.value = userID
   } else {
+    curUserID.value = userID
     alertContent.value = '您确定要移出该队员吗?'
     alertDialog.value.open()
-    curUserID.value = userID
   }
 }
 
@@ -138,24 +140,40 @@ const del = async () => {
       userId: curUserID.value.toString(),
       groupId: props.teamID?.toString() as string,
     })
-    if (res.code === '0') {
-      successInfo.value.open()
-      console.log(res)
-    } else {
+    if (res.code === '7') {
       errorInfo.value.open()
+    } else {
+      successInfo.value.open()
+      getTeamInfo()
     }
   } else if (alertContent.value === '您确定要解散这支队伍吗?') {
     const res = await deleteGroup(props.teamID as number)
-    if (res.code === '0') {
+    if (res.code === '7') {
+      errorInfo.value.open()
+    } else {
       successInfo.value.open()
       // 回到我的队伍
       setTimeout(() => {
         uni.navigateBack()
       }, 1000)
-    } else {
-      errorInfo.value.open()
     }
     console.log(res)
+  } else if (alertContent.value === '您确定要退出队伍吗?') {
+    const res = await deleteGroupUser({
+      userId: userInfo.ID.toString(),
+      groupId: props.teamID?.toString() as string,
+    })
+    if (res.code === '7') {
+      errorInfo.value.open()
+    } else {
+      successInfo.value.open()
+      // 回到我的队伍
+      setTimeout(() => {
+        uni.navigateBack()
+      }, 1000)
+    }
+  } else {
+    console.log('匹配失败')
   }
 }
 // 解散队伍
@@ -164,25 +182,50 @@ const deleteTeam = () => {
   alertDialog.value.open()
 }
 
+const userInfoCache = new Map()
 const userInfoListRender = ref([])
+
 const getTeamInfo = async () => {
   userInfoListRender.value = []
+  console.log(props.teamID)
   const resGroup = await getInvitation({
     groupId: props.teamID,
   })
   for (const item of resGroup.data.list) {
-    const res = await getUserInfoByID(item.userId)
-    const { userAvatarUrl, userName, userIntroduction, ID } = res.data.reuserData
-    const msg = {
-      status: item.status,
-      userAvatarUrl,
-      userName,
-      userIntroduction,
-      ID,
+    const cache = userInfoCache.get(item.userId)
+    // 走缓存
+    if (cache) {
+      const msg = {
+        status: item.status,
+        userAvatarUrl: cache.userAvatarUrl,
+        userName: cache.userName,
+        userIntroduction: cache.userIntroduction,
+        ID: cache.ID,
+      }
+      userInfoListRender.value.push(msg)
+    } else {
+      const res = await getUserInfoByID(item.userId)
+      const { userAvatarUrl, userName, userIntroduction, ID } = res.data.reuserData
+      userInfoCache.set(item.userId, {
+        userAvatarUrl,
+        userName,
+        userIntroduction,
+        ID,
+      })
+      const msg = {
+        status: item.status,
+        userAvatarUrl,
+        userName,
+        userIntroduction,
+        ID,
+      }
+      userInfoListRender.value.push(msg)
     }
-    userInfoListRender.value.push(msg)
   }
 }
+defineExpose({
+  getTeamInfo,
+})
 </script>
 <style scoped>
 .active {

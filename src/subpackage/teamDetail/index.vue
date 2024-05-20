@@ -5,10 +5,10 @@
         >{{ groupName }}
         <teamStatu :teamStatus="teamStatus" />
       </view>
-      <invite :groupID="teamID" />
+      <invite :groupID="teamID" @invite="getTeam" />
     </view>
     <view class="body flex">
-      <card :userInfoList="userInfoList" :teamID="+teamID" :captainId="captainId" />
+      <card ref="cardRef" :teamID="teamID" :captainId="+captainId" />
     </view>
   </view>
 </template>
@@ -20,7 +20,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import invite from './components/invite.vue'
 import teamStatu from './components/teamStatu.vue'
 
-const teamID = ref('')
+const teamID = ref(0)
 const userInfoList = ref([])
 const teamStatus = ref(1)
 const groupName = ref('')
@@ -32,12 +32,14 @@ onLoad(() => {
   eventChannel.on('acceptDataFromTeam', (data) => {
     teamID.value = data.teamId
     userInfoList.value = data.userInfoList
-
     teamStatus.value = +data.groupStatus
     groupName.value = data.groupName
     captainId.value = data.groupCaptainId
-    console.log(data)
   })
 })
+const cardRef = ref()
+const getTeam = () => {
+  if (cardRef.value) cardRef.value.getTeamInfo()
+}
 </script>
 <style lang="scss" scoped></style>

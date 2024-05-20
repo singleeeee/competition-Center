@@ -85,6 +85,10 @@
   --tw-bg-opacity: 1;
   background-color: rgba(248, 113, 113, var(--tw-bg-opacity));
 }
+.bg-pink-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(244, 114, 182, var(--tw-bg-opacity));
+}
 .rounded-2xl {
   border-radius: 32rpx;
 }
@@ -160,8 +164,14 @@
 .h-14 {
   height: 112rpx;
 }
+.h-4 {
+  height: 32rpx;
+}
 .h-56 {
   height: 448rpx;
+}
+.h-6 {
+  height: 48rpx;
 }
 .h--66px- {
   height: 132rpx;
@@ -196,6 +206,9 @@
 }
 .leading--18px- {
   line-height: 36rpx;
+}
+.leading-6 {
+  line-height: 48rpx;
 }
 .m-2 {
   margin: 16rpx;
@@ -283,6 +296,9 @@
 .pl-2 {
   padding-left: 16rpx;
 }
+.pl-3 {
+  padding-left: 24rpx;
+}
 .absolute {
   position: absolute;
 }
@@ -347,9 +363,13 @@
   --tw-text-opacity: 1;
   color: rgba(156, 163, 175, var(--tw-text-opacity));
 }
-.text-green-400 {
+.text-green-600 {
   --tw-text-opacity: 1;
-  color: rgba(52, 211, 153, var(--tw-text-opacity));
+  color: rgba(5, 150, 105, var(--tw-text-opacity));
+}
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgba(220, 38, 38, var(--tw-text-opacity));
 }
 .content-box {
   content: "box";

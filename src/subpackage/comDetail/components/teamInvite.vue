@@ -1,6 +1,6 @@
 <template>
   <view
-    class="flex flex-col relative justify-center message h-24 bg-slate-200 py-2 px-4 rounded-xl text-sm"
+    class="flex flex-col relative justify-center message h-24 bg-slate-200 py-2 px-4 mt-2 rounded-xl text-sm"
     v-for="item in inviteList"
     :key="item.ID"
   >
@@ -53,6 +53,7 @@ onMounted(() => {
 })
 
 const getInviteList = async () => {
+  inviteList.value = []
   const res = await getInvitation({
     userId: props.userID,
     comId: props.comID,
@@ -76,6 +77,7 @@ const acceptTeam = async (teamID: string) => {
       title: res.msg,
       icon: 'none',
     })
+    getInviteList()
   }
 }
 // 拒绝队伍邀请
@@ -86,6 +88,7 @@ const refuseTeam = async (teamID: string) => {
       title: res.msg,
       icon: 'none',
     })
+    getInviteList()
   }
 }
 </script>

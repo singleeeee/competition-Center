@@ -88,14 +88,21 @@
           <!-- <button class="btn" @tap="onDel(teamInfo.ID)">删除队伍</button> -->
         </view>
         <!-- 队伍状态 -->
-        <view class="status" v-if="teamInfo.groupStatus === 2">待审核</view>
+        <!-- 队伍状态 -->
+        <view class="status" v-if="teamInfo.groupStatus === 1">待报名</view>
+        <view class="status" v-else-if="teamInfo.groupStatus === 2">待审核</view>
         <view
           class="status"
           style="background-color: #95ec69; color: #000"
           v-else-if="teamInfo.groupStatus === 3"
           >报名成功</view
         >
-        <view class="status" v-else style="background-color: lightcyan; color: red">报名失败</view>
+        <view
+          class="status"
+          v-else-if="teamInfo.groupStatus === 4"
+          style="background-color: lightcyan; color: red"
+          >报名失败</view
+        >
       </view>
     </view>
     <!-- 比赛通告 -->

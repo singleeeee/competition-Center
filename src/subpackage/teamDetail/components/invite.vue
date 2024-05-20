@@ -66,6 +66,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['invite'])
+
 const popup = ref()
 const status = ref('loading')
 const contentText = ref({
@@ -92,6 +94,7 @@ const inviteTeamer = async (userID: number) => {
     userId: userID,
     groupId: props.groupID,
   })
+  emit('invite')
   uni.showToast({
     title: res.msg,
     icon: 'none',

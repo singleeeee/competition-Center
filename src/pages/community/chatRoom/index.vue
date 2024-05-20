@@ -17,6 +17,7 @@
         :refresher-triggered="loadingStatus"
         @refresherrefresh="onRefresh"
       >
+        <!-- 是否有对话记录 -->
         <template v-if="chatInfoMap[historyIndex].chatList.length > 0">
           <!-- 聊天内容 -->
           <view
@@ -32,58 +33,66 @@
               "
               >{{ dayjs(item.messageTime * 1000).format('M/D HH:mm') }}
             </view> -->
-            <view class="chat-Box">
-              <!-- 对面发的 -->
-              <view v-if="!item.myWord" class="friendBox">
-                <!-- 头像 -->
-                <view class="avatar" @click="toUserInfo(targetID)">
-                  <image class="avatar" :src="item.avatarUrl" />
+            <template v-if="item.type === 1">
+              <view class="chat-Box">
+                <!-- 对面发的 -->
+                <view v-if="!item.myWord" class="friendBox">
+                  <!-- 头像 -->
+                  <view class="avatar" @click="toUserInfo(targetID)">
+                    <image class="avatar" :src="item.avatarUrl" />
+                  </view>
+                  <!-- 普通内容 -->
+                  <div v-if="!item.isImg" style="max-width: 60%">
+                    <text :user-select="true" class="content">{{ item.content }}</text>
+                    <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </div>
+                  <!-- 图片 -->
+                  <view v-else class="imgBox">
+                    <image
+                      @tap="onClickImg(item.imgUrl)"
+                      class="img"
+                      :src="item.imgUrl"
+                      mode="widthFix"
+                    />
+                    <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </view>
                 </view>
-                <!-- 普通内容 -->
-                <div v-if="!item.isImg" style="max-width: 60%">
-                  <text :user-select="true" class="content">{{ item.content }}</text>
-                  <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
-                </div>
-                <!-- 图片 -->
-                <view v-else class="imgBox">
-                  <image
-                    @tap="onClickImg(item.imgUrl)"
-                    class="img"
-                    :src="item.imgUrl"
-                    mode="widthFix"
-                  />
-                  <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                <!-- 自己发的 -->
+                <view v-else class="myBox">
+                  <view class="avatar">
+                    <image class="avatar" :src="item.avatarUrl" />
+                  </view>
+                  <view
+                    v-if="!item.isImg"
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: flex-end;
+                      max-width: 60%;
+                    "
+                  >
+                    <!-- 内容 -->
+                    <text :user-select="true" class="content">{{ item.content }} </text>
+                    <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </view>
+                  <view v-else class="imgBox">
+                    <image
+                      @tap="onClickImg(item.imgUrl)"
+                      class="img"
+                      :src="item.imgUrl"
+                      mode="widthFix"
+                    />
+                    <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </view>
                 </view>
               </view>
-              <!-- 自己发的 -->
-              <view v-else class="myBox">
-                <view class="avatar">
-                  <image class="avatar" :src="item.avatarUrl" />
-                </view>
-                <view
-                  v-if="!item.isImg"
-                  style="
-                    display: flex;
-                    flex-direction: column;
-                    align-items: flex-end;
-                    max-width: 60%;
-                  "
-                >
-                  <!-- 内容 -->
-                  <text :user-select="true" class="content">{{ item.content }} </text>
-                  <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
-                </view>
-                <view v-else class="imgBox">
-                  <image
-                    @tap="onClickImg(item.imgUrl)"
-                    class="img"
-                    :src="item.imgUrl"
-                    mode="widthFix"
-                  />
-                  <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
-                </view>
-              </view>
-            </view>
+            </template>
+            <template v-else-if="item.type === 2">
+              <view class="h-12 bg-pink-400 text-center">群聊信息</view>
+            </template>
+            <template v-else-if="item.type === 3">
+              <inviteInfo />
+            </template>
           </view>
         </template>
         <template v-else>
@@ -138,6 +147,7 @@ import { useChatHistoryStore } from '@/stores/modules/chatHistoryStore'
 import { myDebounce } from '@/utils/myDebounce'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import inviteInfo from './components/inviteInfo.vue'
 dayjs.extend(relativeTime)
 
 // 点击图片预览
@@ -237,6 +247,7 @@ const getFirstLoadInfo = async () => {
       avatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
     }
     const message = {
+      type: item.type,
       messageTime: item.messageTime,
       isImg: item.isImg,
       myWord: item.formUserId === userInfo.value.ID,
@@ -275,6 +286,7 @@ const getHistoryInfo = myDebounce(async (targetID: number) => {
       userAvatarUrl = chatInfoMap.value[historyIndex.value].userAvatarUrl
     }
     const obj = {
+      type: item.type,
       messageTime: item.messageTime,
       isImg: item.isImg,
       myWord: item.formUserId === userInfo.value.ID,
@@ -536,7 +548,7 @@ const chooseImg = () => {
   width: 100%;
 }
 .chatRoom .each_time .detail_info:nth-last-child(1) {
-  padding-bottom: 10vh;
+  padding-bottom: 12vh;
 }
 
 .chatRoom .each_time .detail_info .chat-Box .friendBox,

@@ -73,7 +73,7 @@ const getPostList = async () => {
     disComid: props.disComid,
     disModel: props.disModel,
     page: 1,
-    pageSize: 4,
+    pageSize: 3,
   })
   res.data.list.forEach((element) => {
     postList.value.push(element)
