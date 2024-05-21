@@ -23,8 +23,6 @@
         class="text"
         placeholder="请输入内容"
         v-model="textarea"
-        autofocus
-        focus
         :cursor-spacing="225"
         :auto-height="true"
         :maxlength="-1"

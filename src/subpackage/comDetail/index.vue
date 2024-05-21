@@ -345,7 +345,7 @@ const addToChosedTeamer = (info) => {
     })
     return
   }
-  if (chosedTeamer.value.length <= maxTeamNum.value) {
+  if (chosedTeamer.value.length < maxTeamNum.value) {
     chosedTeamer.value.push(info)
     uni.showToast({
       title: '添加成功!',

@@ -88,10 +88,61 @@
               </view>
             </template>
             <template v-else-if="item.type === 2">
-              <view class="h-12 bg-pink-400 text-center">群聊信息</view>
+              <view class="chat-Box">
+                <!-- 对面发的 -->
+                <view v-if="!item.myWord" class="friendBox">
+                  <!-- 头像 -->
+                  <view class="avatar" @click="toUserInfo(targetID)">
+                    <image class="avatar" :src="item.avatarUrl" />
+                  </view>
+                  <!-- 普通内容 -->
+                  <div v-if="!item.isImg" style="max-width: 60%">
+                    <text :user-select="true" class="content">{{ item.content }}</text>
+                    <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </div>
+                  <!-- 图片 -->
+                  <view v-else class="imgBox">
+                    <image
+                      @tap="onClickImg(item.imgUrl)"
+                      class="img"
+                      :src="item.imgUrl"
+                      mode="widthFix"
+                    />
+                    <view id="yourTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </view>
+                </view>
+                <!-- 自己发的 -->
+                <view v-else class="myBox">
+                  <view class="avatar">
+                    <image class="avatar" :src="item.avatarUrl" />
+                  </view>
+                  <view
+                    v-if="!item.isImg"
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      align-items: flex-end;
+                      max-width: 60%;
+                    "
+                  >
+                    <!-- 内容 -->
+                    <text :user-select="true" class="content">{{ item.content }} </text>
+                    <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </view>
+                  <view v-else class="imgBox">
+                    <image
+                      @tap="onClickImg(item.imgUrl)"
+                      class="img"
+                      :src="item.imgUrl"
+                      mode="widthFix"
+                    />
+                    <view id="myTime">{{ dayjs(item.messageTime * 1000).fromNow() }}</view>
+                  </view>
+                </view>
+              </view>
             </template>
-            <template v-else-if="item.type === 3">
-              <inviteInfo />
+            <template v-else-if="item.type === 3 && !item.myWord">
+              <inviteInfo :data="JSON.parse(item.content)" />
             </template>
           </view>
         </template>

@@ -1,73 +1,84 @@
 <template>
-  <button @tap="getTeamInfo">刷新</button>
   <!-- 队员信息面板 -->
   <view class="flex flex-wrap justify-evenly w-98vw">
-    <view
-      class="flex w-40vw flex-col items-center rounded-2xl mt-2 bg-red-200 px-2 py-3 mx-1"
-      :class="{ 'bg-blue-300': item.ID === userInfo.ID }"
-      v-for="(item, index) in userInfoListRender"
-      :key="index"
-    >
-      <view class="font-bold text-lg text-green-600 h-6" v-if="item.status === 1">邀请中...</view>
+    <template v-if="userInfoListRender.length > 0">
       <view
-        class="flex h-6 justify-center items-center font-bold text-lg text-red-600"
-        v-else-if="item.status === 3"
+        class="flex w-40vw flex-col items-center rounded-2xl mt-2 bg-red-200 px-2 py-3 mx-1"
+        :class="{ 'bg-blue-300': item.ID === userInfo.ID }"
+        v-for="(item, index) in userInfoListRender"
+        :key="index"
       >
-        <uni-icons class="mr-1 mt-1" type="info" color="rgb(220 38 38)" size="28" />
-        <view>拒绝加入</view>
-      </view>
-      <view
-        class="flex h-6 justify-center items-center font-bold text-lg text-red-600"
-        v-else-if="item.status === 4"
-      >
-        <uni-icons class="mr-1 mt-1" type="info" color="rgb(220 38 38)" size="28" />
-        <view>已在其它队伍</view>
-      </view>
-      <view v-else class="h-6"></view>
+        <view class="font-bold text-lg text-green-600 h-6" v-if="item.status === 1">邀请中...</view>
+        <view
+          class="flex h-6 justify-center items-center font-bold text-lg text-red-600"
+          v-else-if="item.status === 3"
+        >
+          <uni-icons class="mr-1 mt-1" type="info" color="rgb(220 38 38)" size="28" />
+          <view>拒绝加入</view>
+        </view>
+        <view
+          class="flex h-6 justify-center items-center font-bold text-lg text-red-600"
+          v-else-if="item.status === 4"
+        >
+          <uni-icons class="mr-1 mt-1" type="info" color="rgb(220 38 38)" size="28" />
+          <view>已在其它队伍</view>
+        </view>
+        <view v-else class="h-6"></view>
 
-      <!-- 身份 -->
-      <view class="flex items-center">
-        <uni-icons class="mr-1 mt-1" type="flag-filled" color="" size="24" />
-        {{ item.ID === captainId ? '队长' : '队员' }}
+        <!-- 身份 -->
+        <view class="flex items-center">
+          <uni-icons class="mr-1 mt-1" type="flag-filled" color="" size="24" />
+          {{ item.ID === captainId ? '队长' : '队员' }}
+        </view>
+        <!-- 头像 -->
+        <view
+          class="active boder-2 mt-4 flex h-[66px] w-[66px] items-center justify-center rounded-full bg-white"
+        >
+          <img
+            class="h-[58px] w-[58px] rounded-full bg-pink-200"
+            :src="item.userAvatarUrl"
+            alt="头像"
+          />
+        </view>
+        <!-- 信息 -->
+        <text class="mt-2 font-bold tracking-widest text-gray-700">{{ item.userName }}</text>
+        <text class="mt-2 h-12 text-xs text-gray-700 text-center line-clamp-2">{{
+          item.userIntroduction
+        }}</text>
+        <!-- 操作 -->
+        <button
+          class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
+          @tap="deleteTeam"
+          v-show="item.ID === captainId && userInfo.ID === captainId"
+        >
+          解散队伍
+        </button>
+        <button
+          class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
+          @tap="deleteTeamer(item.ID)"
+          v-show="item.ID !== captainId && userInfo.ID === captainId"
+        >
+          移出队伍
+        </button>
+        <button
+          class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
+          @tap="deleteTeamer(item.ID)"
+          v-show="item.ID === userInfo.ID && userInfo.ID !== captainId"
+        >
+          退出队伍
+        </button>
       </view>
-      <!-- 头像 -->
-      <view
-        class="active boder-2 mt-4 flex h-[66px] w-[66px] items-center justify-center rounded-full bg-white"
-      >
-        <img
-          class="h-[58px] w-[58px] rounded-full bg-pink-200"
-          :src="item.userAvatarUrl"
-          alt="头像"
-        />
-      </view>
-      <!-- 信息 -->
-      <text class="mt-2 font-bold tracking-widest text-gray-700">{{ item.userName }}</text>
-      <text class="mt-2 h-12 text-xs text-gray-700 text-center line-clamp-2">{{
-        item.userIntroduction
-      }}</text>
-      <!-- 操作 -->
       <button
-        class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
-        @tap="deleteTeam"
-        v-show="item.ID === captainId && userInfo.ID === captainId"
+        v-show="userInfo.ID === captainId"
+        class="btnSign my-4 w-3/4 h-10 leading-9 bg-blue-500 rounded-3xl text-white"
+        @tap="signUp"
       >
-        解散队伍
+        报名
       </button>
-      <button
-        class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
-        @tap="deleteTeamer(item.ID)"
-        v-show="item.ID !== captainId && userInfo.ID === captainId"
-      >
-        移出队伍
-      </button>
-      <button
-        class="btn rouded-lg h-[32px] justify-items-end rounded-2xl bg-red-500 px-4 py-2 text-sm leading-[18px] text-gray-100 shadow-sm"
-        @tap="deleteTeamer(item.ID)"
-        v-show="item.ID === userInfo.ID && userInfo.ID !== captainId"
-      >
-        退出队伍
-      </button>
-    </view>
+    </template>
+    <template v-else>
+      <uni-load-more status="loading" type="circle" />
+    </template>
   </view>
   <!-- 确定删除弹窗 -->
   <uni-popup ref="alertDialog" type="dialog">
@@ -90,16 +101,13 @@
   </uni-popup>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { deleteGroupUser, deleteGroup, getInvitation } from '@/api/group/group'
 import { getUserInfoByID } from '@/api/user/userInfo'
 // import { idToTeamList } from '@/utils/idToTeamList'
 import { useUserInfoStore } from '@/stores'
+import { http } from '@/utils/http'
 const { userInfo } = useUserInfoStore()
-onMounted(() => {
-  console.log('组件加载')
-  getTeamInfo()
-})
 
 const props = defineProps({
   teamID: {
@@ -110,6 +118,22 @@ const props = defineProps({
     type: Number,
     require: true,
   },
+})
+
+watch(
+  () => props.teamID,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal && newVal !== 0) {
+      console.log('更新')
+
+      getTeamInfo()
+    }
+  },
+)
+onMounted(() => {
+  // if (props.teamID !== 0) {
+  //   getTeamInfo()
+  // }
 })
 // 弹窗ref
 const alertDialog = ref()
@@ -132,7 +156,20 @@ const deleteTeamer = (userID: number) => {
     alertDialog.value.open()
   }
 }
-
+// 报名
+const signUp = async () => {
+  const res = await http({
+    url: '/app/group/registerGroup',
+    data: {
+      groupId: props.teamID,
+    },
+  })
+  uni.showToast({
+    title: res.msg,
+    icon: 'none',
+  })
+  if (res.code !== '7') getTeamInfo()
+}
 // 删除操作
 const del = async () => {
   if (alertContent.value === '您确定要移出该队员吗?') {
@@ -191,6 +228,7 @@ const getTeamInfo = async () => {
   const resGroup = await getInvitation({
     groupId: props.teamID,
   })
+  const renderArr = ref([])
   for (const item of resGroup.data.list) {
     const cache = userInfoCache.get(item.userId)
     // 走缓存
@@ -202,7 +240,7 @@ const getTeamInfo = async () => {
         userIntroduction: cache.userIntroduction,
         ID: cache.ID,
       }
-      userInfoListRender.value.push(msg)
+      renderArr.value.push(msg)
     } else {
       const res = await getUserInfoByID(item.userId)
       const { userAvatarUrl, userName, userIntroduction, ID } = res.data.reuserData
@@ -219,9 +257,10 @@ const getTeamInfo = async () => {
         userIntroduction,
         ID,
       }
-      userInfoListRender.value.push(msg)
+      renderArr.value.push(msg)
     }
   }
+  userInfoListRender.value = renderArr.value
 }
 defineExpose({
   getTeamInfo,
@@ -240,5 +279,9 @@ defineExpose({
   -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.btnSign:active {
+  background-color: rgb(7, 7, 117);
+  transform: scale(1.01);
 }
 </style>

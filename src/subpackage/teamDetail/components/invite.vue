@@ -61,7 +61,7 @@ import { getUserList } from '@/api/user/userInfo'
 import { inviteUser } from '@/api/group/group'
 const props = defineProps({
   groupID: {
-    type: String,
+    type: Number,
     require: true,
   },
 })

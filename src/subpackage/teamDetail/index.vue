@@ -8,13 +8,13 @@
       <invite :groupID="teamID" @invite="getTeam" />
     </view>
     <view class="body flex">
-      <card ref="cardRef" :teamID="teamID" :captainId="+captainId" />
+      <card v-show="teamID" ref="cardRef" :teamID="teamID" :captainId="+captainId" />
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, onMounted } from 'vue'
 import card from './components/card.vue'
 import { onLoad } from '@dcloudio/uni-app'
 import invite from './components/invite.vue'
@@ -26,16 +26,22 @@ const teamStatus = ref(1)
 const groupName = ref('')
 const captainId = ref(0)
 onLoad(() => {
+  console.log('页面加载了')
   // 页面通信（复杂数据）
   const instance = getCurrentInstance()?.proxy
-  const eventChannel = instance?.getOpenerEventChannel()
-  eventChannel.on('acceptDataFromTeam', (data) => {
-    teamID.value = data.teamId
-    userInfoList.value = data.userInfoList
-    teamStatus.value = +data.groupStatus
-    groupName.value = data.groupName
-    captainId.value = data.groupCaptainId
-  })
+  if (instance) {
+    const eventChannel = instance?.getOpenerEventChannel()
+    eventChannel.on('acceptDataFromTeam', (data) => {
+      teamID.value = data.teamId
+      userInfoList.value = data.userInfoList
+      teamStatus.value = +data.groupStatus
+      groupName.value = data.groupName
+      captainId.value = data.groupCaptainId
+    })
+  }
+})
+onMounted(() => {
+  console.log('onMounted')
 })
 const cardRef = ref()
 const getTeam = () => {
