@@ -19,3 +19,9 @@ password:123456
 - Input WeChat ID
 - Scan QR code
 - Start experiencing
+
+# DEV VERSION
+
+- 因为小程序涉及社区功能，受限于微信小程序社区的严格管理，很遗憾未能上线，想要体验的童鞋可以扫描下方二维码使用开发版。
+![开发版1 2二维码](https://github.com/user-attachments/assets/d65a0533-22f4-4f08-b18e-6cdd711e2f2b)
+
